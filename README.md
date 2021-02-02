@@ -21,3 +21,11 @@ This project will help with that, allowing me to **instantly** apply *filters* t
 know what my  possible options are. Such a project can also be **generalized** to event 
 planning where you might want multiple things to happen at a specific panel, but can't
  have them all at the same time.
+
+# User Stories
+
+- As a user, I want to be able to add a class/event (events) to my list of possibilities (LoP)
+- As a user, I want to be able to add tags to my events
+- As a user, I want to be able to delete an event from my LoP
+- As a user, I want to be able to view the LoP
+- As a user, I want to be able to filter through completed schedules
