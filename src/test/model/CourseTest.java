@@ -37,7 +37,7 @@ class CourseTest {
                 (ArrayList<int[][]>) Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
                         new int[][]{{15,0}, {18,0}, {4}},
                         new int[][]{{8,0}, {11,0}, {2}}}),
-                false, new ArrayList<String>(), new ArrayList<int[][]>());
+                false, new ArrayList<>(), new ArrayList<>());
     }
 
     private Course setupC3(){
@@ -61,16 +61,16 @@ class CourseTest {
         assertTrue(c3.getHasLab());
 
         assertEquals(new ArrayList<>(), c1.getLabNames());
-        assertEquals(Arrays.asList(new String[]{"L2A", "L2B", "L2C"}), c2.getLabNames());
-        assertEquals(Arrays.asList(new String[]{"L2A", "L2B", "L2C"}), c3.getLabNames());
+        assertEquals(Arrays.asList("L2A", "L2B", "L2C"), c2.getLabNames());
+        assertEquals(Arrays.asList("L2A", "L2B", "L2C"), c3.getLabNames());
 
         assertEquals(new HashMap<>(), c1.getLabTimes());
-        assertEquals(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
+        assertEquals(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
                 new int[][]{{15,0}, {18,0}, {4}},
-                new int[][]{{8,0}, {11,0}, {2}}}), c2.getLabTimes());
-        assertEquals(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
+                new int[][]{{8,0}, {11,0}, {2}}), new ArrayList<>(c2.getLabTimes().values()));
+        assertEquals(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
                 new int[][]{{15,0}, {18,0}, {4}},
-                new int[][]{{8,0}, {11,0}, {2}}}), c3.getLabTimes());
+                new int[][]{{8,0}, {11,0}, {2}}), new ArrayList<>(c3.getLabTimes().values()));
     }
 
     @Test
@@ -81,13 +81,13 @@ class CourseTest {
 
         assertEquals(new ArrayList<>(), c1.getTutorialNames());
         assertEquals(new ArrayList<>(), c2.getTutorialNames());
-        assertEquals(Arrays.asList(new String[]{"T2A", "T2C", "T2E"}), c3.getTutorialNames());
+        assertEquals(Arrays.asList("T2A", "T2C", "T2E"), c3.getTutorialNames());
 
         assertEquals(new HashMap<>(), c1.getTutorialTimes());
         assertEquals(new HashMap<>(), c2.getTutorialTimes());
-        assertEquals(Arrays.asList(new int[][][] {new int[][]{{20,0}, {21,0}, {1,3,5}},
+        assertEquals(Arrays.asList(new int[][]{{20,0}, {21,0}, {1,3,5}},
                 new int[][]{{12,0}, {13,30}, {2}},
-                new int[][]{{14,30}, {16,0}, {1}}}), c3.getTutorialTimes());
+                new int[][]{{14,30}, {16,0}, {1}}), new ArrayList<>(c3.getTutorialTimes().values()));
     }
 
     @Test
@@ -96,37 +96,133 @@ class CourseTest {
         assertEquals("ENGL 100", c2.getName());
         assertEquals("PHYS 118", c3.getName());
 
-        assertEquals(Arrays.asList(new String[]{"201", "202", "203"}), c1.getSubClassNames());
-        assertEquals(Arrays.asList(new String[]{"201", "202"}), c2.getSubClassNames());
-        assertEquals(Arrays.asList(new String[]{"201", "202"}), c3.getSubClassNames());
+        assertEquals(Arrays.asList("201", "202", "203"), c1.getSubClassNames());
+        assertEquals(Arrays.asList("201", "202"), c2.getSubClassNames());
+        assertEquals(Arrays.asList("201", "202"), c3.getSubClassNames());
 
         assertEquals(new HashMap<>(), c1.getSubClassTimes());
         assertEquals(new HashMap<>(), c2.getSubClassTimes());
-        assertEquals(Arrays.asList(new int[][][] {new int[][]{{20,0}, {21,0}, {1,3,5}},
+        assertEquals(Arrays.asList(new int[][]{{20,0}, {21,0}, {1,3,5}},
                 new int[][]{{12,0}, {13,30}, {2}},
-                new int[][]{{14,30}, {16,0}, {1}}}), c3.getSubClassTimes());
+                new int[][]{{14,30}, {16,0}, {1}}), new ArrayList<>(c3.getSubClassTimes().values()));
     }
 
-    //TODO test setters
     @Test
     public void setLabTests() {
-        assertFalse(c1.getHasLab());
-        assertTrue(c2.getHasLab());
+        c1.setHasLab(true);
+        assertTrue(c1.getHasLab());
+        c2.setHasLab(false);
+        assertFalse(c2.getHasLab());
+        c2.setHasLab(true);
         assertTrue(c3.getHasLab());
 
-        assertEquals(new ArrayList<>(), c1.getLabNames());
-        assertEquals(Arrays.asList(new String[]{"L2A", "L2B", "L2C"}), c2.getLabNames());
-        assertEquals(Arrays.asList(new String[]{"L2A", "L2B", "L2C"}), c3.getLabNames());
+        c3.setLabNames((ArrayList<String>) Arrays.asList("L2D", "L2C", "L2F"));
+        assertEquals(Arrays.asList("L2D", "L2C", "L2F"), c3.getLabNames());
 
-        assertEquals(new HashMap<>(), c1.getLabTimes());
-        assertEquals(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
-                new int[][]{{15,0}, {18,0}, {4}},
-                new int[][]{{8,0}, {11,0}, {2}}}), c2.getLabTimes());
-        assertEquals(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
-                new int[][]{{15,0}, {18,0}, {4}},
-                new int[][]{{8,0}, {11,0}, {2}}}), c3.getLabTimes());
+        HashMap<String, int[][]> forTest = new HashMap<>();
+        forTest.put("L2D", (new int[][]{{10,0}, {12,0}, {1,3,5}}));
+        forTest.put("L2C", (new int[][]{{15,0}, {18,0}, {4}}));
+        forTest.put("L2F", (new int[][]{{8,0}, {11,0}, {2}}));
+
+        c3.setLabTimes(forTest);
+        assertEquals(forTest.values(), new ArrayList<>(c3.getLabTimes().values()));
     }
 
-    //TODO test adders
+    @Test
+    public void setTutorialTests() {
+        c1.setHasTutorial(true);
+        assertTrue(c1.getHasTutorial());
+        c2.setHasTutorial(false);
+        assertFalse(c2.getHasTutorial());
+        c2.setHasTutorial(true);
+        assertTrue(c3.getHasTutorial());
+
+        c3.setTutorialNames((ArrayList<String>) Arrays.asList("L2D", "L2C", "L2F"));
+        assertEquals(Arrays.asList("L2D", "L2C", "L2F"), c3.getTutorialNames());
+
+        HashMap<String, int[][]> forTest = new HashMap<>();
+        forTest.put("L2D", (new int[][]{{10,0}, {12,0}, {1,3,5}}));
+        forTest.put("L2C", (new int[][]{{15,0}, {18,0}, {4}}));
+        forTest.put("L2F", (new int[][]{{8,0}, {11,0}, {2}}));
+
+        c3.setTutorialTimes(forTest);
+        assertEquals(forTest.values(), new ArrayList<>(c3.getTutorialTimes().values()));
+    }
+
+    @Test
+    public void setOtherTests() {
+        c1.setName("HYDR 200");
+        assertEquals("HYDR 200", c1.getName());
+
+        c3.setSubClassNames((ArrayList<String>) Arrays.asList("L2D", "L2C", "L2F"));
+        assertEquals(Arrays.asList("L2D", "L2C", "L2F"), c3.getSubClassNames());
+
+        HashMap<String, int[][]> forTest = new HashMap<>();
+        forTest.put("L2D", (new int[][]{{10,0}, {12,0}, {1,3,5}}));
+        forTest.put("L2C", (new int[][]{{15,0}, {18,0}, {4}}));
+        forTest.put("L2F", (new int[][]{{8,0}, {11,0}, {2}}));
+
+        c3.setSubClassTimes(forTest);
+        assertEquals(forTest.values(), new ArrayList<>(c3.getSubClassTimes().values()));
+    }
+
+
+
+    @Test
+    public void addersTest() {
+        c1.addSubClass("205", (new int[][]{{9,0}, {10,0}, {1,3}}));
+        assertEquals( Arrays.asList("201", "202", "203", "205"), c1.getSubClassNames());
+        HashMap<String, int[][]> forTest = new HashMap<>();
+        forTest.put("201", (new int[][]{{7,0}, {8,0}, {1,3,5}}));
+        forTest.put("202", (new int[][]{{15,0}, {16,0}, {1,3,5}}));
+        forTest.put("203", (new int[][]{{9,30}, {10,30}, {1,3,5}}));
+        forTest.put("205", (new int[][]{{9,0}, {10,0}, {1,3}}));
+        assertEquals( forTest.values(), new ArrayList<>(c3.getSubClassTimes().values()));
+
+        c1.addLab("L1", (new int[][]{{9,0}, {10,0}, {1,3}}));
+        assertEquals( Arrays.asList("L1"), c1.getLabNames());
+        HashMap<String, int[][]> forTest2 = new HashMap<>();
+        forTest2.put("L1", (new int[][]{{9,0}, {10,0}, {1,3}}));
+        assertEquals( forTest2.values(), new ArrayList<>(c3.getLabTimes().values()));
+
+        c1.addTutorial("T1", (new int[][]{{9,0}, {10,0}, {1,3}}));
+        assertEquals( Arrays.asList("T1"), c1.getLabNames());
+        HashMap<String, int[][]> forTest3 = new HashMap<>();
+        forTest3.put("L1", (new int[][]{{9,0}, {10,0}, {1,3}}));
+        assertEquals( forTest3.values(), new ArrayList<>(c3.getTutorialTimes().values()));
+    }
+
+    //TODO test removers
+
+    @Test
+    public void removersTest() {
+        c3.removeSubClass("202");
+        assertEquals( Arrays.asList("201"), c3.getSubClassNames());
+        HashMap<String, int[][]> forTest = new HashMap<>();
+        forTest.put("201", (new int[][]{{10,0}, {12,0}, {1,3,5}}));
+        assertEquals( forTest.values(), new ArrayList<>(c3.getSubClassTimes().values()));
+        c3.removeSubClass("201");
+        HashMap<String, int[][]> forTest4 = new HashMap<>();
+        assertEquals( Arrays.asList(), c3.getSubClassNames());
+        assertEquals( forTest4.values(), new ArrayList<>(c3.getSubClassTimes().values()));
+
+        c3.removeLab("L2C");
+        c3.removeLab("L2B");
+        assertEquals( Arrays.asList("L2A"), c3.getLabNames());
+        HashMap<String, int[][]> forTest2 = new HashMap<>();
+        forTest2.put("L2A", (new int[][]{{10,0}, {12,0}, {1,3,5}}));
+        assertEquals( forTest2.values(), new ArrayList<>(c3.getLabTimes().values()));
+
+        c3.removeTutorial("T2C");
+        c3.removeTutorial("T2E");
+        assertEquals( Arrays.asList("T2A"), c3.getTutorialNames());
+        HashMap<String, int[][]> forTest3 = new HashMap<>();
+        forTest3.put("T2A", (new int[][]{{20,0}, {21,0}, {1,3,5}}));
+        assertEquals( forTest3.values(), new ArrayList<>(c3.getTutorialTimes().values()));
+    }
+
     //TODO test editers
+
+    //@Test
+    //private void
 }

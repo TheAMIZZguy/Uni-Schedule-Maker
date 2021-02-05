@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class Scheduler {
 
-    private final int EARLIEST_TIME_ALLOWED = 7; //7am
+    private static final int EARLIEST_TIME_ALLOWED = 7; //7am
     // 14 possible hours, broken into half hour blocks. 5 days a week. 7am (07:00) to 9pm (21:00)
     private String[][] schedule = new String[2 * 14][5];
     // self Explanatory
