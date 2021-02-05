@@ -13,18 +13,18 @@ public class Course {
 
     //A specific subclass offered with the days/times offered: Example is 201    (This would be CPSC 210 201)
     private ArrayList<String> subClassNames;
-    private HashMap<String, int[][]> subClassTimes = new HashMap<String, int[][]>();
+    private HashMap<String, int[][]> subClassTimes = new HashMap<>();
     //will be in format of   subClassName : [[hh,mm],[hh,mm],[d,d,d,d,d]]
     //the first one will be the starting time, the second will be ending time,
     //        and the third one will represent days available like: [1,3,5] for MWF
 
     //Similar as above, but labs
-    private ArrayList<String> labNames = new ArrayList<String>();
-    private HashMap<String, int[][]> labTimes = new HashMap<String, int[][]>();
+    private ArrayList<String> labNames = new ArrayList<>();
+    private HashMap<String, int[][]> labTimes = new HashMap<>();
 
     //Similar as above, but tutorials
-    private ArrayList<String> tutorialNames = new ArrayList<String>();
-    private HashMap<String, int[][]> tutorialTimes = new HashMap<String, int[][]>();
+    private ArrayList<String> tutorialNames = new ArrayList<>();
+    private HashMap<String, int[][]> tutorialTimes = new HashMap<>();
 
 
     //REQUIRES: subClassNames and subClassTimes to be the same length,
