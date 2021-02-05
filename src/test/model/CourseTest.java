@@ -192,7 +192,6 @@ class CourseTest {
         assertEquals( forTest3.values(), new ArrayList<>(c3.getTutorialTimes().values()));
     }
 
-    //TODO test removers
 
     @Test
     public void removersTest() {
@@ -221,8 +220,49 @@ class CourseTest {
         assertEquals( forTest3.values(), new ArrayList<>(c3.getTutorialTimes().values()));
     }
 
-    //TODO test editers
 
-    //@Test
-    //private void
+    @Test
+    public void editSubClassTest() {
+        c1.removeSubClass("202");
+        c1.removeSubClass("203");
+        c1.editSubClassName("201","222");
+        assertEquals( Arrays.asList("222"), c1.getSubClassNames());
+
+        c1.editSubClassName("201","223");
+        assertEquals( Arrays.asList("222"), c1.getSubClassNames());
+        c1.editSubClassTime("222", new int[][]{{9,30}, {10,30}, {1,3,5}});
+        assertEquals( Arrays.asList(new int[][]{{9,30}, {10,30}, {1,3,5}}), c1.getSubClassTimes().values());
+
+    }
+
+
+    @Test
+    public void editLabTest() {
+        c3.removeLab("L2B");
+        c3.removeLab("L2C");
+        c3.editLabName("L2A", "L2D");
+        assertEquals( Arrays.asList("L2D"), c3.getLabNames());
+
+        c3.editLabName("201","223");
+        assertEquals( Arrays.asList("L2D"), c3.getLabNames());
+
+        c3.editLabTime("L2D", new int[][]{{9,30}, {10,30}, {1,3,5}});
+        assertEquals( Arrays.asList(new int[][]{{9,30}, {10,30}, {1,3,5}}), c3.getLabTimes().values());
+
+    }
+
+    @Test
+    public void editTutorialTest() {
+        c3.removeTutorial("T2E");
+        c3.removeTutorial("T2C");
+        c3.editTutorialName("T2A", "T2D");
+        assertEquals( Arrays.asList("T2D"), c3.getTutorialNames());
+
+        c3.editTutorialName("201","223");
+        assertEquals( Arrays.asList("T2D"), c3.getTutorialNames());
+
+        c3.editTutorialTime("T2D", new int[][]{{9,30}, {10,30}, {1,3,5}});
+        assertEquals( Arrays.asList(new int[][]{{9,30}, {10,30}, {1,3,5}}), c3.getTutorialTimes().values());
+
+    }
 }
