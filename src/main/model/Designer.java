@@ -1,0 +1,15 @@
+package model;
+
+public class Designer {
+
+    /*a class that makes schedules
+     * 1) OBTAIN ALL THE CLASSES THAT THEY WANT
+     * 2) ADD ALL THOSE CLASSES THROUGH LOOPS - NO LABS OR TUTORIALS
+     * 3) ADDING LABS/ TUTS
+     *   3.1) IN EACH SCHEDULE GET THE COURSES FROM THE STRING[] COURSES IN SCHEDULER.JAVA AND
+     *          THEN GET EACH COURSE,
+     *   3.2) IF IT HAS A LAB, THEN A FOR LOOP OF (LAB IN LABS), WHERE THE SCHEDULER
+     *          ADDS THE LAB TO THE SCHEDULE IF POSSIBLE, resulting in several more schedules
+     *   3.3) DO SAME THING WITH TUTORIALS, BUT ON THE LAB ADDED SCHEDULES
+     */
+}

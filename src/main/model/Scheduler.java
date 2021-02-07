@@ -11,6 +11,8 @@ public class Scheduler {
     private String[][] schedule = new String[2 * 14][5];
     // self Explanatory
     private String[] coursesInSchedule;
+    private Boolean[] hasAddedLab;
+    private Boolean[] hasAddedtutorial;
     private int currentCourses = 0;
 
     //REQUIRES: numOfClasses must be a positive integer
@@ -34,14 +36,40 @@ public class Scheduler {
     //MODIFIES: this
     //EFFECTS: Tries to add a course to the schedule, returns true if successful, false otherwise
     public boolean addCourseToSchedule(Course a) {
-        if (Arrays.asList(coursesInSchedule).contains(a.getName())) {
-            //TODO, add tests first too
+        if (!Arrays.asList(coursesInSchedule).contains(a.getName()) && currentCourses < coursesInSchedule.length) {
+            for (int i = 0; i < a.getSubClassNames().size(); i++) {
+                //the index of 2 is because that is the location of days, the 0 to 2 is the times
+                if (isOpenForClass(a.getSubClassTimes().get(a.getSubClassNames().get(i))[2],
+                        Arrays.copyOfRange(a.getSubClassTimes().get(a.getSubClassNames().get(i)),0,2))) {
+                    addingClassToSchedule(a.getSubClassTimes().get(a.getSubClassNames().get(i))[2],
+                            Arrays.copyOfRange(a.getSubClassTimes().get(a.getSubClassNames().get(i)),0,2),
+                            a.getName() + " " + a.getSubClassNames().get(i));
+                    addToCoursesInSchedule(a.getName());// + " " + a.getSubClassNames().get(i));
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /* Checks if the lab or tutorial would conflict with something, and then adds it   */
+    //REQUIRES: times must follow the correct format from Course
+    //MODIFIES: this
+    //EFFECTS: Tries to add a lab/tutorial to the schedule, returns true if successful, false otherwise
+    public boolean addLabOrTutorialToSchedule(String name, int[][] times) {
+        int[] days = times[2];
+        int[][] hours = Arrays.copyOfRange(times,0,2);
+
+        if (isOpenForClass(days, hours)) {
+            addingClassToSchedule(days, hours, name);
+            return true;
         }
         return false;
     }
 
     private void addToCoursesInSchedule(String course) {
         coursesInSchedule[currentCourses] = course;
+        currentCourses++;
     }
 
     // VISUAL EXAMPLE OF SCHEDULE WITH TIMES STARTING AT 7AM, TOP ROW
@@ -73,11 +101,29 @@ public class Scheduler {
 
         for (int day : days) {
             for (int currentTime = eta2; currentTime < eta2 + schedule.length; currentTime++) {
-                if (startTime < currentTime && currentTime < endTime) {
-                    this.schedule[currentTime - eta2][day] = name;
+                if (startTime <= currentTime && currentTime < endTime) {
+                    this.schedule[currentTime - eta2][day - 1] = name;
                 }
             }
         }
         return this.schedule; //for the sake of tests
+    }
+
+    public boolean isOpenForClass(int[] days, int[][] times) {
+        int eta2 = EARLIEST_TIME_ALLOWED * 2;
+
+        int startTime = times[0][0] * 2 + times[0][1] / 30;
+        int endTime = times[1][0] * 2 + times[1][1] / 30;
+
+        for (int day : days) {
+            for (int currentTime = eta2; currentTime < eta2 + schedule.length; currentTime++) {
+                if (startTime <= currentTime && currentTime < endTime) {
+                    if (this.schedule[currentTime - eta2][day - 1] != null) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
