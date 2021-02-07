@@ -23,35 +23,35 @@ class CourseTest {
     }
 
     private Course setupC1(){
-        return new Course("CPSC 210", new ArrayList<String>(Arrays.asList(new String[]{"201", "202", "203"})),
-                new ArrayList<int[][]>(Arrays.asList(new int[][][] {new int[][]{{7,0}, {8,0}, {1,3,5}},
-                        new int[][]{{15,0}, {16,0}, {1,3,5}},
-                        new int[][]{{9,30}, {10,30}, {1,3,5}}})));
+        return new Course("CPSC 210", new ArrayList<>(Arrays.asList("201", "202", "203")),
+                new ArrayList<>(Arrays.asList(new int[][]{{7, 0}, {8, 0}, {1, 3, 5}},
+                        new int[][]{{15, 0}, {16, 0}, {1, 3, 5}},
+                        new int[][]{{9, 30}, {10, 30}, {1, 3, 5}})));
     }
 
     private Course setupC2(){
-        return new Course("ENGL 100", new ArrayList<String>(Arrays.asList(new String[]{"201", "202"})),
-                new ArrayList<int[][]>(Arrays.asList(new int[][][] {new int[][]{{8,0}, {20,0}, {1,3,5}},
-                        new int[][]{{9,30}, {10,30}, {1,3,5}}})),
-                true, new ArrayList<String>(Arrays.asList(new String[]{"L2A", "L2B", "L2C"})),
-                new ArrayList<int[][]>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
-                        new int[][]{{15,0}, {18,0}, {4}},
-                        new int[][]{{8,0}, {11,0}, {2}}})),
+        return new Course("ENGL 100", new ArrayList<>(Arrays.asList("201", "202")),
+                new ArrayList<>(Arrays.asList(new int[][]{{8, 0}, {20, 0}, {1, 3, 5}},
+                        new int[][]{{9, 30}, {10, 30}, {1, 3, 5}})),
+                true, new ArrayList<>(Arrays.asList("L2A", "L2B", "L2C")),
+                new ArrayList<>(Arrays.asList(new int[][]{{10, 0}, {12, 0}, {1, 3, 5}},
+                        new int[][]{{15, 0}, {18, 0}, {4}},
+                        new int[][]{{8, 0}, {11, 0}, {2}})),
                 false, new ArrayList<>(), new ArrayList<>());
     }
 
     private Course setupC3(){
-        return new Course("PHYS 118", new ArrayList<String>(Arrays.asList(new String[]{"201", "202"})),
-                new ArrayList<int[][]>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
-                        new int[][]{{9,30}, {10,30}, {1,3,5}}})),
-                true, new ArrayList<String>(Arrays.asList(new String[]{"L2A", "L2B", "L2C"})),
-                new ArrayList<int[][]>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
-                        new int[][]{{15,0}, {18,0}, {4}},
-                        new int[][]{{8,0}, {11,0}, {2}}})),
-                true, new ArrayList<String>(Arrays.asList(new String[]{"T2A", "T2C", "T2E"})),
-                new ArrayList<int[][]>(Arrays.asList(new int[][][] {new int[][]{{20,0}, {21,0}, {1,3,5}},
-                        new int[][]{{12,0}, {13,30}, {2}},
-                        new int[][]{{14,30}, {16,0}, {1}}})));
+        return new Course("PHYS 118", new ArrayList<>(Arrays.asList("201", "202")),
+                new ArrayList<>(Arrays.asList(new int[][]{{10, 0}, {12, 0}, {1, 3, 5}},
+                        new int[][]{{9, 30}, {10, 30}, {1, 3, 5}})),
+                true, new ArrayList<>(Arrays.asList("L2A", "L2B", "L2C")),
+                new ArrayList<>(Arrays.asList(new int[][]{{10, 0}, {12, 0}, {1, 3, 5}},
+                        new int[][]{{15, 0}, {18, 0}, {4}},
+                        new int[][]{{8, 0}, {11, 0}, {2}})),
+                true, new ArrayList<>(Arrays.asList("T2A", "T2C", "T2E")),
+                new ArrayList<>(Arrays.asList(new int[][]{{20, 0}, {21, 0}, {1, 3, 5}},
+                        new int[][]{{12, 0}, {13, 30}, {2}},
+                        new int[][]{{14, 30}, {16, 0}, {1}})));
     }
 
     private boolean compareLists(ArrayList a, ArrayList b) {

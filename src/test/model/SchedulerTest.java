@@ -15,28 +15,28 @@ public class SchedulerTest {
     private Scheduler sched1;
     private String[][] emptySched; //this is to compare schedules more easily
 
-    Course cpsc210 = new Course("CPSC 210", new ArrayList<>(Arrays.asList(new String[]{"201", "202", "203"})),
-            new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{7,0}, {8,0}, {1,3,5}},
-                                                    new int[][]{{15,0}, {16,0}, {1,3,5}},
-                                                    new int[][]{{9,30}, {10,30}, {1,3,5}}})));
-    Course math120 = new Course("MATH 120", new ArrayList<>(Arrays.asList(new String[]{"201", "212", "230"})),
-            new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
-                                                    new int[][]{{15,0}, {16,0}, {1,3,5}},
-                                                    new int[][]{{10,0}, {12,0}, {1,3,5}}})));
-    Course stat200 = new Course("STAT 200", new ArrayList<>(Arrays.asList(new String[]{"200"})),
+    Course cpsc210 = new Course("CPSC 210", new ArrayList<>(Arrays.asList("201", "202", "203")),
+            new ArrayList<>(Arrays.asList(new int[][]{{7,0}, {8,0}, {1,3,5}},
+                    new int[][]{{15,0}, {16,0}, {1,3,5}},
+                    new int[][]{{9,30}, {10,30}, {1,3,5}})));
+    Course math120 = new Course("MATH 120", new ArrayList<>(Arrays.asList("201", "212", "230")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
+                    new int[][]{{15,0}, {16,0}, {1,3,5}},
+                    new int[][]{{10,0}, {12,0}, {1,3,5}})));
+    Course stat200 = new Course("STAT 200", new ArrayList<>(Arrays.asList("200")),
             new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {2,4}}})));
-    Course phys118 = new Course("PHYS 118", new ArrayList<>(Arrays.asList(new String[]{"201", "202"})),
-            new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
-                                                    new int[][]{{9,30}, {10,30}, {1,3,5}}})),
-            true, new ArrayList<>(Arrays.asList(new String[]{"L2A", "L2B", "L2C"})),
-            new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
+    Course phys118 = new Course("PHYS 118", new ArrayList<>(Arrays.asList("201", "202")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
+                    new int[][]{{9,30}, {10,30}, {1,3,5}})),
+            true, new ArrayList<>(Arrays.asList("L2A", "L2B", "L2C")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
                     new int[][]{{15,0}, {18,0}, {4}},
-                    new int[][]{{8,0}, {11,0}, {2}}})),
-            true, new ArrayList<>(Arrays.asList(new String[]{"T2A", "T2C", "T2E"})),
-            new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{20,0}, {21,0}, {1,3,5}},
+                    new int[][]{{8,0}, {11,0}, {2}})),
+            true, new ArrayList<>(Arrays.asList("T2A", "T2C", "T2E")),
+            new ArrayList<>(Arrays.asList(new int[][]{{20,0}, {21,0}, {1,3,5}},
                     new int[][]{{12,0}, {13,30}, {2}},
-                    new int[][]{{14,30}, {16,0}, {1}}})));
-    Course stat201 = new Course("STAT 201", new ArrayList<>(Arrays.asList(new String[]{"201"})),
+                    new int[][]{{14,30}, {16,0}, {1}})));
+    Course stat201 = new Course("STAT 201", new ArrayList<>(Arrays.asList("201")),
             new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {2,4}}})));
 
     @BeforeEach
@@ -131,7 +131,7 @@ public class SchedulerTest {
     public boolean isEqualSchedule(String[][] sched1, String[][] sched2) {
         for (int i = 0 ; i < sched1.length; i++) {
             for (int j = 0 ; j < sched1[i].length; j++) {
-                if(sched1[i][j] != sched2[i][j]) {
+                if(!sched1[i][j].equals(sched2[i][j])) {
                     return false;
                 }
             }
