@@ -23,35 +23,44 @@ class CourseTest {
     }
 
     private Course setupC1(){
-        return new Course("CPSC 210", (ArrayList<String>) Arrays.asList(new String[]{"201", "202", "203"}),
-                (ArrayList<int[][]>) Arrays.asList(new int[][][] {new int[][]{{7,0}, {8,0}, {1,3,5}},
+        return new Course("CPSC 210", new ArrayList<>(Arrays.asList(new String[]{"201", "202", "203"})),
+                new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{7,0}, {8,0}, {1,3,5}},
                         new int[][]{{15,0}, {16,0}, {1,3,5}},
-                        new int[][]{{9,30}, {10,30}, {1,3,5}}}));
+                        new int[][]{{9,30}, {10,30}, {1,3,5}}})));
     }
 
     private Course setupC2(){
-        return new Course("ENGL 100", (ArrayList<String>) Arrays.asList(new String[]{"201", "202"}),
-                (ArrayList<int[][]>) Arrays.asList(new int[][][] {new int[][]{{8,0}, {20,0}, {1,3,5}},
-                        new int[][]{{9,30}, {10,30}, {1,3,5}}}),
-                true, (ArrayList<String>) Arrays.asList(new String[]{"L2A", "L2B", "L2C"}),
-                (ArrayList<int[][]>) Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
+        return new Course("ENGL 100", new ArrayList<>(Arrays.asList(new String[]{"201", "202"})),
+                new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{8,0}, {20,0}, {1,3,5}},
+                        new int[][]{{9,30}, {10,30}, {1,3,5}}})),
+                true, new ArrayList<>(Arrays.asList(new String[]{"L2A", "L2B", "L2C"})),
+                new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
                         new int[][]{{15,0}, {18,0}, {4}},
-                        new int[][]{{8,0}, {11,0}, {2}}}),
+                        new int[][]{{8,0}, {11,0}, {2}}})),
                 false, new ArrayList<>(), new ArrayList<>());
     }
 
     private Course setupC3(){
-        return new Course("PHYS 118", (ArrayList<String>) Arrays.asList(new String[]{"201", "202"}),
-                (ArrayList<int[][]>) Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
-                        new int[][]{{9,30}, {10,30}, {1,3,5}}}),
-                true, (ArrayList<String>) Arrays.asList(new String[]{"L2A", "L2B", "L2C"}),
-                (ArrayList<int[][]>) Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
+        return new Course("PHYS 118", new ArrayList<>(Arrays.asList(new String[]{"201", "202"})),
+                new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
+                        new int[][]{{9,30}, {10,30}, {1,3,5}}})),
+                true, new ArrayList<>(Arrays.asList(new String[]{"L2A", "L2B", "L2C"})),
+                new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{10,0}, {12,0}, {1,3,5}},
                         new int[][]{{15,0}, {18,0}, {4}},
-                        new int[][]{{8,0}, {11,0}, {2}}}),
-                true, (ArrayList<String>) Arrays.asList(new String[]{"T2A", "T2C", "T2E"}),
-                (ArrayList<int[][]>) Arrays.asList(new int[][][] {new int[][]{{20,0}, {21,0}, {1,3,5}},
+                        new int[][]{{8,0}, {11,0}, {2}}})),
+                true, new ArrayList<>(Arrays.asList(new String[]{"T2A", "T2C", "T2E"})),
+                new ArrayList<>(Arrays.asList(new int[][][] {new int[][]{{20,0}, {21,0}, {1,3,5}},
                         new int[][]{{12,0}, {13,30}, {2}},
-                        new int[][]{{14,30}, {16,0}, {1}}}));
+                        new int[][]{{14,30}, {16,0}, {1}}})));
+    }
+
+    private boolean compareLists(ArrayList a, ArrayList b) {
+        for (int i = 0 ; i < a.size(); i++) {
+            if(a.get(i) != b.get(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Test
@@ -61,17 +70,16 @@ class CourseTest {
         assertTrue(c3.getHasLab());
 
         assertEquals(new ArrayList<>(), c1.getLabNames());
-        assertEquals(Arrays.asList("L2A", "L2B", "L2C"), c2.getLabNames());
-        assertEquals(Arrays.asList("L2A", "L2B", "L2C"), c3.getLabNames());
+        assertTrue(compareLists(new ArrayList<>(Arrays.asList("L2A", "L2B", "L2C")), c2.getLabNames()));
+        assertTrue(compareLists(new ArrayList<>(Arrays.asList("L2A", "L2B", "L2C")), c3.getLabNames()));
 
         assertEquals(new HashMap<>(), c1.getLabTimes());
-        assertEquals(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
-                new int[][]{{15,0}, {18,0}, {4}},
-                new int[][]{{8,0}, {11,0}, {2}}), new ArrayList<>(c2.getLabTimes().values()));
-        assertEquals(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
-                new int[][]{{15,0}, {18,0}, {4}},
-                new int[][]{{8,0}, {11,0}, {2}}), new ArrayList<>(c3.getLabTimes().values()));
+        assertEquals(new ArrayList<>(c2.getLabTimes().values()).get(0)[0][0],
+                new int[][]{{10,0}, {12,0}, {1,3,5}}[0][0]);
+        assertEquals(new ArrayList<>(c3.getLabTimes().values()).get(0)[1][1],
+                new int[][]{{10,0}, {12,0}, {1,3,5}}[1][1]);
     }
+
 
     @Test
     public void getTutorialTests() {
@@ -81,13 +89,12 @@ class CourseTest {
 
         assertEquals(new ArrayList<>(), c1.getTutorialNames());
         assertEquals(new ArrayList<>(), c2.getTutorialNames());
-        assertEquals(Arrays.asList("T2A", "T2C", "T2E"), c3.getTutorialNames());
+        assertTrue(compareLists(new ArrayList<>(Arrays.asList("T2A", "T2C", "T2E")), c3.getTutorialNames()));
 
         assertEquals(new HashMap<>(), c1.getTutorialTimes());
         assertEquals(new HashMap<>(), c2.getTutorialTimes());
-        assertEquals(Arrays.asList(new int[][]{{20,0}, {21,0}, {1,3,5}},
-                new int[][]{{12,0}, {13,30}, {2}},
-                new int[][]{{14,30}, {16,0}, {1}}), new ArrayList<>(c3.getTutorialTimes().values()));
+        assertEquals(new ArrayList<>(c3.getTutorialTimes().values()).get(0)[1][1],
+                new int[][]{{20,0}, {21,0}, {1,3,5}}[1][1]);
     }
 
     @Test
@@ -116,7 +123,7 @@ class CourseTest {
         c2.setHasLab(true);
         assertTrue(c3.getHasLab());
 
-        c3.setLabNames((ArrayList<String>) Arrays.asList("L2D", "L2C", "L2F"));
+        c3.setLabNames(new ArrayList<>(Arrays.asList("L2D", "L2C", "L2F")));
         assertEquals(Arrays.asList("L2D", "L2C", "L2F"), c3.getLabNames());
 
         HashMap<String, int[][]> forTest = new HashMap<>();
@@ -137,7 +144,7 @@ class CourseTest {
         c2.setHasTutorial(true);
         assertTrue(c3.getHasTutorial());
 
-        c3.setTutorialNames((ArrayList<String>) Arrays.asList("L2D", "L2C", "L2F"));
+        c3.setTutorialNames(new ArrayList<>(Arrays.asList("L2D", "L2C", "L2F")));
         assertEquals(Arrays.asList("L2D", "L2C", "L2F"), c3.getTutorialNames());
 
         HashMap<String, int[][]> forTest = new HashMap<>();
@@ -154,7 +161,7 @@ class CourseTest {
         c1.setName("HYDR 200");
         assertEquals("HYDR 200", c1.getName());
 
-        c3.setSubClassNames((ArrayList<String>) Arrays.asList("L2D", "L2C", "L2F"));
+        c3.setSubClassNames(new ArrayList<>(Arrays.asList("L2D", "L2C", "L2F")));
         assertEquals(Arrays.asList("L2D", "L2C", "L2F"), c3.getSubClassNames());
 
         HashMap<String, int[][]> forTest = new HashMap<>();

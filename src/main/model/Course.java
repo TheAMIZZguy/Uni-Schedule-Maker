@@ -51,15 +51,19 @@ public class Course {
         this.name = name;
         this.subClassNames = subClassNames;
         for (int i = 0; i < subClassNames.size(); i++) {
-            this.subClassTimes.put(subClassNames.get(i),subClassTimes.get(i));
+            this.subClassTimes.put(subClassNames.get(i), subClassTimes.get(i));
         }
+
         this.hasLab = hasLab;
-        for (int i = 0; i < subClassNames.size(); i++) {
-            this.subClassTimes.put(subClassNames.get(i),subClassTimes.get(i));
+        this.labNames = labNames;
+        for (int i = 0; i < labNames.size(); i++) {
+            this.labTimes.put(labNames.get(i), labTimes.get(i));
         }
+
         this.hasTutorial = hasTutorial;
-        for (int i = 0; i < subClassNames.size(); i++) {
-            this.subClassTimes.put(subClassNames.get(i),subClassTimes.get(i));
+        this.tutorialNames = tutorialNames;
+        for (int i = 0; i < tutorialNames.size(); i++) {
+            this.tutorialTimes.put(tutorialNames.get(i), tutorialTimes.get(i));
         }
     }
 
