@@ -148,6 +148,7 @@ public class Course {
     //EFFECTS: adds a sub class and times
     public void addSubClass(String subClassName, int[][] subClassTime) {
         this.subClassTimes.put(subClassName, subClassTime);
+        this.subClassNames.add(subClassName);
     }
 
     //REQUIRES: the int[][] needs to be in the specific format mentioned above
@@ -155,6 +156,7 @@ public class Course {
     //EFFECTS: adds a lab and times
     public void addLab(String labName, int[][] labTime) {
         this.labTimes.put(labName, labTime);
+        this.labNames.add(labName);
     }
 
     //REQUIRES: the int[][] needs to be in the specific format mentioned above
@@ -162,6 +164,7 @@ public class Course {
     //EFFECTS: adds a tutorial and times
     public void addTutorial(String tutorialName, int[][] tutorialTime) {
         this.tutorialTimes.put(tutorialName, tutorialTime);
+        this.tutorialNames.add(tutorialName);
     }
 
 
@@ -169,18 +172,21 @@ public class Course {
     //EFFECTS: removes a sub class and times
     public void removeSubClass(String name) {
         this.subClassTimes.remove(name);
+        this.subClassNames.remove(name);
     }
 
     //MODIFIES: this
     //EFFECTS: removes a lab and times
     public void removeLab(String name) {
         this.labTimes.remove(name);
+        this.labNames.remove(name);
     }
 
     //MODIFIES: this
     //EFFECTS: removes a tutorial and times
     public void removeTutorial(String name) {
         this.tutorialTimes.remove(name);
+        this.tutorialNames.remove(name);
     }
 
 
@@ -188,8 +194,12 @@ public class Course {
     //MODIFIES: this
     //EFFECTS: edits a sub class name
     public void editSubClassName(String oldName, String newName) {
-        this.subClassTimes.put(newName, subClassTimes.get(oldName));
-        this.subClassTimes.remove(oldName);
+        if (subClassNames.contains(oldName)) {
+            this.subClassTimes.put(newName, subClassTimes.get(oldName));
+            this.subClassTimes.remove(oldName);
+            this.subClassNames.remove(oldName);
+            this.subClassNames.add(newName);
+        }
     }
 
     //REQUIRES: the name to exist in the HashMap, newTimes to follow the int[][] format from above
@@ -203,8 +213,12 @@ public class Course {
     //MODIFIES: this
     //EFFECTS: edits a lab name
     public void editLabName(String oldName, String newName) {
-        this.labTimes.put(newName, labTimes.get(oldName));
-        this.labTimes.remove(oldName);
+        if (labNames.contains(oldName)) {
+            this.labTimes.put(newName, labTimes.get(oldName));
+            this.labTimes.remove(oldName);
+            this.labNames.remove(oldName);
+            this.labNames.add(newName);
+        }
     }
 
     //REQUIRES: the name to exist in the HashMap, newTimes to follow the int[][] format from above
@@ -218,8 +232,12 @@ public class Course {
     //MODIFIES: this
     //EFFECTS: edits a tutorial name
     public void editTutorialName(String oldName, String newName) {
-        this.tutorialTimes.put(newName, tutorialTimes.get(oldName));
-        this.tutorialTimes.remove(oldName);
+        if (tutorialNames.contains(oldName)) {
+            this.tutorialTimes.put(newName, tutorialTimes.get(oldName));
+            this.tutorialTimes.remove(oldName);
+            this.tutorialNames.remove(oldName);
+            this.tutorialNames.add(newName);
+        }
     }
 
     //REQUIRES: the name to exist in the HashMap, newTimes to follow the int[][] format from above
