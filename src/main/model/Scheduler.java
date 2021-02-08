@@ -20,9 +20,20 @@ public class Scheduler {
         this.coursesInSchedule = new String[numOfClasses];
     }
 
+    //DeepCopy Constructor
+    public Scheduler(Scheduler copySchedule) {
+        this.schedule = copySchedule.getSchedule();
+        this.coursesInSchedule = copySchedule.getCoursesInSchedule();
+        this.currentCourses = copySchedule.getCurrentCourses();
+    }
+
     //getters
     public String[][] getSchedule() {
         return schedule;
+    }
+
+    public int getCurrentCourses() {
+        return currentCourses;
     }
 
     public String[] getCoursesInSchedule() {

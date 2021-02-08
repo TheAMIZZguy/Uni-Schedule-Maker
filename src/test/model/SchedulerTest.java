@@ -124,6 +124,12 @@ public class SchedulerTest {
         assertTrue(sched1.addLabOrTutorialToSchedule(name2, times2));
     }
 
+    //TODO
+    @Test
+    public void deepCopyTest(){
+        assertTrue(false);
+    }
+
     public String[][] courseScheduleHelper(Course a, int sub) {
         return sched1.addingClassToSchedule(a.getSubClassTimes().get(a.getSubClassNames().get(sub))[1],
                 Arrays.copyOfRange(a.getSubClassTimes().get(a.getSubClassNames().get(sub)),0,2),
