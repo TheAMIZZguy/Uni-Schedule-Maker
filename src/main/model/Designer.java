@@ -13,6 +13,9 @@ public class Designer {
 
     private int maxCourses;
 
+    private ArrayList<Scheduler> listOfPossibilitiesWithLT;
+    private ArrayList<Scheduler>[] tierXClassesWithLT;
+
     public Designer(ArrayList<Course> courses, int maxCourses) {
         this.coursesToTake = courses;
         this.maxCourses = maxCourses;
@@ -20,6 +23,12 @@ public class Designer {
 
         for (int i = 0; i < maxCourses; i++) {
             tierXClasses[i] = new ArrayList<>();
+        }
+
+        this.tierXClassesWithLT = new ArrayList[courses.size() * 2];
+
+        for (int i = 0; i < courses.size() * 2; i++) {
+            tierXClassesWithLT[i] = new ArrayList<>();
         }
     }
 
@@ -116,8 +125,114 @@ public class Designer {
         }
     }
 
+    /*
+     * 1) DeepCopy LoP into some other Array of Arraylists
+     * 2) Get the first class from CoursesToTake
+     * 2.1) Get whether this class has labs
+     * 2.1.1) If No, then do nothing, don't increment any indexes for list
+     * 2.1.2) If Yes, then try to add the first lab to all schedules with this class in this layer:
+     * 2.1.2.1) Start a bool at false
+     * 2.1.2.2) Try to add the first lab to all classes like the previous add Class method,
+     * 2.1.2.3) If a schedule doesn't have the parent class, then just add that schedule to next layer
+     * 2.1.2.4) Repeat 2.1.2.2-3 With the rest of the labs,
+     * 2.1.2.5) If at least one lab or class was added to next layer, change the bool
+     * 2.1.2.6) If bool stays false, say adding labs and tutorials was impossible, else continue
+     * 3) Repeat step 2 but with the next class
+     * 4) Repeat everything but with tutorials
+     * 5) If there is at least one schedule at the end, success.
+     * 2) For the first lab of the first class
+     */
     public boolean buildSchedulesWithLabsAndTutorials() {
-        return false;
+        tierXClassesWithLT[0] = deepCopyLoP();
+        //int currentClass = 0;
+        int currentTier = 1;
+
+        boolean success = false;
+
+        for (int i = 0; i < coursesToTake.size(); i++) {
+            Course course = coursesToTake.get(i);
+            if (course.getHasLab()) {
+                if (fillNextTierWithLabs(course, currentTier)) {
+                    success = true;
+                }
+            }
+            currentTier++;
+        }
+        for (int i = 0; i < coursesToTake.size(); i++) {
+            Course course = coursesToTake.get(i);
+            if (course.getHasTutorial()) {
+                if (fillNextTierWithLabs(course, currentTier)) {
+                    success = true;
+                }
+            }
+            currentTier++;
+        }
+
+        this.listOfPossibilitiesWithLT = tierXClassesWithLT[currentTier - 1];
+
+        return success;
+    }
+
+    private ArrayList<Scheduler> deepCopyLoP() {
+        ArrayList<Scheduler> copiedLoP = new ArrayList<>();
+
+        if (listOfPossibilities != null) {
+            for (int i = 0; i < listOfPossibilities.size(); i++) {
+                copiedLoP.add(new Scheduler(listOfPossibilities.get(i)));
+            }
+        }
+        return copiedLoP;
+    }
+
+    private boolean fillNextTierWithLabs(Course course, int curTier) {
+        String name = course.getName();
+        boolean addedAtLeastOne = false;
+        ArrayList<String> namesOfLabs = course.getLabNames();
+        HashMap<String, int[][]> timesOfLabs = course.getLabTimes();
+
+        for (int i = 0; i < namesOfLabs.size(); i++) {
+            if (fillNextTierWithLabOrTutorial(name, namesOfLabs.get(i), timesOfLabs.get(namesOfLabs.get(i)), curTier)) {
+                addedAtLeastOne = true;
+            }
+        }
+
+        return addedAtLeastOne;
+    }
+
+    private boolean fillNextTierWithTutorials(Course course, int curTier) {
+        String name = course.getName();
+        boolean addedAtLeastOne = false;
+        ArrayList<String> namesOfTutorials = course.getTutorialNames();
+        HashMap<String, int[][]> timesOfTutorials = course.getTutorialTimes();
+
+        for (int i = 0; i < namesOfTutorials.size(); i++) {
+            if (fillNextTierWithLabOrTutorial(name, namesOfTutorials.get(i),
+                    timesOfTutorials.get(namesOfTutorials.get(i)), curTier)) {
+                addedAtLeastOne = true;
+            }
+        }
+
+        return addedAtLeastOne;
+    }
+
+    private boolean fillNextTierWithLabOrTutorial(String name, String nameOfLab, int[][] times, int curTier) {
+        boolean returnBool = false;
+        ArrayList<Scheduler> prevScheds = new ArrayList<>(tierXClassesWithLT[curTier - 1]);
+        for (int i = 0; i < prevScheds.size(); i++) {
+            if (Arrays.asList(prevScheds.get(i).getCoursesInSchedule()).contains(name)) {
+                Scheduler newSched = new Scheduler(prevScheds.get(i));
+                if (newSched.addLabOrTutorialToSchedule(name + " " + nameOfLab, times)) {
+                    tierXClassesWithLT[curTier].add(newSched);
+                    returnBool = true;
+                }
+            } else {
+                Scheduler newSched = new Scheduler(prevScheds.get(i));
+                tierXClassesWithLT[curTier].add(newSched);
+                returnBool = true;
+            }
+        }
+
+        return returnBool;
     }
 
 

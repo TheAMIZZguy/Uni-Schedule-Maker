@@ -44,6 +44,7 @@ public class DesignerTest {
 
     ArrayList<Course> list;
     ArrayList<Course> list2;
+    ArrayList<Course> list3;
 
     @BeforeEach
     public void setup() {
@@ -58,7 +59,9 @@ public class DesignerTest {
         list2.add(math120);
         designer3 = new Designer(list2, 5);
 
-        designer4 = new Designer(list, 1);
+        list3 = new ArrayList<>();
+        list3.add(phys1182);
+        designer4 = new Designer(list3, 1);
 
     }
 
@@ -122,6 +125,42 @@ public class DesignerTest {
     }
 
     //TODO Add Labs and Tutorials
+    @Test
+    public void buildSchedulesWithLabsAndTutorialsTest() {
+        designer1.buildSchedulesOnlyMainWithPriority();
+        designer1.buildSchedulesWithLabsAndTutorials();
+        ArrayList<Scheduler> alpha = new ArrayList<>();
+        assertTrue(compareSchedulerList(alpha, designer1.getSchedules()));
+
+        assertTrue(designer4.buildSchedulesOnlyMainWithPriority());
+        assertTrue(designer4.buildSchedulesWithLabsAndTutorials());
+        Scheduler scheduler1 = new Scheduler(1);
+        scheduler1.addCourseToSchedule(phys1182);
+        scheduler1.addLabOrTutorialToSchedule("PHYS 118 L2A", new int[][]{{10,0}, {12,0}, {1,3,5}});
+        scheduler1.addLabOrTutorialToSchedule("PHYS 118 T2A", new int[][]{{20,0}, {21,0}, {1,3,5}});
+
+        Scheduler scheduler2 = new Scheduler(1);
+        scheduler2.addCourseToSchedule(phys1182);
+        scheduler2.addLabOrTutorialToSchedule("PHYS 118 L2A", new int[][]{{10,0}, {12,0}, {1,3,5}});
+        scheduler2.addLabOrTutorialToSchedule("PHYS 118 T2C", new int[][]{{12,0}, {13,30}, {2}});
+
+        Scheduler scheduler3 = new Scheduler(1);
+        scheduler3.addCourseToSchedule(phys1182);
+        scheduler3.addLabOrTutorialToSchedule("PHYS 118 L2B", new int[][]{{15,0}, {18,0}, {4}});
+        scheduler3.addLabOrTutorialToSchedule("PHYS 118 T2A", new int[][]{{20,0}, {21,0}, {1,3,5}});
+
+        Scheduler scheduler4 = new Scheduler(1);
+        scheduler4.addCourseToSchedule(phys1182);
+        scheduler4.addLabOrTutorialToSchedule("PHYS 118 L2B", new int[][]{{15,0}, {18,0}, {4}});
+        scheduler4.addLabOrTutorialToSchedule("PHYS 118 T2C", new int[][]{{12,0}, {13,30}, {2}});
+
+        ArrayList<Scheduler> alpha2 = new ArrayList<>();
+        alpha2.add(scheduler1);
+        alpha2.add(scheduler2);
+        alpha2.add(scheduler3);
+        alpha2.add(scheduler4);
+        assertTrue(compareSchedulerList(alpha2, designer4.getSchedules()));
+    }
 
     //TODO Without Priority?
 
