@@ -16,6 +16,8 @@ public class Designer {
     private ArrayList<Scheduler> listOfPossibilitiesWithLT;
     private ArrayList<Scheduler>[] tierXClassesWithLT;
 
+    private boolean hasAddedLabsAndTutorials;
+
     public Designer(ArrayList<Course> courses, int maxCourses) {
         this.coursesToTake = courses;
         this.maxCourses = maxCourses;
@@ -25,9 +27,9 @@ public class Designer {
             tierXClasses[i] = new ArrayList<>();
         }
 
-        this.tierXClassesWithLT = new ArrayList[courses.size() * 2];
+        this.tierXClassesWithLT = new ArrayList[courses.size() * 2 + 1];
 
-        for (int i = 0; i < courses.size() * 2; i++) {
+        for (int i = 0; i < courses.size() * 2 + 1; i++) {
             tierXClassesWithLT[i] = new ArrayList<>();
         }
     }
@@ -38,6 +40,9 @@ public class Designer {
     }
 
     public ArrayList<Scheduler> getSchedules() {
+        if (hasAddedLabsAndTutorials) {
+            return listOfPossibilitiesWithLT;
+        }
         return listOfPossibilities;
     }
 
@@ -143,8 +148,10 @@ public class Designer {
      * 2) For the first lab of the first class
      */
     public boolean buildSchedulesWithLabsAndTutorials() {
+        if (!(listOfPossibilities != null)) {
+            return false;
+        }
         tierXClassesWithLT[0] = deepCopyLoP();
-        //int currentClass = 0;
         int currentTier = 1;
 
         boolean success = false;
@@ -161,14 +168,17 @@ public class Designer {
         for (int i = 0; i < coursesToTake.size(); i++) {
             Course course = coursesToTake.get(i);
             if (course.getHasTutorial()) {
-                if (fillNextTierWithLabs(course, currentTier)) {
+                if (fillNextTierWithTutorials(course, currentTier)) {
                     success = true;
                 }
             }
             currentTier++;
         }
 
-        this.listOfPossibilitiesWithLT = tierXClassesWithLT[currentTier - 1];
+        if (success) {
+            this.listOfPossibilitiesWithLT = tierXClassesWithLT[currentTier - 1];
+            hasAddedLabsAndTutorials = true;
+        }
 
         return success;
     }

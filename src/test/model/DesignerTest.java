@@ -128,7 +128,7 @@ public class DesignerTest {
     @Test
     public void buildSchedulesWithLabsAndTutorialsTest() {
         designer1.buildSchedulesOnlyMainWithPriority();
-        designer1.buildSchedulesWithLabsAndTutorials();
+        assertFalse(designer1.buildSchedulesWithLabsAndTutorials());
         ArrayList<Scheduler> alpha = new ArrayList<>();
         assertTrue(compareSchedulerList(alpha, designer1.getSchedules()));
 
