@@ -16,7 +16,11 @@ public class Designer {
     public Designer(ArrayList<Course> courses, int maxCourses) {
         this.coursesToTake = courses;
         this.maxCourses = maxCourses;
-        tierXClasses = new ArrayList[maxCourses];
+        this.tierXClasses = new ArrayList[maxCourses];
+
+        for (int i = 0; i < maxCourses; i++) {
+            tierXClasses[i] = new ArrayList<>();
+        }
     }
 
     //getters
@@ -37,52 +41,79 @@ public class Designer {
         listOfPossibilities.add(s);
     }
 
-    /* 1) Takes the first course and makes schedules equal to all the subcourses it has
+    /*  THIS CLASS DOES STEPS 1-3
+     * 1) Takes the first course and makes schedules equal to all the subcourses it has
      * 2) Then to each of those it adds all the subcourses of the next class
      * 3) Repeat until done
      * 4) Then repeat 1-3 but with a different class as the starting class
      * 5) Repeat step 4 until all classes have appeared
      * 6) Then remove duplicates?
+     * 7) Add Labs and Tutorials
      * Note: If a class doesn't fit then it isn't added
      */
-    public boolean buildSchedulesOnlyMain() {
-        //Course psuedoCourse;
-        //String psuedoName;
-        //ArrayList<String> psuedoSubName = new ArrayList<>();
-        //ArrayList<int[][]> psuedoSubTimes = new ArrayList<>();
-        for (int i = 0; i < coursesToTake.size(); i++) {
-            Course pseudoCourse;
-            String pseudoName;
-            ArrayList<String> pseudoSubName = new ArrayList<>();
-            ArrayList<int[][]> pseudoSubTimes = new ArrayList<>();
-            for (int j = 0; j < coursesToTake.get(i).getSubClassNames().size(); j++) {
-                pseudoName = coursesToTake.get(i).getName();
-                pseudoSubName.add(coursesToTake.get(i).getSubClassNames().get(j));
-                pseudoSubTimes.add(coursesToTake.get(i).getSubClassTimes().get(pseudoSubName.get(0)));
-
-                pseudoCourse = new Course(pseudoName, pseudoSubName, pseudoSubTimes);
-
-                if (i == 0) {
-                    Scheduler schedule1 = new Scheduler(maxCourses);
-                    schedule1.addCourseToSchedule(pseudoCourse);
-                    tierXClasses[i].add(schedule1);
-                } else {
-                    if (tierXClasses[i - 1] != null) {
-                        for (int k = 0; k < tierXClasses[i - 1].size(); k++) {
-                            Scheduler deepCopy = new Scheduler(tierXClasses[i - 1].get(k));
-                            tierXClasses[i].add(deepCopy);
-                        }
-                    }
-                }
-            }
+    public boolean buildSchedulesOnlyMainWithPriority() {
+        if (coursesToTake.size() == 0) {
+            return false;
         }
 
-        if (tierXClasses[tierXClasses.length - 1] != null) {
-            listOfPossibilities = tierXClasses[tierXClasses.length - 1];
+        for (int i = 0; i < coursesToTake.size(); i++) {
+            buildScheduleLoop(i);
+        }
+
+        int subtractor = 1;
+        while (tierXClasses[tierXClasses.length - subtractor].size() == 0) {
+            subtractor++;
+            if (tierXClasses.length - subtractor < 0) {
+                break;
+            }
+        }
+        if (tierXClasses[tierXClasses.length - subtractor].size() != 0) {
+            this.listOfPossibilities = tierXClasses[tierXClasses.length - subtractor];
             return true;
         }
 
         return false;
+    }
+
+    private void buildScheduleLoop(int i) {
+        String pseudoName;
+        Course pseudoCourse;
+        for (int j = 0; j < coursesToTake.get(i).getSubClassNames().size(); j++) {
+            ArrayList<String> pseudoSubName = new ArrayList<>();
+            ArrayList<int[][]> pseudoSubTimes = new ArrayList<>();
+
+            pseudoName = coursesToTake.get(i).getName();
+            pseudoSubName.add(coursesToTake.get(i).getSubClassNames().get(j));
+            pseudoSubTimes.add(coursesToTake.get(i).getSubClassTimes().get(pseudoSubName.get(0)));
+
+            pseudoCourse = new Course(pseudoName, pseudoSubName, pseudoSubTimes);
+
+            addPseudoCourse(i, pseudoCourse);
+        }
+    }
+
+    private void addPseudoCourse(int i, Course pseudoCourse) {
+        if (i == 0) {
+            Scheduler schedule1 = new Scheduler(maxCourses);
+            schedule1.addCourseToSchedule(pseudoCourse);
+            tierXClasses[i].add(schedule1);
+        } else {
+            int subtractor = 1;
+            while (tierXClasses[i - subtractor].size() == 0) {
+                subtractor++;
+                if (i - subtractor < 0) {
+                    break;
+                }
+            }
+            if (tierXClasses[i - subtractor].size() != 0) {
+                for (int k = 0; k < tierXClasses[i - subtractor].size(); k++) {
+                    Scheduler deepCopy = new Scheduler(tierXClasses[i - subtractor].get(k));
+                    if (deepCopy.addCourseToSchedule(pseudoCourse)) {
+                        tierXClasses[i].add(deepCopy);
+                    }
+                }
+            }
+        }
     }
 
     public boolean buildSchedulesWithLabsAndTutorials() {

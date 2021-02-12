@@ -22,9 +22,26 @@ public class Scheduler {
 
     //DeepCopy Constructor
     public Scheduler(Scheduler copySchedule) {
-        this.schedule = copySchedule.getSchedule();
-        this.coursesInSchedule = copySchedule.getCoursesInSchedule();
+        this.schedule = scheduleDeepCopy(copySchedule.getSchedule());
+        this.coursesInSchedule = coursesInScheduleDeepCopy(copySchedule.getCoursesInSchedule());
         this.currentCourses = copySchedule.getCurrentCourses();
+    }
+
+    public String[][] scheduleDeepCopy(String[][] schedulePrev) {
+        String[][] scheduleNew = new String[2 * 14][5];
+        for (int i = 0; i < schedulePrev.length; i++) {
+            for (int j = 0; j < schedulePrev[i].length; j++) {
+                scheduleNew[i][j] = schedulePrev[i][j];
+            }
+        }
+        return scheduleNew;
+    }
+    public String[] coursesInScheduleDeepCopy(String[] coursesInSchedulePrev) {
+        String[] coursesInScheduleNew = new String[coursesInSchedulePrev.length];
+        for (int i = 0; i < coursesInSchedulePrev.length; i++) {
+            coursesInScheduleNew[i] = coursesInSchedulePrev[i];
+        }
+        return coursesInScheduleNew;
     }
 
     //getters
