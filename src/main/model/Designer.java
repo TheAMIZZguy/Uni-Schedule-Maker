@@ -173,6 +173,17 @@ public class Designer {
      * 5) If there is at least one schedule at the end, success.
      * 2) For the first lab of the first class
      */
+
+    //THESE VARIABLES ARE USED HERE BECAUSE THEY SHOULD *NOT* BE USED ELSEWHERE OUTSIDE THIS FUNCTION
+    //NEEDED TO BE OUTSIDE TO ABSTRACT THE METHOD
+    private int currentTier = 1;
+
+    private boolean successLab = false;
+    private boolean hadLab = false;
+
+    private boolean successTutorial = false;
+    private boolean hadTutorial = false;
+
     //MODIFIES: this
     //EFFECTS: Changes the current listOfPossibilites to one with labs
     public boolean buildSchedulesWithLabsAndTutorials() {
@@ -182,34 +193,16 @@ public class Designer {
         tierXClassesWithLT[0] = deepCopyLoP();
         int currentTier = 1;
 
-        boolean successLab = false;
-        boolean hadLab = false;
-        for (int i = 0; i < coursesToTake.size(); i++) {
-            Course course = coursesToTake.get(i);
-            if (course.getHasLab()) {
-                hadLab = true;
-                if (fillNextTierWithLabs(course, currentTier)) {
-                    successLab = true;
-                }
-                currentTier++;
-            }
-        }
+        successLab = false;
+        hadLab = false;
+        currentTier = buildScheduleWithLabs(currentTier);
         if (!hadLab) {
             successLab = true;
         }
 
-        boolean successTutorial = false;
-        boolean hadTutorial = false;
-        for (int i = 0; i < coursesToTake.size(); i++) {
-            Course course = coursesToTake.get(i);
-            if (course.getHasTutorial()) {
-                hadTutorial = true;
-                if (fillNextTierWithTutorials(course, currentTier)) {
-                    successTutorial = true;
-                }
-                currentTier++;
-            }
-        }
+        successTutorial = false;
+        hadTutorial = false;
+        currentTier = buildScheduleWithTutorials(currentTier);
         if (!hadTutorial) {
             successTutorial = true;
         }
@@ -220,6 +213,40 @@ public class Designer {
         }
 
         return (successLab && successTutorial);
+    }
+
+    //REQUIRES: currentTier to be a non-zero index of the list
+    //MODIFIES: this
+    //EFFECTS: builds the schedule by tiers based on labs
+    private int buildScheduleWithTutorials(int currentTier) {
+        for (int i = 0; i < coursesToTake.size(); i++) {
+            Course course = coursesToTake.get(i);
+            if (course.getHasTutorial()) {
+                hadTutorial = true;
+                if (fillNextTierWithTutorials(course, currentTier)) {
+                    successTutorial = true;
+                }
+                currentTier++;
+            }
+        }
+        return currentTier;
+    }
+
+    //REQUIRES: currentTier to be a non-zero index of the list
+    //MODIFIES: this
+    //EFFECTS: builds the schedule by tiers based on tutorials
+    private int buildScheduleWithLabs(int currentTier) {
+        for (int i = 0; i < coursesToTake.size(); i++) {
+            Course course = coursesToTake.get(i);
+            if (course.getHasLab()) {
+                hadLab = true;
+                if (fillNextTierWithLabs(course, currentTier)) {
+                    successLab = true;
+                }
+                currentTier++;
+            }
+        }
+        return currentTier;
     }
 
     //EFFECTS: creates a new deepCopy of the listOfPossibilities

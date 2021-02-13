@@ -261,6 +261,5 @@ public class DesignerTest {
         assertTrue(designer10.buildSchedulesWithLabsAndTutorials());
     }
 
-    //TODO Without Priority?
 
 }

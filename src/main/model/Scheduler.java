@@ -1,6 +1,5 @@
 package model;
 
-import com.sun.deploy.util.ArrayUtil;
 
 import java.util.Arrays;
 
@@ -11,8 +10,8 @@ public class Scheduler {
     private String[][] schedule = new String[2 * 14][5];
     // self Explanatory
     private String[] coursesInSchedule;
-    private Boolean[] hasAddedLab;
-    private Boolean[] hasAddedtutorial;
+    //private Boolean[] hasAddedLab;
+    //private Boolean[] hasAddedtutorial;
     private int currentCourses = 0;
 
     //REQUIRES: numOfClasses must be a positive integer
