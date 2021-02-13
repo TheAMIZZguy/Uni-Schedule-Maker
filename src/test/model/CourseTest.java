@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CourseTest {
+public class CourseTest {
 
     Course c1;
     Course c2;
