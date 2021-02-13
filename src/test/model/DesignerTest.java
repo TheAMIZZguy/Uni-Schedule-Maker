@@ -36,15 +36,57 @@ public class DesignerTest {
     Course math1202 = new Course("MATH 120", new ArrayList<>(Arrays.asList("212")),
             new ArrayList<>(Arrays.asList(new int[][]{{15,0}, {16,0}, {1,3,5}}, new int[][]{})));
 
+    Course phys1183 = new Course("PHYS 118", new ArrayList<>(Arrays.asList("202")),
+            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})),
+            true, new ArrayList<>(Arrays.asList("L2A", "L2B")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
+                    new int[][]{{10,0}, {12,0}, {1,3,5}})),
+            true, new ArrayList<>(Arrays.asList("T2A", "T2C")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
+                    new int[][]{{10,0}, {12,0}, {1,3,5}})));
+    Course math1203 = new Course("MATH 120", new ArrayList<>(Arrays.asList("212")),
+            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})));
+
+    Course phys1184 = new Course("PHYS 118", new ArrayList<>(Arrays.asList("202")),
+            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})),
+            true, new ArrayList<>(Arrays.asList("L2A", "L2B")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
+                    new int[][]{{10,0}, {12,0}, {1,3,5}})),
+            false, new ArrayList<>(Arrays.asList("T2A", "T2C")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
+                    new int[][]{{10,0}, {12,0}, {1,3,5}})));
+    Course math1204 = new Course("MATH 120", new ArrayList<>(Arrays.asList("212", "213")),
+            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}},
+                    new int[][]{{7,0}, {7,30}, {2}})));
+
+    Course cpsc121 = new Course("CPSC 121", new ArrayList<>(Arrays.asList("212")),
+            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})));
+    Course cpsc110 = new Course("CPSC 110", new ArrayList<>(Arrays.asList("212")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,30}, {11,0}, {1,3,5}}, new int[][]{})));
+
+
+
 
     Designer designer1;
     Designer designer2;
     Designer designer3;
     Designer designer4;
+    Designer designer5;
+    Designer designer6;
+    Designer designer7;
+    Designer designer8;
+    Designer designer9;
+    Designer designer10;
 
     ArrayList<Course> list;
     ArrayList<Course> list2;
     ArrayList<Course> list3;
+    ArrayList<Course> list4;
+    ArrayList<Course> list5;
+    ArrayList<Course> list6;
+    ArrayList<Course> list7;
+    ArrayList<Course> list8;
+    ArrayList<Course> list9;
 
     @BeforeEach
     public void setup() {
@@ -63,16 +105,46 @@ public class DesignerTest {
         list3.add(phys1182);
         designer4 = new Designer(list3, 1);
 
+        list4 = new ArrayList<>();
+        list4.add(phys1183);
+        designer5 = new Designer(list4, 1);
+
+        list5 = new ArrayList<>();
+        list5.add(phys1183);
+        list5.add(math1203);
+        designer6 = new Designer(list5, 2);
+
+        list6 = new ArrayList<>();
+        list6.add(math120);
+        designer7 = new Designer(list6, 1);
+
+        list7 = new ArrayList<>();
+        list7.add(phys1184);
+        designer8 = new Designer(list7, 1);
+
+        list8 = new ArrayList<>();
+        list8.add(math1204);
+        list8.add(phys1182);
+        designer9 = new Designer(list8, 2);
+
+        list9 = new ArrayList<>();
+        list9.add(math1203);
+        list9.add(cpsc121);
+        list9.add(cpsc110);
+        designer10 = new Designer(list9, 3);
+
     }
 
     //ArrayList<Scheduler>
 
     @Test
     public void buildSchedulesOnlyMainWithPriorityTest() {
+        //empty test
         designer1.buildSchedulesOnlyMainWithPriority();
         ArrayList<Scheduler> alpha = new ArrayList<>();
         assertTrue(compareSchedulerList(alpha, designer1.getSchedules()));
 
+        //normal test
         designer2.buildSchedulesOnlyMainWithPriority();
         Scheduler scheduler21 = new Scheduler(1);
         Scheduler scheduler22 = new Scheduler(1);
@@ -82,6 +154,7 @@ public class DesignerTest {
         alpha.add(scheduler22);
         assertTrue(compareSchedulerList(alpha, designer2.getSchedules()));
 
+        //Case with some schedule impossibilities
         assertTrue(designer3.buildSchedulesOnlyMainWithPriority());
         Scheduler scheduler31 = new Scheduler(2);
         Scheduler scheduler32 = new Scheduler(2);
@@ -97,8 +170,13 @@ public class DesignerTest {
         alpha2.add(scheduler31);
         alpha2.add(scheduler33);
         assertTrue(compareSchedulerList(alpha2, designer3.getSchedules()));
+
+        //To make sure the code still runs with some edge cases
+        //Will add and remove as the functionality changes
+        assertTrue(designer6.buildSchedulesOnlyMainWithPriority());
     }
 
+    //EFFECTS: tests if two ListOfScheduler objects have the same data
     private boolean compareSchedulerList(ArrayList<Scheduler> alpha, ArrayList<Scheduler> beta) {
         for (int i = 0; i < alpha.size(); i++) {
             if (!(compareScheduler(alpha.get(i), beta.get(i)))) {
@@ -108,6 +186,7 @@ public class DesignerTest {
         return true;
     }
 
+    //EFFECTS: tests if two Scheduler objects have the same data in their schedule
     private boolean compareScheduler(Scheduler alpha, Scheduler beta) {
         String[][] schedule1 = alpha.getSchedule();
         String[][] schedule2 = beta.getSchedule();
@@ -124,14 +203,16 @@ public class DesignerTest {
         return true;
     }
 
-    //TODO Add Labs and Tutorials
     @Test
     public void buildSchedulesWithLabsAndTutorialsTest() {
+        //test empty
         designer1.buildSchedulesOnlyMainWithPriority();
         assertFalse(designer1.buildSchedulesWithLabsAndTutorials());
         ArrayList<Scheduler> alpha = new ArrayList<>();
         assertTrue(compareSchedulerList(alpha, designer1.getSchedules()));
 
+        //test normal
+        //most of this is building alpha2 as a test comparison schedule
         assertTrue(designer4.buildSchedulesOnlyMainWithPriority());
         assertTrue(designer4.buildSchedulesWithLabsAndTutorials());
         Scheduler scheduler1 = new Scheduler(1);
@@ -160,6 +241,24 @@ public class DesignerTest {
         alpha2.add(scheduler3);
         alpha2.add(scheduler4);
         assertTrue(compareSchedulerList(alpha2, designer4.getSchedules()));
+
+        //A lot of possible edge cases to make sure the correct parts of the code run under certain situations
+        //such as No Labs/Tuts, Impossible to Add Labs/Tuts, and some redundant tests that
+        // change as the functionality changes
+        assertTrue(designer5.buildSchedulesOnlyMainWithPriority());
+        assertFalse(designer5.buildSchedulesWithLabsAndTutorials());
+
+        assertTrue(designer7.buildSchedulesOnlyMainWithPriority());
+        assertTrue(designer7.buildSchedulesWithLabsAndTutorials());
+
+        assertTrue(designer8.buildSchedulesOnlyMainWithPriority());
+        assertTrue(designer8.buildSchedulesWithLabsAndTutorials());
+
+        assertTrue(designer9.buildSchedulesOnlyMainWithPriority());
+        assertTrue(designer9.buildSchedulesWithLabsAndTutorials());
+
+        assertTrue(designer10.buildSchedulesOnlyMainWithPriority());
+        assertTrue(designer10.buildSchedulesWithLabsAndTutorials());
     }
 
     //TODO Without Priority?

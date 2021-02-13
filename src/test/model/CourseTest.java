@@ -22,6 +22,7 @@ class CourseTest {
         c3 = setupC3(); // Course with lab and tutorial
     }
 
+    //Initializes the Courses So they can be edited every time and then reset
     private Course setupC1(){
         return new Course("CPSC 210", new ArrayList<>(Arrays.asList("201", "202", "203")),
                 new ArrayList<>(Arrays.asList(new int[][]{{7, 0}, {8, 0}, {1, 3, 5}},
@@ -63,6 +64,7 @@ class CourseTest {
         return true;
     }
 
+    //All the tests are self explanatory and work pretty straightforwardly
     @Test
     public void getLabTests() {
         assertFalse(c1.getHasLab());
@@ -74,6 +76,8 @@ class CourseTest {
         assertTrue(compareLists(new ArrayList<>(Arrays.asList("L2A", "L2B", "L2C")), c3.getLabNames()));
 
         assertEquals(new HashMap<>(), c1.getLabTimes());
+        //.get(X)[X][X] will appear often because testing for every separate case will largely be useless as the
+        // specific values of X are what primarily change
         assertEquals(new ArrayList<>(c2.getLabTimes().values()).get(0)[0][0],
                 new int[][]{{10,0}, {12,0}, {1,3,5}}[0][0]);
         assertEquals(new ArrayList<>(c3.getLabTimes().values()).get(0)[1][1],

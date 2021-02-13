@@ -27,6 +27,7 @@ public class Scheduler {
         this.currentCourses = copySchedule.getCurrentCourses();
     }
 
+    //EFFECTS: makes a deepCopy of a Schedule
     public String[][] scheduleDeepCopy(String[][] schedulePrev) {
         String[][] scheduleNew = new String[2 * 14][5];
         for (int i = 0; i < schedulePrev.length; i++) {
@@ -36,6 +37,8 @@ public class Scheduler {
         }
         return scheduleNew;
     }
+
+    //EFFECTS: makes a deepCopy of courses in a chedule
     public String[] coursesInScheduleDeepCopy(String[] coursesInSchedulePrev) {
         String[] coursesInScheduleNew = new String[coursesInSchedulePrev.length];
         for (int i = 0; i < coursesInSchedulePrev.length; i++) {
@@ -95,6 +98,8 @@ public class Scheduler {
         return false;
     }
 
+    //MODIFIES: this
+    //EFFECTS: Adds a course to the Courses in Schedule and increments the count
     private void addToCoursesInSchedule(String course) {
         coursesInSchedule[currentCourses] = course;
         currentCourses++;
@@ -137,6 +142,7 @@ public class Scheduler {
         return this.schedule; //for the sake of tests
     }
 
+    //EFFECTS: returns true if a class is able to be added to a schedule
     public boolean isOpenForClass(int[] days, int[][] times) {
         int eta2 = EARLIEST_TIME_ALLOWED * 2;
 

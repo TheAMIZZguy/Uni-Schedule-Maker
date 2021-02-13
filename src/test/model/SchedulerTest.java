@@ -45,6 +45,7 @@ public class SchedulerTest {
         emptySched = new String[14*2][5];
     }
 
+    //Tests are mostly self explanatory, a lot of repetition is manually making schedules to compare
     @Test
     public void getScheduleTest(){
         assertEquals(14*2, sched1.getSchedule().length);
@@ -89,27 +90,19 @@ public class SchedulerTest {
         assertEquals(null, sched1.getCoursesInSchedule()[0]);
         //testing adding a class to empty
         assertTrue(sched1.addCourseToSchedule(math120));
-        //assertTrue(isEqualSchedule(courseScheduleHelper(math120, 0), sched1.getSchedule()));
         assertTrue(isSameArray(new String[]{"MATH 120", null, null, null, null}, sched1.getCoursesInSchedule()));
-        //assertEquals(new String[]{"MATH 120", null, null, null, null}, sched1.getCoursesInSchedule());
 
         //testing adding a class to a schedule with a class
         assertTrue(sched1.addCourseToSchedule(stat200));
-        //assertTrue(isEqualSchedule(courseScheduleHelper(stat200, 0), sched1.getSchedule()));
         assertTrue(isSameArray(new String[]{"MATH 120", "STAT 200", null, null, null}, sched1.getCoursesInSchedule()));
 
         //testing adding a class to a schedule with overlapping hours
         assertFalse(sched1.addCourseToSchedule(stat201));
-        //assertTrue(isEqualSchedule(courseScheduleHelper(stat201, 0), sched1.getSchedule()));
         assertTrue(isSameArray(new String[]{"MATH 120", "STAT 200", null, null, null}, sched1.getCoursesInSchedule()));
 
         //testing adding a class with labs/tutorials to a schedule with other classes
         assertTrue(sched1.addCourseToSchedule(phys118));
-        //courseScheduleHelperLab(phys118, 1);
-        //courseScheduleHelperLab(phys118, 1);
-        //assertTrue(isEqualSchedule(courseScheduleHelper(phys118, 0), sched1.getSchedule()));
         assertTrue(isSameArray(new String[]{"MATH 120", "STAT 200", "PHYS 118", null, null}, sched1.getCoursesInSchedule()));
-        //assertEquals(new String[]{"MATH 120", "STAT 200", "PHYS 118", null, null}, sched1.getCoursesInSchedule());
     }
 
     @Test
@@ -124,11 +117,12 @@ public class SchedulerTest {
         assertTrue(sched1.addLabOrTutorialToSchedule(name2, times2));
     }
 
-    //TODO
+    /* THESE TESTS WERE MADE REDUNDANT/USELESS AFTER AN IMPROVEMENT, BUT LEFT INCASE THEY MIGHT BE NECESSARY LATER
     @Test
     public void deepCopyTest(){
         assertTrue(false);
     }
+
 
     public String[][] courseScheduleHelper(Course a, int sub) {
         return sched1.addingClassToSchedule(a.getSubClassTimes().get(a.getSubClassNames().get(sub))[1],
@@ -148,6 +142,9 @@ public class SchedulerTest {
                 a.getName() + " " + a.getTutorialNames().get(sub));
     }
 
+     */
+
+    //EFFECTS: compares two schedules of String[][] to see if they are equal
     public boolean isEqualSchedule(String[][] sched1, String[][] sched2) {
         for (int i = 0 ; i < sched1.length; i++) {
             for (int j = 0 ; j < sched1[i].length; j++) {
@@ -161,6 +158,7 @@ public class SchedulerTest {
         return true;
     }
 
+    //EFFECTS: compares two arrays of String[] to see if they are equal
     public boolean isSameArray(String[] arr1, String[] arr2) {
         for (int i = 0 ; i < arr1.length; i++) {
             if (arr1[i] != null && arr2[i] != null) {

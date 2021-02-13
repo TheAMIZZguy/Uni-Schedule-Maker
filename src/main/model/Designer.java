@@ -6,6 +6,17 @@ import java.util.Arrays;
 
 public class Designer {
 
+    /*a class that makes schedules
+     * 1) OBTAIN ALL THE CLASSES THAT THEY WANT
+     * 2) ADD ALL THOSE CLASSES THROUGH LOOPS - NO LABS OR TUTORIALS
+     * 3) ADDING LABS/ TUTS
+     *   3.1) IN EACH SCHEDULE GET THE COURSES FROM THE STRING[] COURSES IN SCHEDULER.JAVA AND
+     *          THEN GET EACH COURSE,
+     *   3.2) IF IT HAS A LAB, THEN A FOR LOOP OF (LAB IN LABS), WHERE THE SCHEDULER
+     *          ADDS THE LAB TO THE SCHEDULE IF POSSIBLE, resulting in several more schedules
+     *   3.3) DO SAME THING WITH TUTORIALS, BUT ON THE LAB ADDED SCHEDULES
+     */
+
     private ArrayList<Scheduler> listOfPossibilities;
     private ArrayList<Course> coursesToTake;
 
@@ -18,6 +29,7 @@ public class Designer {
 
     private boolean hasAddedLabsAndTutorials;
 
+    //REQUIRES: maxCourses to be a positive integer
     public Designer(ArrayList<Course> courses, int maxCourses) {
         this.coursesToTake = courses;
         this.maxCourses = maxCourses;
@@ -35,9 +47,11 @@ public class Designer {
     }
 
     //getters
+    /* Method wasn't necessary, but I might want to implement it later
     public ArrayList<Course> getCourses() {
         return coursesToTake;
     }
+    */
 
     public ArrayList<Scheduler> getSchedules() {
         if (hasAddedLabsAndTutorials) {
@@ -47,6 +61,7 @@ public class Designer {
     }
 
     //setters
+    /*Methods weren't necessary, but I might want to implement it later
     public void addCourse(Course c) {
         coursesToTake.add(c);
     }
@@ -54,8 +69,10 @@ public class Designer {
     public void addSchedule(Scheduler s) {
         listOfPossibilities.add(s);
     }
+    */
 
-    /*  THIS CLASS DOES STEPS 1-3
+
+    /*  THIS CLASS DOES STEPS 1-3. STEPS 4-6 NOT IMPLEMENTED FOR SPEED REASONS
      * 1) Takes the first course and makes schedules equal to all the subcourses it has
      * 2) Then to each of those it adds all the subcourses of the next class
      * 3) Repeat until done
@@ -65,6 +82,10 @@ public class Designer {
      * 7) Add Labs and Tutorials
      * Note: If a class doesn't fit then it isn't added
      */
+
+
+    //MODIFIES: this
+    //EFFECTS: Goes through classes in order and adds them to schedule if possible in a tree-like fashion
     public boolean buildSchedulesOnlyMainWithPriority() {
         if (coursesToTake.size() == 0) {
             return false;
@@ -77,18 +98,20 @@ public class Designer {
         int subtractor = 1;
         while (tierXClasses[tierXClasses.length - subtractor].size() == 0) {
             subtractor++;
-            if (tierXClasses.length - subtractor < 0) {
-                break;
-            }
+            //if (tierXClasses.length - subtractor < 0) {
+            //    break;
+            //}
         }
         if (tierXClasses[tierXClasses.length - subtractor].size() != 0) {
             this.listOfPossibilities = tierXClasses[tierXClasses.length - subtractor];
-            return true;
+            //return true;
         }
-
-        return false;
+        return true; // I couldn't think of a test that would return false at this point
+        //return false;
     }
 
+    //MODIFIES: this
+    //EFFECTS: Gets a deepCopy of a class with a different first hour and then adds it
     private void buildScheduleLoop(int i) {
         String pseudoName;
         Course pseudoCourse;
@@ -106,6 +129,9 @@ public class Designer {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: Creates new schedules by adding this class to other possible classes in the previous layer of the tree
+    //          Adds them in the next layer
     private void addPseudoCourse(int i, Course pseudoCourse) {
         if (i == 0) {
             Scheduler schedule1 = new Scheduler(maxCourses);
@@ -115,9 +141,9 @@ public class Designer {
             int subtractor = 1;
             while (tierXClasses[i - subtractor].size() == 0) {
                 subtractor++;
-                if (i - subtractor < 0) {
-                    break;
-                }
+                //if (i - subtractor < 0) {
+                //    break;
+                //}
             }
             if (tierXClasses[i - subtractor].size() != 0) {
                 for (int k = 0; k < tierXClasses[i - subtractor].size(); k++) {
@@ -147,6 +173,8 @@ public class Designer {
      * 5) If there is at least one schedule at the end, success.
      * 2) For the first lab of the first class
      */
+    //MODIFIES: this
+    //EFFECTS: Changes the current listOfPossibilites to one with labs
     public boolean buildSchedulesWithLabsAndTutorials() {
         if (!(listOfPossibilities != null)) {
             return false;
@@ -154,35 +182,47 @@ public class Designer {
         tierXClassesWithLT[0] = deepCopyLoP();
         int currentTier = 1;
 
-        boolean success = false;
-
+        boolean successLab = false;
+        boolean hadLab = false;
         for (int i = 0; i < coursesToTake.size(); i++) {
             Course course = coursesToTake.get(i);
             if (course.getHasLab()) {
+                hadLab = true;
                 if (fillNextTierWithLabs(course, currentTier)) {
-                    success = true;
+                    successLab = true;
                 }
+                currentTier++;
             }
-            currentTier++;
         }
+        if (!hadLab) {
+            successLab = true;
+        }
+
+        boolean successTutorial = false;
+        boolean hadTutorial = false;
         for (int i = 0; i < coursesToTake.size(); i++) {
             Course course = coursesToTake.get(i);
             if (course.getHasTutorial()) {
+                hadTutorial = true;
                 if (fillNextTierWithTutorials(course, currentTier)) {
-                    success = true;
+                    successTutorial = true;
                 }
+                currentTier++;
             }
-            currentTier++;
+        }
+        if (!hadTutorial) {
+            successTutorial = true;
         }
 
-        if (success) {
+        if (successLab && successTutorial) {
             this.listOfPossibilitiesWithLT = tierXClassesWithLT[currentTier - 1];
             hasAddedLabsAndTutorials = true;
         }
 
-        return success;
+        return (successLab && successTutorial);
     }
 
+    //EFFECTS: creates a new deepCopy of the listOfPossibilities
     private ArrayList<Scheduler> deepCopyLoP() {
         ArrayList<Scheduler> copiedLoP = new ArrayList<>();
 
@@ -194,6 +234,9 @@ public class Designer {
         return copiedLoP;
     }
 
+    //REQUIRES: curTier to be a non-zero layer of the tree
+    //MODIFIES: this
+    //EFFECTS: fills next later of tree with labs
     private boolean fillNextTierWithLabs(Course course, int curTier) {
         String name = course.getName();
         boolean addedAtLeastOne = false;
@@ -209,6 +252,9 @@ public class Designer {
         return addedAtLeastOne;
     }
 
+    //REQUIRES: curTier to be a non-zero layer of the tree
+    //MODIFIES: this
+    //EFFECTS: fills next later of tree with tutorials
     private boolean fillNextTierWithTutorials(Course course, int curTier) {
         String name = course.getName();
         boolean addedAtLeastOne = false;
@@ -225,6 +271,9 @@ public class Designer {
         return addedAtLeastOne;
     }
 
+    //REQUIRES: curTier to be a non-zero layer of the tree, times to be in the correct format from Course
+    //MODIFIES: this
+    //EFFECTS: actually does the adding of the labs and tutorials
     private boolean fillNextTierWithLabOrTutorial(String name, String nameOfLab, int[][] times, int curTier) {
         boolean returnBool = false;
         ArrayList<Scheduler> prevScheds = new ArrayList<>(tierXClassesWithLT[curTier - 1]);
@@ -235,25 +284,14 @@ public class Designer {
                     tierXClassesWithLT[curTier].add(newSched);
                     returnBool = true;
                 }
-            } else {
+            } /*else {
                 Scheduler newSched = new Scheduler(prevScheds.get(i));
                 tierXClassesWithLT[curTier].add(newSched);
                 returnBool = true;
-            }
+            }*/ // With how the tree is currently build, it will be impossible for this to run, but
+            // a future improvement might change that so this is kept for safety
         }
-
         return returnBool;
     }
 
-
-    /*a class that makes schedules
-     * 1) OBTAIN ALL THE CLASSES THAT THEY WANT
-     * 2) ADD ALL THOSE CLASSES THROUGH LOOPS - NO LABS OR TUTORIALS
-     * 3) ADDING LABS/ TUTS
-     *   3.1) IN EACH SCHEDULE GET THE COURSES FROM THE STRING[] COURSES IN SCHEDULER.JAVA AND
-     *          THEN GET EACH COURSE,
-     *   3.2) IF IT HAS A LAB, THEN A FOR LOOP OF (LAB IN LABS), WHERE THE SCHEDULER
-     *          ADDS THE LAB TO THE SCHEDULE IF POSSIBLE, resulting in several more schedules
-     *   3.3) DO SAME THING WITH TUTORIALS, BUT ON THE LAB ADDED SCHEDULES
-     */
 }
