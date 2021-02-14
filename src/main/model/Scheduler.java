@@ -66,7 +66,7 @@ public class Scheduler {
     //MODIFIES: this
     //EFFECTS: Tries to add a course to the schedule, returns true if successful, false otherwise
     public boolean addCourseToSchedule(Course a) {
-        if (!Arrays.asList(coursesInSchedule).contains(a.getName()) && currentCourses < coursesInSchedule.length) {
+        if (!Arrays.asList(coursesInSchedule).contains(a.getName()) || currentCourses < coursesInSchedule.length) {
             for (int i = 0; i < a.getSubClassNames().size(); i++) {
                 //the index of 2 is because that is the location of days, the 0 to 2 is the times
                 if (isOpenForClass(a.getSubClassTimes().get(a.getSubClassNames().get(i))[2],
