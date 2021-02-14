@@ -24,7 +24,7 @@ public class UserInteractionConsole {
 
     //EFFECTS: Initializes the communication with the user and instantiates course info
     public UserInteractionConsole() {
-        listOfCourses = new ArrayList<Course>();
+        listOfCourses = new ArrayList<>();
 
         System.out.println("Hello! Welcome to your personalized Schedule Planner");
         System.out.println("To start off, Up to how many classes or events would you like to Add?");
@@ -73,8 +73,8 @@ public class UserInteractionConsole {
         return returnBool;
     }
 
-    private Boolean simpleDesigner(ArrayList<Course> listOfCoursesForDesigner) {
-        Boolean returnBool = true;
+    private boolean simpleDesigner(ArrayList<Course> listOfCoursesForDesigner) {
+        boolean returnBool = true;
         designer = new Designer(listOfCoursesForDesigner, maxClassesAtOnce);
         if (designer.buildSchedulesOnlyMainWithPriority() && designer.buildSchedulesWithLabsAndTutorials()) {
             ArrayList<Scheduler> schedules = designer.getSchedules();
@@ -137,11 +137,11 @@ public class UserInteractionConsole {
     }
 
     //EFFECTS: creates n arrays where each one is the same but with a different starting point, returns true if success
-    public Boolean createSemiPermutationSchedule() {
+    public boolean createSemiPermutationSchedule() {
 
         listOfCoursesPermutation = semiPermutationOfCourseList(listOfCourses);
 
-        Boolean returnBool = true;
+        boolean returnBool = true;
         for (int i = 0; i < listOfCoursesPermutation.size(); i++) {
             if (!simpleDesigner(listOfCoursesPermutation.get(i))) {
                 returnBool = false;
@@ -237,14 +237,14 @@ public class UserInteractionConsole {
         subClassNames = getNames(obtainIntSafely(1, 999, "Enter int > 0"), "Class");
         subClassTimes = getTimes(name, subClassNames);
 
-        Boolean response1 = yesNoQuestion("Does this class have a separate lab component?");
+        boolean response1 = yesNoQuestion("Does this class have a separate lab component?");
         if (response1) {
             System.out.println("How many Labs does this have?");
             labNames = getNames(obtainIntSafely(1, 999, "Enter int > 0"), "Lab");
             labTimes = getTimes(name, labNames);
         }
 
-        Boolean response2 = yesNoQuestion("Does this class have a separate tutorial component?");
+        boolean response2 = yesNoQuestion("Does this class have a separate tutorial component?");
         if (response2) {
             System.out.println("How many Tutorials does this have?");
             tutorialNames = getNames(obtainIntSafely(1, 999, "Enter int > 0"), "Tutorial");
@@ -328,7 +328,7 @@ public class UserInteractionConsole {
         System.out.println("At what time does " + name + " " + subClass + " " + startend);
         System.out.println("Use Military Time to nearest half hour (Example: 5:30pm would be 1730))");
         int num = 0;
-        if (startend == "start?") {
+        if (startend.equals("start?")) {
             System.out.println("Earliest a class can start is 700 and the latest is 2030");
             num = obtainIntSafely(700, 2030, "That is an invalid input");
         } else {
@@ -343,12 +343,9 @@ public class UserInteractionConsole {
 
         if (numString.toCharArray()[numString.toCharArray().length - 2] == '3') {
             returnMins = 30;
-        } else {
-            returnMins = 0;
         }
 
-
-        return new int[]{returnHour, returnHour};
+        return new int[]{returnHour, returnMins};
     }
 
     //EFFECTS: safely guides the user through inputing an integer between a range of numbers
