@@ -3,6 +3,7 @@ package ui;
 import java.util.Scanner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import model.Course;
 import model.Designer;
@@ -58,11 +59,10 @@ public class UserInteractionConsole {
                 returnBool = simpleDesigner(listOfCourses);
                 break;
             case 2:
-                //TODO Permutation
                 returnBool = createPermutationSchedule();
                 break;
             case 3:
-                //TODO Semi-Permutation
+                returnBool = createSemiPermutationSchedule();
                 break;
             default:
                 break;
@@ -94,7 +94,6 @@ public class UserInteractionConsole {
         return obtainIntSafely(1, max, ("Type a number between 1 and " + max));
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////
     public Boolean createPermutationSchedule() {
         listOfCoursesPermutation = permutationOfCourseList(listOfCourses);
 
@@ -107,6 +106,9 @@ public class UserInteractionConsole {
         return returnBool;
     }
 
+    //These next two functions were pulled from StackOverflow in order to get a permutation of a list,
+    //I modified it to work with the courses
+    //EFFECTS: make an arraylist of arraylists of every permutation of the arraylist
     public ArrayList<ArrayList<Course>> permutationOfCourseList(ArrayList<Course> originalCourseList) {
         ArrayList<ArrayList<Course>> results = new ArrayList<ArrayList<Course>>();
         if (originalCourseList == null || originalCourseList.size() == 0) {
@@ -117,6 +119,8 @@ public class UserInteractionConsole {
         return results;
     }
 
+    //EFFECTS: make an arraylist of arraylists of every permutation of the arraylist.
+    //     Does so by recursively switching values around.
     public void recursivePermuter(ArrayList<Course> originalCourseList,
                                   ArrayList<ArrayList<Course>> results, ArrayList<Course> result) {
         if (originalCourseList.size() == result.size()) {
@@ -131,10 +135,38 @@ public class UserInteractionConsole {
             }
         }
     }
-    //////////////////////////////////////////////////////////////////////////////////////////
 
-    public void createSemiPermutationSchedule() {
-        //TODO
+    //EFFECTS: creates n arrays where each one is the same but with a different starting point, returns true if success
+    public Boolean createSemiPermutationSchedule() {
+
+        listOfCoursesPermutation = semiPermutationOfCourseList(listOfCourses);
+
+        Boolean returnBool = true;
+        for (int i = 0; i < listOfCoursesPermutation.size(); i++) {
+            if (!simpleDesigner(listOfCoursesPermutation.get(i))) {
+                returnBool = false;
+            }
+        }
+        return returnBool;
+    }
+
+    //EFFECTS: creates n arrays where each one is the same but with a different starting point
+    private ArrayList<ArrayList<Course>> semiPermutationOfCourseList(ArrayList<Course> originalCourseList) {
+        ArrayList<ArrayList<Course>> results = new ArrayList<ArrayList<Course>>();
+        if (originalCourseList == null || originalCourseList.size() == 0) {
+            return results;
+        }
+
+        for (int i = 0; i < originalCourseList.size(); i++) {
+            ArrayList<Course> tempList = new ArrayList<>();
+            tempList = new ArrayList<>(originalCourseList.subList(i, originalCourseList.size()));
+            for (int j = 0; j < i; j++) {
+                tempList.add(originalCourseList.get(j));
+            }
+            results.add(tempList);
+        }
+
+        return results;
     }
 
     //EFFECTS: Prints all the schedules in scheduleList
@@ -143,6 +175,25 @@ public class UserInteractionConsole {
             System.out.println(" ____ ");
             printSchedule(scheduleList.get(i));
             System.out.println(" ____ ");
+        }
+    }
+
+    //EFFECTS: Prints all the schedules in scheduleList that have the classes the user wants
+    public void showAllSchedulesFiltered() {
+        ArrayList<String> filters = new ArrayList<>();
+        while (yesNoQuestion("Would you like to filter for another class?")) {
+            System.out.println("What is the Base name of the class you want to filter for "
+                    + "(eg. CPSC 210, NOT CPSC 210 201)");
+            filters.add(scanner.nextLine());
+        }
+        for (int i = 0; i < scheduleList.size(); i++) {
+            for (String s : filters) {
+                if (Arrays.stream(scheduleList.get(i).getCoursesInSchedule()).anyMatch(s::equals)) {
+                    System.out.println(" ____ ");
+                    printSchedule(scheduleList.get(i));
+                    System.out.println(" ____ ");
+                }
+            }
         }
     }
 
@@ -210,7 +261,7 @@ public class UserInteractionConsole {
     }
 
     //EFFECTS: safely guides the user through answering a yes/no question
-    private boolean yesNoQuestion(String message) {
+    public boolean yesNoQuestion(String message) {
         System.out.println(message + " y/n");
         String answer = scanner.nextLine();
         while (!(answer.equals("y") || (answer.equals("n")))) {
@@ -241,7 +292,7 @@ public class UserInteractionConsole {
             } else if (type.equals("Lab")) {
                 System.out.println("Name of Lab " + i + " (eg. CPSC 210 L2A Lab Name would be L2A)");
             } else {
-                System.out.println("Name of Tutorial " + i + " (eg. CPSC 210 T2A Lab Name would be T2A)");
+                System.out.println("Name of Tutorial " + i + " (eg. CPSC 210 T2A Tutorial Name would be T2A)");
             }
             subNames.add(scanner.nextLine());
         }
@@ -301,7 +352,7 @@ public class UserInteractionConsole {
     }
 
     //EFFECTS: safely guides the user through inputing an integer between a range of numbers
-    private int obtainIntSafely(int min, int max, String failMessage) {
+    public int obtainIntSafely(int min, int max, String failMessage) {
         int num = 0;
         boolean validInput = false;
         while (!validInput) {

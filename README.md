@@ -28,7 +28,7 @@ planning where you might want multiple things to happen at a specific panel, but
 - As a user, I want to be able to add extra parts to a class (if it has a lab or tutorial)
 - As a user, I want to be able to view the List of Possible Schedules (Lop)
 - As a user, I want to be able to choose how to add schedules to the LoP
-- As a user, I want to be able to filter through completed schedules *
+- As a user, I want to be able to filter through completed schedules
 - (future features below)
 - As a user, I want to be able to delete a schedule from my LoP
 - As a user, I want to be able to view the courses individually

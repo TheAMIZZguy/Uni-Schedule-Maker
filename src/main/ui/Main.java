@@ -10,7 +10,11 @@ public class Main {
 
         if (interactable.generate()) {
             System.out.println("Showing all Schedules");
-            interactable.showAllSchedules();
+            if (interactable.yesNoQuestion("Would you want to filter through results?")) {
+                interactable.showAllSchedulesFiltered();
+            } else {
+                interactable.showAllSchedules();
+            }
         }
     }
 
