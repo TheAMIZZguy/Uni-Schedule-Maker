@@ -64,7 +64,13 @@ public class DesignerTest {
     Course cpsc110 = new Course("CPSC 110", new ArrayList<>(Arrays.asList("212")),
             new ArrayList<>(Arrays.asList(new int[][]{{10,30}, {11,0}, {1,3,5}}, new int[][]{})));
 
-
+    Course phys1185 = new Course("PHYS 118", new ArrayList<>(Arrays.asList("202")),
+            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})),
+            true, new ArrayList<>(Arrays.asList("L2A", "L2B")),
+            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})),
+            false, new ArrayList<>(Arrays.asList("T2A", "T2C")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
+                    new int[][]{{10,0}, {12,0}, {1,3,5}})));
 
 
     Designer designer1;
@@ -77,6 +83,8 @@ public class DesignerTest {
     Designer designer8;
     Designer designer9;
     Designer designer10;
+    Designer designer11;
+    Designer designer12;
 
     ArrayList<Course> list;
     ArrayList<Course> list2;
@@ -87,6 +95,8 @@ public class DesignerTest {
     ArrayList<Course> list7;
     ArrayList<Course> list8;
     ArrayList<Course> list9;
+    ArrayList<Course> list11;
+    ArrayList<Course> list12;
 
     @BeforeEach
     public void setup() {
@@ -133,6 +143,15 @@ public class DesignerTest {
         list9.add(cpsc110);
         designer10 = new Designer(list9, 3);
 
+        list11 = new ArrayList<>();
+        list11.add(phys1185);
+        designer11 = new Designer(list11, 1);
+
+        list12 = new ArrayList<>();
+        list12.add(math1203);
+        list12.add(cpsc121);
+        list12.add(cpsc110);
+        designer12 = new Designer(list12, 1);
     }
 
     //ArrayList<Scheduler>
@@ -259,6 +278,9 @@ public class DesignerTest {
 
         assertTrue(designer10.buildSchedulesOnlyMainWithPriority());
         assertTrue(designer10.buildSchedulesWithLabsAndTutorials());
+
+        assertTrue(designer11.buildSchedulesOnlyMainWithPriority());
+        assertFalse(designer11.buildSchedulesWithLabsAndTutorials());
     }
 
 

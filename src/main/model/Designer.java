@@ -102,10 +102,11 @@ public class Designer {
             //    break;
             //}
         }
-        if (tierXClasses[tierXClasses.length - subtractor].size() != 0) {
-            this.listOfPossibilities = tierXClasses[tierXClasses.length - subtractor];
-            //return true;
-        }
+        // reimplement this if-statement if the code above needs to be uncommented
+        //if (tierXClasses[tierXClasses.length - subtractor].size() != 0) {
+        this.listOfPossibilities = tierXClasses[tierXClasses.length - subtractor];
+        //return true;
+        //}
         return true; // I couldn't think of a test that would return false at this point
         //return false;
     }
@@ -145,14 +146,15 @@ public class Designer {
                 //    break;
                 //}
             }
-            if (tierXClasses[i - subtractor].size() != 0) {
-                for (int k = 0; k < tierXClasses[i - subtractor].size(); k++) {
-                    Scheduler deepCopy = new Scheduler(tierXClasses[i - subtractor].get(k));
-                    if (deepCopy.addCourseToSchedule(pseudoCourse)) {
-                        tierXClasses[i].add(deepCopy);
-                    }
+            // reimplement this if-statement if the code above needs to be uncommented
+            //if (tierXClasses[i - subtractor].size() != 0) {
+            for (int k = 0; k < tierXClasses[i - subtractor].size(); k++) {
+                Scheduler deepCopy = new Scheduler(tierXClasses[i - subtractor].get(k));
+                if (deepCopy.addCourseToSchedule(pseudoCourse)) {
+                    tierXClasses[i].add(deepCopy);
                 }
             }
+            //}
         }
     }
 
@@ -207,12 +209,12 @@ public class Designer {
             successTutorial = true;
         }
 
-        if (successLab && successTutorial) {
+        if (!(!successLab || !successTutorial)) {
             this.listOfPossibilitiesWithLT = tierXClassesWithLT[currentTier - 1];
             hasAddedLabsAndTutorials = true;
         }
 
-        return (successLab && successTutorial);
+        return (!(!successLab || !successTutorial));
     }
 
     //REQUIRES: currentTier to be a non-zero index of the list
@@ -253,11 +255,11 @@ public class Designer {
     private ArrayList<Scheduler> deepCopyLoP() {
         ArrayList<Scheduler> copiedLoP = new ArrayList<>();
 
-        if (listOfPossibilities != null) {
-            for (int i = 0; i < listOfPossibilities.size(); i++) {
-                copiedLoP.add(new Scheduler(listOfPossibilities.get(i)));
-            }
+        //if (listOfPossibilities != null) {
+        for (int i = 0; i < listOfPossibilities.size(); i++) {
+            copiedLoP.add(new Scheduler(listOfPossibilities.get(i)));
         }
+        //}
         return copiedLoP;
     }
 
@@ -305,17 +307,18 @@ public class Designer {
         boolean returnBool = false;
         ArrayList<Scheduler> prevScheds = new ArrayList<>(tierXClassesWithLT[curTier - 1]);
         for (int i = 0; i < prevScheds.size(); i++) {
-            if (Arrays.asList(prevScheds.get(i).getCoursesInSchedule()).contains(name)) {
-                Scheduler newSched = new Scheduler(prevScheds.get(i));
-                if (newSched.addLabOrTutorialToSchedule(name + " " + nameOfLab, times)) {
-                    tierXClassesWithLT[curTier].add(newSched);
-                    returnBool = true;
-                }
-            } /*else {
+            //if (Arrays.asList(prevScheds.get(i).getCoursesInSchedule()).contains(name)) {
+            Scheduler newSched = new Scheduler(prevScheds.get(i));
+            if (newSched.addLabOrTutorialToSchedule(name + " " + nameOfLab, times)) {
+                tierXClassesWithLT[curTier].add(newSched);
+                returnBool = true;
+            }
+            /*} else {
                 Scheduler newSched = new Scheduler(prevScheds.get(i));
                 tierXClassesWithLT[curTier].add(newSched);
                 returnBool = true;
-            }*/ // With how the tree is currently build, it will be impossible for this to run, but
+            }*/
+            // With how the tree is currently build, it will be impossible for the else to run, but
             // a future improvement might change that so this is kept for safety
         }
         return returnBool;
