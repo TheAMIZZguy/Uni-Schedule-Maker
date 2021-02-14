@@ -45,19 +45,23 @@ public class UserInteractionConsole {
         }
     }
 
-    public void generate() {
+    public boolean generate() {
         int option = optionQuestion("Would you like to compute a list of possible schedules "
                 + " via simple tree (1), permutation tree (2), or semi-permutation tree (3). "
                 + "\n WARNING: PERMUTATION TREE CAN BE VERY SLOW AND SHOULD ONLY BE "
                 + "USED WITH A SMALL SELECTION OF CLASSES", 3);
 
+        Boolean returnBool = true;
 
         switch (option) {
             case 1:
                 designer = new Designer(listOfCourses, maxClassesAtOnce);
-                designer.buildSchedulesOnlyMainWithPriority();
-                designer.buildSchedulesWithLabsAndTutorials();
-                scheduleList = designer.getSchedules();
+                if (designer.buildSchedulesOnlyMainWithPriority() &&  designer.buildSchedulesWithLabsAndTutorials()) {
+                    scheduleList = designer.getSchedules();
+                } else {
+                    System.out.println("Impossible to make a schedule");
+                    returnBool = false;
+                }
                 break;
             case 2:
                 //TODO Permutation
@@ -67,8 +71,8 @@ public class UserInteractionConsole {
                 break;
             default:
                 break;
-
         }
+        return returnBool;
     }
 
     private int optionQuestion(String message, int max) {
@@ -89,7 +93,7 @@ public class UserInteractionConsole {
     }
 
     private void printSchedule(Scheduler scheduler) {
-        System.out.println("\tMonday \t Tuesday \t Wednesday \t Thursday \t Friday \n");
+        System.out.println("  \tMonday      \t Tuesday    \t Wednesday  \t Thursday   \t Friday     \n");
         String[][] scheduleToPrint = scheduler.getSchedule();
         for (int i = 0; i < scheduleToPrint.length; i++) {
             if (i % 2 == 0) {
@@ -101,7 +105,7 @@ public class UserInteractionConsole {
                 if (scheduleToPrint[i][j] != null) {
                     System.out.print(scheduleToPrint[i][j] + "\t");
                 } else {
-                    System.out.print("\t");
+                    System.out.print("            \t");
                 }
             }
             System.out.println();
