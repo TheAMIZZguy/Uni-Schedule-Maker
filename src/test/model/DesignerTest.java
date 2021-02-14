@@ -66,7 +66,7 @@ public class DesignerTest {
 
     Course phys1185 = new Course("PHYS 118", new ArrayList<>(Arrays.asList("202")),
             new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})),
-            true, new ArrayList<>(Arrays.asList("L2A", "L2B")),
+            true, new ArrayList<>(Arrays.asList("L2A")),
             new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})),
             false, new ArrayList<>(Arrays.asList("T2A", "T2C")),
             new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
@@ -281,6 +281,9 @@ public class DesignerTest {
 
         assertTrue(designer11.buildSchedulesOnlyMainWithPriority());
         assertFalse(designer11.buildSchedulesWithLabsAndTutorials());
+
+        assertTrue(designer12.buildSchedulesOnlyMainWithPriority());
+        assertTrue(designer12.buildSchedulesWithLabsAndTutorials());
     }
 
 

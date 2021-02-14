@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Arrays;
+import java.lang.Math;
 
 public class Designer {
 
@@ -91,7 +92,7 @@ public class Designer {
             return false;
         }
 
-        for (int i = 0; i < coursesToTake.size(); i++) {
+        for (int i = 0; i < Math.min(coursesToTake.size(), maxCourses); i++) {
             buildScheduleLoop(i);
         }
 
