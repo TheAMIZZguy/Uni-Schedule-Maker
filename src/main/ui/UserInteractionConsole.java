@@ -1,11 +1,8 @@
 package ui;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Arrays;
 
 import model.Course;
 import model.Designer;
@@ -19,11 +16,12 @@ public class UserInteractionConsole {
     Designer designer;
 
     ArrayList<ArrayList<Course>> listOfCoursesPermutation;
-    ArrayList<Scheduler> scheduleList;
+    ArrayList<Scheduler> scheduleList = new ArrayList<>();
 
     int numOfClasses;
     int maxClassesAtOnce;
 
+    //EFFECTS: Initializes the communication with the user and instantiates course info
     public UserInteractionConsole() {
         listOfCourses = new ArrayList<Course>();
 
@@ -45,26 +43,23 @@ public class UserInteractionConsole {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: Generates a list of schedules with a chosen option
     public boolean generate() {
         int option = optionQuestion("Would you like to compute a list of possible schedules "
                 + " via simple tree (1), permutation tree (2), or semi-permutation tree (3). "
                 + "\n WARNING: PERMUTATION TREE CAN BE VERY SLOW AND SHOULD ONLY BE "
-                + "USED WITH A SMALL SELECTION OF CLASSES", 3);
+                + "USED WITH A SMALL SELECTION OF CLASSES \n Option 3 is Recommended", 3);
 
         Boolean returnBool = true;
 
         switch (option) {
             case 1:
-                designer = new Designer(listOfCourses, maxClassesAtOnce);
-                if (designer.buildSchedulesOnlyMainWithPriority() &&  designer.buildSchedulesWithLabsAndTutorials()) {
-                    scheduleList = designer.getSchedules();
-                } else {
-                    System.out.println("Impossible to make a schedule");
-                    returnBool = false;
-                }
+                returnBool = simpleDesigner(listOfCourses);
                 break;
             case 2:
                 //TODO Permutation
+                returnBool = createPermutationSchedule();
                 break;
             case 3:
                 //TODO Semi-Permutation
@@ -72,18 +67,77 @@ public class UserInteractionConsole {
             default:
                 break;
         }
+        if (!returnBool) {
+            System.out.println("Impossible to make a schedule");
+        }
         return returnBool;
     }
 
+    private Boolean simpleDesigner(ArrayList<Course> listOfCoursesForDesigner) {
+        Boolean returnBool = true;
+        designer = new Designer(listOfCoursesForDesigner, maxClassesAtOnce);
+        if (designer.buildSchedulesOnlyMainWithPriority() && designer.buildSchedulesWithLabsAndTutorials()) {
+            ArrayList<Scheduler> schedules = designer.getSchedules();
+            for (int i = 0; i < schedules.size(); i++) {
+                this.scheduleList.add(schedules.get(i));
+            }
+        } else {
+            returnBool = false;
+        }
+        return returnBool;
+    }
+
+    //REQUIRES: max to be a non-negative integer
+    //EFFECTS: implements safe inputs for options method
     private int optionQuestion(String message, int max) {
         System.out.println(message + " (enter the number without parenthesis)");
-        return obtainIntSafely(0, max, ("Type a number between 0 and " + max));
+        return obtainIntSafely(1, max, ("Type a number between 1 and " + max));
     }
 
-    public void createPermutationSchedule() {
+    ////////////////////////////////////////////////////////////////////////////////////
+    public Boolean createPermutationSchedule() {
+        listOfCoursesPermutation = permutationOfCourseList(listOfCourses);
 
+        Boolean returnBool = true;
+        for (int i = 0; i < listOfCoursesPermutation.size(); i++) {
+            if (!simpleDesigner(listOfCoursesPermutation.get(i))) {
+                returnBool = false;
+            }
+        }
+        return returnBool;
     }
 
+    public ArrayList<ArrayList<Course>> permutationOfCourseList(ArrayList<Course> originalCourseList) {
+        ArrayList<ArrayList<Course>> results = new ArrayList<ArrayList<Course>>();
+        if (originalCourseList == null || originalCourseList.size() == 0) {
+            return results;
+        }
+        ArrayList<Course> result = new ArrayList<>();
+        recursivePermuter(originalCourseList, results, result);
+        return results;
+    }
+
+    public void recursivePermuter(ArrayList<Course> originalCourseList,
+                                  ArrayList<ArrayList<Course>> results, ArrayList<Course> result) {
+        if (originalCourseList.size() == result.size()) {
+            ArrayList<Course> temp = new ArrayList<>(result);
+            results.add(temp);
+        }
+        for (int i = 0; i < originalCourseList.size(); i++) {
+            if (!result.contains(originalCourseList.get(i))) {
+                result.add(originalCourseList.get(i));
+                recursivePermuter(originalCourseList, results, result);
+                result.remove(result.size() - 1);
+            }
+        }
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    public void createSemiPermutationSchedule() {
+        //TODO
+    }
+
+    //EFFECTS: Prints all the schedules in scheduleList
     public void showAllSchedules() {
         for (int i = 0; i < scheduleList.size(); i++) {
             System.out.println(" ____ ");
@@ -92,6 +146,8 @@ public class UserInteractionConsole {
         }
     }
 
+    //REQUIRES: scheduler to be non-null
+    //EFFECTS: prints the schedule in a human readable manner
     private void printSchedule(Scheduler scheduler) {
         System.out.println("  \tMonday      \t Tuesday    \t Wednesday  \t Thursday   \t Friday     \n");
         String[][] scheduleToPrint = scheduler.getSchedule();
@@ -112,10 +168,8 @@ public class UserInteractionConsole {
         }
     }
 
-    public void showSchedulesWithClass() {
 
-    }
-
+    //These were extracted for easy use
     private ArrayList<String> subClassNames;
     private ArrayList<int[][]> subClassTimes;
     private ArrayList<String> labNames = new ArrayList<>();
@@ -123,6 +177,7 @@ public class UserInteractionConsole {
     private ArrayList<String> tutorialNames = new ArrayList<>();
     private ArrayList<int[][]> tutorialTimes = new ArrayList<>();
 
+    //EFFECTS: guides the users through the steps of designing a course
     private Course obtainCourseSafely() {
         System.out.println("What is the name of the first/next Course (eg. CPSC 210)");
         String name = scanner.nextLine();
@@ -154,6 +209,7 @@ public class UserInteractionConsole {
         return new Course(name, subClassNames, subClassTimes);
     }
 
+    //EFFECTS: safely guides the user through answering a yes/no question
     private boolean yesNoQuestion(String message) {
         System.out.println(message + " y/n");
         String answer = scanner.nextLine();
@@ -164,6 +220,7 @@ public class UserInteractionConsole {
         return answer.equals("y");
     }
 
+    //EFFECTS: safely guides the user through designing the start and end times of a class
     private ArrayList<int[][]> getTimes(String name, ArrayList<String> subNames) {
         ArrayList<int[][]> subTimes = new ArrayList<>();
         for (String sub : subNames) {
@@ -175,6 +232,7 @@ public class UserInteractionConsole {
         return subTimes;
     }
 
+    //EFFECTS: safely guides the user through naming their labs and tutorials and sub classes
     private ArrayList<String> getNames(int numOfSub, String type) {
         ArrayList<String> subNames = new ArrayList<String>();
         for (int i = 1; i <= numOfSub; i++) {
@@ -190,6 +248,7 @@ public class UserInteractionConsole {
         return subNames;
     }
 
+    //EFFECTS: safely guides the user through selecting the days for their class or subpart
     private int[] obtainDaysSafely(String name, String subClass) {
         System.out.println("At what days does " + name + " " + subClass + " take place?");
         ArrayList<Integer> preDays = new ArrayList();
@@ -213,6 +272,7 @@ public class UserInteractionConsole {
         return days;
     }
 
+    //EFFECTS: safely guides the user through selecting the time for their class or subpart
     private int[] obtainTimeSafely(String name, String subClass, String startend) {
         System.out.println("At what time does " + name + " " + subClass + " " + startend);
         System.out.println("Use Military Time to nearest half hour (Example: 5:30pm would be 1730))");
@@ -240,6 +300,7 @@ public class UserInteractionConsole {
         return new int[]{returnHour, returnHour};
     }
 
+    //EFFECTS: safely guides the user through inputing an integer between a range of numbers
     private int obtainIntSafely(int min, int max, String failMessage) {
         int num = 0;
         boolean validInput = false;
@@ -254,7 +315,7 @@ public class UserInteractionConsole {
                     scanner.nextLine();
                     System.out.print(failMessage);
                 }
-            } catch (InputMismatchException e) {
+            } catch (Exception e) {
                 validInput = false;
                 scanner.nextLine();
                 System.out.print(failMessage);
