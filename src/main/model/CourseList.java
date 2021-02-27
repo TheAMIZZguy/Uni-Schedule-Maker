@@ -1,9 +1,12 @@
 package model;
 
 import model.Course;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 
-public class CourseList {
+public class CourseList implements Writable {
     private ArrayList<Course> courseList;
 
     public CourseList(ArrayList<Course> courseList) {
@@ -26,5 +29,12 @@ public class CourseList {
 
     public void removeCourseFromList(int index) {
         this.courseList.remove(index);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("courseList", courseList);
+        return json;
     }
 }

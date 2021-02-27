@@ -1,41 +1,45 @@
 package persistence;
 
 
-import model.Course;
 import model.Scheduler;
-import model.Designer;
+import model.Course;
+import model.ScheduleList;
+import model.CourseList;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import org.json.*;
 
 public class JsonReader {
 
-    private String source;
+    private String sourceSchedules;
+    private String sourceCourses;
 
     // EFFECTS: constructs reader to read from source file
-    public JsonReader(String source) {
-        this.source = source;
+    public JsonReader(String sourceS, String sourceC) {
+        this.sourceSchedules = sourceS;
+        this.sourceCourses = sourceC;
     }
 
     // EFFECTS: reads workroom from file and returns it;
     // throws IOException if an error occurs reading data from file
-    public Designer readDesigner() throws IOException {
-        String jsonData = readFile(source);
+    public ScheduleList readSchedules() throws IOException {
+        String jsonData = readFile(sourceSchedules);
         JSONObject jsonObject = new JSONObject(jsonData);
-        return parseDesigner(jsonObject);
+        return parseScheduleList(jsonObject);
     }
 
     // EFFECTS: reads workroom from file and returns it;
     // throws IOException if an error occurs reading data from file
-    public Course readCourse() throws IOException {
-        String jsonData = readFile(source);
+    public CourseList readCourseList() throws IOException {
+        String jsonData = readFile(sourceCourses);
         JSONObject jsonObject = new JSONObject(jsonData);
-        return parseCourse(jsonObject);
+        return parseCourseList(jsonObject);
     }
 
     // EFFECTS: reads source file as string and returns it
@@ -49,30 +53,40 @@ public class JsonReader {
         return contentBuilder.toString();
     }
 
-    // EFFECTS: parses workroom from JSON object and returns it
-    private Designer parseWorkRoom(JSONObject jsonObject) {
-        //String name = jsonObject.getString("name");
-        Designer designer = new Designer(name);
-        addThingies(designer, jsonObject);
-        return designer;
+    // EFFECTS: parses ScheduleList from JSON object and returns it
+    private ScheduleList parseScheduleList(JSONObject jsonObject) {
+        //ArrayList<Scheduler> scheduleList = jsonObject.getJSONArray("scheduleList");
+        //jsonObject.getString("scheduleList");
+        JSONArray jsonArray = jsonObject.getJSONArray("scheduleList");
+        ArrayList<Scheduler> schedules = extractArrayListScheduleList(jsonArray);
+        ScheduleList scheduleList = new ScheduleList(schedules);
+        return scheduleList;
     }
 
-    // MODIFIES: wr
-    // EFFECTS: parses thingies from JSON object and adds them to workroom
-    private void addThingies(WorkRoom wr, JSONObject jsonObject) {
-        JSONArray jsonArray = jsonObject.getJSONArray("thingies");
+    // EFFECTS: parses a ArrayList<Scheduler> from JSON Array and returns it
+    private ArrayList<Scheduler> extractArrayListScheduleList(JSONArray jsonArray) {
+        ArrayList<Scheduler> schedules = new ArrayList<>();
         for (Object json : jsonArray) {
-            JSONObject nextThingy = (JSONObject) json;
-            addThingy(wr, nextThingy);
+            schedules.add((Scheduler) json);
         }
+        return schedules;
     }
 
-    // MODIFIES: wr
-    // EFFECTS: parses thingy from JSON object and adds it to workroom
-    private void addThingy(WorkRoom wr, JSONObject jsonObject) {
-        String name = jsonObject.getString("name");
-        Category category = Category.valueOf(jsonObject.getString("category"));
-        Thingy thingy = new Thingy(name, category);
-        wr.addThingy(thingy);
+    // EFFECTS: parses CourseList from JSON object and returns it
+    private CourseList parseCourseList(JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.getJSONArray("scheduleList");
+        ArrayList<Course> courses = extractArrayListCourseList(jsonArray);
+        CourseList courseList = new CourseList(courses);
+        return courseList;
     }
+
+    // EFFECTS: parses a ArrayList<Course> from JSON Array and returns it
+    private ArrayList<Course> extractArrayListCourseList(JSONArray jsonArray) {
+        ArrayList<Course> schedules = new ArrayList<>();
+        for (Object json : jsonArray) {
+            schedules.add((Course) json);
+        }
+        return schedules;
+    }
+
 }
