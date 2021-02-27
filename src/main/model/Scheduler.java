@@ -3,6 +3,7 @@ package model;
 
 import java.util.Arrays;
 
+//A schedule in the form of arrays, with some extra data like current courses in the schedule (filtering purposes)
 public class Scheduler {
 
     private static final int EARLIEST_TIME_ALLOWED = 7; //7am

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Arrays;
 import java.lang.Math;
 
+//Takes classes and then designs a lot of different schedule possibilities.
 public class Designer {
 
     /*a class that makes schedules
@@ -47,12 +48,59 @@ public class Designer {
         }
     }
 
-    //getters
-    /* Method wasn't necessary, but I might want to implement it later
+    public Designer(ArrayList<Course> coursesToTake, int maxCourses, ArrayList<Scheduler> listOfPossibilities,
+                    ArrayList<Scheduler> listOfPossibilitiesWithLT, boolean hasAddedLabsAndTutorials) {
+        this.coursesToTake = coursesToTake;
+        this.maxCourses = maxCourses;
+        this.listOfPossibilities = listOfPossibilities;
+        this.listOfPossibilitiesWithLT = listOfPossibilitiesWithLT;
+        this.hasAddedLabsAndTutorials = hasAddedLabsAndTutorials;
+
+        for (int i = 0; i < maxCourses; i++) {
+            tierXClasses[i] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < coursesToTake.size() * 2 + 1; i++) {
+            tierXClassesWithLT[i] = new ArrayList<>();
+        }
+    }
+
+    public Designer(Designer copyDesigner) {
+        this.coursesToTake = copyDesigner.getCourses();
+        this.maxCourses = copyDesigner.getMaxCourses();
+        this.listOfPossibilities = copyDesigner.getListOfPossibilities();
+        this.listOfPossibilitiesWithLT = copyDesigner.getListOfPossibilitiesWithLT();
+        this.hasAddedLabsAndTutorials = copyDesigner.getHasAddedLabsAndTutorials();
+
+        for (int i = 0; i < maxCourses; i++) {
+            tierXClasses[i] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < coursesToTake.size() * 2 + 1; i++) {
+            tierXClassesWithLT[i] = new ArrayList<>();
+        }
+    }
+
+    //getters (mostly for DeepCopy-esque Use)
     public ArrayList<Course> getCourses() {
         return coursesToTake;
     }
-    */
+
+    public int getMaxCourses() {
+        return maxCourses;
+    }
+
+    public ArrayList<Scheduler> getListOfPossibilities() {
+        return listOfPossibilities;
+    }
+
+    public ArrayList<Scheduler> getListOfPossibilitiesWithLT() {
+        return listOfPossibilitiesWithLT;
+    }
+
+    public boolean getHasAddedLabsAndTutorials() {
+        return hasAddedLabsAndTutorials;
+    }
 
     public ArrayList<Scheduler> getSchedules() {
         if (hasAddedLabsAndTutorials) {

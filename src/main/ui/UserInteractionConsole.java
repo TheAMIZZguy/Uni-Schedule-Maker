@@ -9,6 +9,7 @@ import model.Course;
 import model.Designer;
 import model.Scheduler;
 
+//User Interaction, asking info about classes and how they want to design schedules
 public class UserInteractionConsole {
 
     Scanner scanner;

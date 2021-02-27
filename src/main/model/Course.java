@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+//All the data for a specific course, including name, time and all the labs/tutorials it can have.
 public class Course {
     //self-explanatory
     private boolean hasLab;
