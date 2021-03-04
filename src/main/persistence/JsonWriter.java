@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.io.*;
 
+//VERY largely inspired from the JSONSerializationDemo we were given from UBC
 public class JsonWriter {
     private static final int TAB = 4;
     private PrintWriter writerScheduleList;
@@ -32,26 +33,35 @@ public class JsonWriter {
     // EFFECTS: writes JSON representation of ScheduleList to file
     public void writeScheduleList(ScheduleList scheduleList) {
         JSONObject json = scheduleList.toJson();
-        saveToFile(json.toString(TAB), writerScheduleList);
+        saveToFile(json.toString(TAB), true);
     }
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of CourseList to file
-    public void writeCourse(CourseList courseList) {
+    public void writeCourseList(CourseList courseList) {
         JSONObject json = courseList.toJson();
-        saveToFile(json.toString(TAB), writerCourseList);
+        saveToFile(json.toString(TAB), false);
     }
 
 
     // MODIFIES: this
     // EFFECTS: closes writer
-    public void close(PrintWriter writer) {
-        writer.close();
+    public void close(boolean isScheduleList) {
+        if (isScheduleList) {
+            writerScheduleList.close();
+        } else {
+            writerCourseList.close();
+        }
+
     }
 
     // MODIFIES: this
     // EFFECTS: writes string to file
-    private void saveToFile(String json, PrintWriter writer) {
-        writer.print(json);
+    private void saveToFile(String json, boolean isScheduleList) {
+        if (isScheduleList) {
+            writerScheduleList.print(json);
+        } else {
+            writerCourseList.print(json);
+        }
     }
 }

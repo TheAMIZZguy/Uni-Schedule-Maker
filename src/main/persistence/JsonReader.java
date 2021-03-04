@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 import org.json.*;
 
+//VERY largely inspired from the JSONSerializationDemo we were given from UBC
 public class JsonReader {
 
     private String sourceSchedules;
@@ -67,10 +68,42 @@ public class JsonReader {
     private ArrayList<Scheduler> extractArrayListScheduleList(JSONArray jsonArray) {
         ArrayList<Scheduler> schedules = new ArrayList<>();
         for (Object json : jsonArray) {
-            schedules.add((Scheduler) json);
+            JSONObject json2 = (JSONObject) json;
+            String[][] sched = convertJsonMuliDimToStringMultiDim(json2.getJSONArray("schedule"));
+            String[] coursesInSchedule = convertJsonArrayToStringArray(json2.getJSONArray("coursesInSchedule"));
+            int currentCourses = json2.getInt("currentCourses");
+            Scheduler scheduler = new Scheduler(sched, coursesInSchedule, currentCourses);
+            schedules.add(scheduler);
         }
         return schedules;
     }
+
+
+
+    private String[][] convertJsonMuliDimToStringMultiDim(JSONArray schedule) {
+        String[][] returnScheduleList = new String[2 * 14][5];
+        //System.out.println(schedule);
+        //System.out.println(schedule.get(0));
+        //ArrayList arrL = convertJSONArrayToArrayList(schedule);
+        //returnScheduleList = List.valueOf(schedule);
+
+        //ArrayList<JSONArray> arrL = convertJSONArrayToArrayList(schedule.get(0));
+        for (int i = 0; i < returnScheduleList.length; i++) {
+            returnScheduleList[i] = convertJsonArrayToStringArray((JSONArray) schedule.get(i));
+        }
+        return returnScheduleList;
+    }
+
+    private String[] convertJsonArrayToStringArray(JSONArray arr) {
+        String[] returnArray = new String[arr.length()];
+        for (int i = 0; i < arr.length(); i++) {
+            if (!JSONObject.NULL.equals(arr.get(i))) {
+                returnArray[i] = (String) arr.get(i);
+            }
+        }
+        return returnArray;
+    }
+
 
     // EFFECTS: parses CourseList from JSON object and returns it
     private CourseList parseCourseList(JSONObject jsonObject) {

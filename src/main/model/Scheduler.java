@@ -26,6 +26,12 @@ public class Scheduler {
         this.coursesInSchedule = coursesInScheduleDeepCopy(copySchedule.getCoursesInSchedule());
         this.currentCourses = copySchedule.getCurrentCourses();
     }
+    //Json Constructor
+    public Scheduler(String[][] schedule, String[] coursesInSchedule, int currentCourses) {
+        this.schedule = schedule;
+        this.coursesInSchedule = coursesInSchedule;
+        this.currentCourses = currentCourses;
+    }
 
     //EFFECTS: makes a deepCopy of a Schedule
     public String[][] scheduleDeepCopy(String[][] schedulePrev) {
