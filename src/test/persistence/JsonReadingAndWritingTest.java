@@ -15,7 +15,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class JsonWritingTest {
+public class JsonReadingAndWritingTest {
 
     //BECUASE
     Course math1203 = new Course("MATH 120", new ArrayList<>(Arrays.asList("212")),
@@ -71,7 +71,7 @@ public class JsonWritingTest {
 
 
     @Test
-    void testEmptyScheduleListWriter() {
+    void testEmptyScheduleListReaderWriter() {
         try {
             ScheduleList sl = new ScheduleList(new ArrayList<>());
             JsonWriter writer = new JsonWriter("./data/testScheduleListEmpty.json",
@@ -112,7 +112,7 @@ public class JsonWritingTest {
     }
 
     @Test
-    void testEmptyCourseListWriter() {
+    void testEmptyCourseListReaderWriter() {
         try {
             CourseList cl = new CourseList(new ArrayList<>());
             JsonWriter writer = new JsonWriter("./data/testScheduleListEmpty.json",

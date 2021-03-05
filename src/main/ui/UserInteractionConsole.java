@@ -372,4 +372,20 @@ public class UserInteractionConsole {
         }
         return num;
     }
+
+
+
+
+    public int userInteractionTree() {
+        System.out.println("\t 1) Add new course to Active Course List");
+        System.out.println("\t 2) Add saved course to Active Course List");
+        System.out.println("\t 3) View Active Course List");
+        System.out.println("\t 4) Save Active Course List to saved courses");
+        System.out.println("\t 5) Generate schedules from Active Course List");
+        System.out.println("\t 6) Save select generated schedules to saved schedules");
+        System.out.println("\t 7) View all Schedules");
+        System.out.println("\t 8) Exit");
+
+        return obtainIntSafely(1,8, "That is not one of the options, try again");
+    }
 }
