@@ -27,8 +27,12 @@ public class CourseList implements Writable {
         this.courseList.add(differentCourse);
     }
 
-    public void removeCourseFromList(int index) {
+    public boolean removeCourseFromList(int index) {
+        if (0 > index || index >= courseList.size()) {
+            return false;
+        }
         this.courseList.remove(index);
+        return true;
     }
 
     @Override
