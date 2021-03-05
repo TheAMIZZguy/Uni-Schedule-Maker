@@ -14,40 +14,65 @@ public class UserInteractionConsole {
 
     Scanner scanner;
 
-    ArrayList<Course> listOfCourses;
+    ArrayList<Course> activeCourseList; //ACL
     Designer designer;
 
     ArrayList<ArrayList<Course>> listOfCoursesPermutation;
     ArrayList<Scheduler> scheduleList = new ArrayList<>();
 
-    int numOfClasses;
     int maxClassesAtOnce;
+
+    ScheduleList scheduleList;
+    ScheduleList CourseList;
 
     //EFFECTS: Initializes the communication with the user and instantiates course info
     public UserInteractionConsole() {
-        listOfCourses = new ArrayList<>();
-
-        System.out.println("Hello! Welcome to your personalized Schedule Planner");
-        System.out.println("To start off, Up to how many classes or events would you like to Add?");
-
+        activeCourseList = new ArrayList<>();
         scanner = new Scanner(System.in);
 
-        numOfClasses = obtainIntSafely(1, 100,
-                "This must be a positive integer less than 100");
+        loadLists(); //TODO, do ScheduleList and CourseList initialization
 
-        System.out.println("And how many would you take at once?");
-        maxClassesAtOnce = obtainIntSafely(1, 8, "This must be a positive integer less than 8");
+        System.out.println("Hello! Welcome to your personalized Schedule Planner \n\n");
 
-
-        System.out.println("\nNote: Add Classes in the order you would most want to take them\n");
-        for (int i = 0; i < numOfClasses; i++) {
-            listOfCourses.add(obtainCourseSafely());
+        int choice = userInteractionTree();
+        while (choice != 8) {
+            switch (choice) {
+                case 1:
+                    obtainCourseSafely();
+                    break;
+                case 2:
+                    addSavedCourseToACL();
+                    break;
+                case 3:
+                    viewActiveCourseList();
+                    break;
+                case 4:
+                    addActiveCourseListToCourseList();
+                    break;
+                    //TODO clears stuff
+                case 5:
+                    generate();
+                    //GET maxClassesAtOnce here
+                    break;
+                case 6:
+                    saveGeneratedSchedules();
+                    //TODO clears stuff
+                    break;
+                case 7:
+                    viewSchedules();
+                    break;
+            }
+            choice = userInteractionTree();
         }
+
     }
 
     //MODIFIES: this
     //EFFECTS: Generates a list of schedules with a chosen option
     public boolean generate() {
+        System.out.println("Before generating, up to how many courses would you take at once?");
+        maxClassesAtOnce = obtainIntSafely(1, 8, "This must be a positive integer less than 8");
+
         int option = optionQuestion("Would you like to compute a list of possible schedules "
                 + " via simple tree (1), permutation tree (2), or semi-permutation tree (3). "
                 + "\n WARNING: PERMUTATION TREE CAN BE VERY SLOW AND SHOULD ONLY BE "
@@ -57,15 +82,13 @@ public class UserInteractionConsole {
 
         switch (option) {
             case 1:
-                returnBool = simpleDesigner(listOfCourses);
+                returnBool = simpleDesigner(activeCourseList);
                 break;
             case 2:
                 returnBool = createPermutationSchedule();
                 break;
             case 3:
                 returnBool = createSemiPermutationSchedule();
-                break;
-            default:
                 break;
         }
         if (!returnBool) {
@@ -96,7 +119,7 @@ public class UserInteractionConsole {
     }
 
     public Boolean createPermutationSchedule() {
-        listOfCoursesPermutation = permutationOfCourseList(listOfCourses);
+        listOfCoursesPermutation = permutationOfCourseList(activeCourseList);
 
         Boolean returnBool = true;
         for (int i = 0; i < listOfCoursesPermutation.size(); i++) {
@@ -140,7 +163,7 @@ public class UserInteractionConsole {
     //EFFECTS: creates n arrays where each one is the same but with a different starting point, returns true if success
     public boolean createSemiPermutationSchedule() {
 
-        listOfCoursesPermutation = semiPermutationOfCourseList(listOfCourses);
+        listOfCoursesPermutation = semiPermutationOfCourseList(activeCourseList);
 
         boolean returnBool = true;
         for (int i = 0; i < listOfCoursesPermutation.size(); i++) {
@@ -231,7 +254,7 @@ public class UserInteractionConsole {
 
     //EFFECTS: guides the users through the steps of designing a course
     private Course obtainCourseSafely() {
-        System.out.println("What is the name of the first/next Course (eg. CPSC 210)");
+        System.out.println("What is the name of the Course you wish to add (eg. CPSC 210)");
         String name = scanner.nextLine();
 
         System.out.println("How many Sub-Classes does this have? (eg. CPSC 210 201 and CPSC 210 202 would mean 2)");
