@@ -70,25 +70,24 @@ public class JsonWritingTest {
     }
 
 
-    //TODO
-//    @Test
-//    void testWriterEmptyWorkroom() {
-//        try {
-//            WorkRoom wr = new WorkRoom("My work room");
-//            JsonWriter writer = new JsonWriter("./data/testWriterEmptyWorkroom.json");
-//            writer.open();
-//            writer.write(wr);
-//            writer.close();
-//
-//            JsonReader reader = new JsonReader("./data/testWriterEmptyWorkroom.json");
-//            wr = reader.read();
-//            assertEquals("My work room", wr.getName());
-//            assertEquals(0, wr.numThingies());
-//        } catch (IOException e) {
-//            fail("Exception should not have been thrown");
-//        }
-//    }
+    @Test
+    void testEmptyScheduleListWriter() {
+        try {
+            ScheduleList sl = new ScheduleList(new ArrayList<>());
+            JsonWriter writer = new JsonWriter("./data/testScheduleListEmpty.json",
+                    "./data/testCourseListEmpty.json");
+            writer.open();
+            writer.writeScheduleList(sl);
+            writer.close(true);
 
+            JsonReader reader = new JsonReader("./data/testScheduleListEmpty.json",
+                    "./data/testCourseListEmpty.json");
+            sl = reader.readSchedules();
+            assertEquals(0, sl.getScheduleList().size());
+        } catch (IOException e) {
+            fail("Exception should not have been thrown");
+        }
+    }
 
     @Test
     void testReadingWritingScheduleList() {
@@ -113,6 +112,25 @@ public class JsonWritingTest {
     }
 
     @Test
+    void testEmptyCourseListWriter() {
+        try {
+            CourseList cl = new CourseList(new ArrayList<>());
+            JsonWriter writer = new JsonWriter("./data/testScheduleListEmpty.json",
+                    "./data/testCourseListEmpty.json");
+            writer.open();
+            writer.writeCourseList(cl);
+            writer.close(false);
+
+            JsonReader reader = new JsonReader("./data/testScheduleListEmpty.json",
+                    "./data/testCourseListEmpty.json");
+            cl = reader.readCourseList();
+            assertEquals(0, cl.getCourseList().size());
+        } catch (IOException e) {
+            fail("Exception should not have been thrown");
+        }
+    }
+
+    @Test
     void testReadingWritingCourseList() {
 
         try {
@@ -128,7 +146,7 @@ public class JsonWritingTest {
                     "./data/testCourseList.json");
             cl = reader.readCourseList();
             assertEquals(4, cl.getCourseList().size());
-            assertEquals("PHYS 118",cl.getCourseList().get(3).getName());
+            assertEquals("PHYS 118", cl.getCourseList().get(3).getName());
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");
