@@ -28,8 +28,12 @@ public class ScheduleList implements Writable {
         this.scheduleList.add(differentSchedule);
     }
 
-    public void removeScheduleFromList(int index) {
+    public boolean removeScheduleFromList(int index) {
+        if (0 > index || index >= scheduleList.size()) {
+            return false;
+        }
         this.scheduleList.remove(index);
+        return true;
     }
 
     @Override

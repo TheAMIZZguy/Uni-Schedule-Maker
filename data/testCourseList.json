@@ -1,0 +1,182 @@
+{"courseList": [
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"212": [
+            [
+                9,
+                30
+            ],
+            [
+                10,
+                0
+            ],
+            [
+                1,
+                3,
+                5
+            ]
+        ]},
+        "labNames": [],
+        "tutorialNames": [],
+        "subClassNames": ["212"],
+        "hasLab": false,
+        "name": "MATH 120",
+        "tutorialTimes": {},
+        "labTimes": {}
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"212": [
+            [
+                9,
+                30
+            ],
+            [
+                10,
+                0
+            ],
+            [
+                1,
+                3,
+                5
+            ]
+        ]},
+        "labNames": [],
+        "tutorialNames": [],
+        "subClassNames": ["212"],
+        "hasLab": false,
+        "name": "CPSC 121",
+        "tutorialTimes": {},
+        "labTimes": {}
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"212": [
+            [
+                10,
+                30
+            ],
+            [
+                11,
+                0
+            ],
+            [
+                1,
+                3,
+                5
+            ]
+        ]},
+        "labNames": [],
+        "tutorialNames": [],
+        "subClassNames": ["212"],
+        "hasLab": false,
+        "name": "CPSC 110",
+        "tutorialTimes": {},
+        "labTimes": {}
+    },
+    {
+        "hasTutorial": true,
+        "subClassTimes": {
+            "202": [
+                [
+                    9,
+                    30
+                ],
+                [
+                    10,
+                    0
+                ],
+                [
+                    1,
+                    3,
+                    5
+                ]
+            ],
+            "201": [
+                [
+                    10,
+                    0
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    1,
+                    3,
+                    5
+                ]
+            ]
+        },
+        "labNames": [
+            "L2A",
+            "L2B"
+        ],
+        "tutorialNames": [
+            "T2A",
+            "T2C"
+        ],
+        "subClassNames": [
+            "201",
+            "202"
+        ],
+        "hasLab": true,
+        "name": "PHYS 118",
+        "tutorialTimes": {
+            "T2C": [
+                [
+                    12,
+                    0
+                ],
+                [
+                    13,
+                    30
+                ],
+                [2]
+            ],
+            "T2A": [
+                [
+                    20,
+                    0
+                ],
+                [
+                    21,
+                    0
+                ],
+                [
+                    1,
+                    3,
+                    5
+                ]
+            ]
+        },
+        "labTimes": {
+            "L2B": [
+                [
+                    15,
+                    0
+                ],
+                [
+                    18,
+                    0
+                ],
+                [4]
+            ],
+            "L2A": [
+                [
+                    10,
+                    0
+                ],
+                [
+                    12,
+                    0
+                ],
+                [
+                    1,
+                    3,
+                    5
+                ]
+            ]
+        }
+    }
+]}

@@ -48,6 +48,7 @@ public class Designer {
         }
     }
 
+    /* They ended up being unnecessary but I didn't want to remove them incase they were needed later
     public Designer(ArrayList<Course> coursesToTake, int maxCourses, ArrayList<Scheduler> listOfPossibilities,
                     ArrayList<Scheduler> listOfPossibilitiesWithLT, boolean hasAddedLabsAndTutorials) {
         this.coursesToTake = coursesToTake;
@@ -94,12 +95,14 @@ public class Designer {
         return listOfPossibilities;
     }
 
-    public ArrayList<Scheduler> getListOfPossibilitiesWithLT() {
-        return listOfPossibilitiesWithLT;
-    }
-
     public boolean getHasAddedLabsAndTutorials() {
         return hasAddedLabsAndTutorials;
+    }
+
+     */
+
+    public ArrayList<Scheduler> getListOfPossibilitiesWithLT() {
+        return listOfPossibilitiesWithLT;
     }
 
     public ArrayList<Scheduler> getSchedules() {

@@ -56,8 +56,6 @@ public class JsonReader {
 
     // EFFECTS: parses ScheduleList from JSON object and returns it
     private ScheduleList parseScheduleList(JSONObject jsonObject) {
-        //ArrayList<Scheduler> scheduleList = jsonObject.getJSONArray("scheduleList");
-        //jsonObject.getString("scheduleList");
         JSONArray jsonArray = jsonObject.getJSONArray("scheduleList");
         ArrayList<Scheduler> schedules = extractArrayListScheduleList(jsonArray);
         ScheduleList scheduleList = new ScheduleList(schedules);
@@ -79,21 +77,16 @@ public class JsonReader {
     }
 
 
-
+    //TODO REM
     private String[][] convertJsonMuliDimToStringMultiDim(JSONArray schedule) {
         String[][] returnScheduleList = new String[2 * 14][5];
-        //System.out.println(schedule);
-        //System.out.println(schedule.get(0));
-        //ArrayList arrL = convertJSONArrayToArrayList(schedule);
-        //returnScheduleList = List.valueOf(schedule);
-
-        //ArrayList<JSONArray> arrL = convertJSONArrayToArrayList(schedule.get(0));
         for (int i = 0; i < returnScheduleList.length; i++) {
             returnScheduleList[i] = convertJsonArrayToStringArray((JSONArray) schedule.get(i));
         }
         return returnScheduleList;
     }
 
+    //TODO REM
     private String[] convertJsonArrayToStringArray(JSONArray arr) {
         String[] returnArray = new String[arr.length()];
         for (int i = 0; i < arr.length(); i++) {
@@ -104,10 +97,9 @@ public class JsonReader {
         return returnArray;
     }
 
-
     // EFFECTS: parses CourseList from JSON object and returns it
     private CourseList parseCourseList(JSONObject jsonObject) {
-        JSONArray jsonArray = jsonObject.getJSONArray("scheduleList");
+        JSONArray jsonArray = jsonObject.getJSONArray("courseList");
         ArrayList<Course> courses = extractArrayListCourseList(jsonArray);
         CourseList courseList = new CourseList(courses);
         return courseList;
@@ -115,11 +107,67 @@ public class JsonReader {
 
     // EFFECTS: parses a ArrayList<Course> from JSON Array and returns it
     private ArrayList<Course> extractArrayListCourseList(JSONArray jsonArray) {
-        ArrayList<Course> schedules = new ArrayList<>();
+        ArrayList<Course> courses = new ArrayList<>();
         for (Object json : jsonArray) {
-            schedules.add((Course) json);
+            JSONObject jsonObject = (JSONObject) json;
+
+            String name = jsonObject.getString("name");
+            ArrayList<String> subClassNames = getNameArrayFromJson(jsonObject.getJSONArray("subClassNames"));
+            ArrayList<int[][]> subClassTimes =  getTimesArrayFromJson(jsonObject.getJSONObject("subClassTimes"),
+                    subClassNames);
+            boolean hasLab = jsonObject.getBoolean("hasLab");
+            ArrayList<String> labNames =  getNameArrayFromJson(jsonObject.getJSONArray("labNames"));
+            ArrayList<int[][]> labTimes = getTimesArrayFromJson(jsonObject.getJSONObject("labTimes"),
+                    labNames);
+            boolean hasTutorial = jsonObject.getBoolean("hasTutorial");
+            ArrayList<String> tutorialNames =  getNameArrayFromJson(jsonObject.getJSONArray("tutorialNames"));
+            ArrayList<int[][]> tutorialTimes = getTimesArrayFromJson(jsonObject.getJSONObject("tutorialTimes"),
+                    tutorialNames);
+
+            Course course = new Course(name, subClassNames, subClassTimes,
+                    hasLab, labNames, labTimes, hasTutorial, tutorialNames, tutorialTimes);
+            courses.add(course);
         }
-        return schedules;
+        return courses;
+    }
+
+    private ArrayList<int[][]> getTimesArrayFromJson(JSONObject timesArray, ArrayList<String> namesArray) {
+        ArrayList<int[][]> returnArray = new ArrayList<>();
+        for (int i = 0; i < namesArray.size(); i++) {
+            int[][] alpha = getIntArray(timesArray.getJSONArray(namesArray.get(i)));
+            returnArray.add(alpha);
+        }
+        return returnArray;
+    }
+
+    private int[][] getIntArray(JSONArray timesArray) {
+        int[][] returnArray = new int[3][];
+        for (int i = 0; i < timesArray.length(); i++) {
+            if (!JSONObject.NULL.equals(timesArray.get(i))) {
+                returnArray[i] = getInts((JSONArray) timesArray.get(i));
+            }
+        }
+        return returnArray;
+    }
+
+    private int[] getInts(JSONArray intArr) {
+        int[] returnArray = new int[intArr.length()];
+        for (int i = 0; i < intArr.length(); i++) {
+            if (!JSONObject.NULL.equals(intArr.get(i))) {
+                returnArray[i] = ((int) intArr.get(i));
+            }
+        }
+        return returnArray;
+    }
+
+    private ArrayList<String> getNameArrayFromJson(JSONArray namesArray) {
+        ArrayList<String> returnArray = new ArrayList<>();
+        for (int i = 0; i < namesArray.length(); i++) {
+            if (!JSONObject.NULL.equals(namesArray.get(i))) {
+                returnArray.add((String) namesArray.get(i));
+            }
+        }
+        return returnArray;
     }
 
 }
