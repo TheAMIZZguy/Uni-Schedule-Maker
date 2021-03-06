@@ -1,13 +1,13 @@
 package ui;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import model.Course;
-import model.Designer;
-import model.Scheduler;
+import model.*;
+import persistence.JsonReader;
 
 //User Interaction, asking info about classes and how they want to design schedules
 public class UserInteractionConsole {
@@ -18,53 +18,201 @@ public class UserInteractionConsole {
     Designer designer;
 
     ArrayList<ArrayList<Course>> listOfCoursesPermutation;
-    ArrayList<Scheduler> scheduleList = new ArrayList<>();
+    ArrayList<Scheduler> activeScheduleList;
 
     int maxClassesAtOnce;
 
     ScheduleList scheduleList;
-    ScheduleList CourseList;
+    CourseList courseList;
+    JsonReader reader;
 
     //EFFECTS: Initializes the communication with the user and instantiates course info
     public UserInteractionConsole() {
-        activeCourseList = new ArrayList<>();
-        scanner = new Scanner(System.in);
-
-        loadLists(); //TODO, do ScheduleList and CourseList initialization
+        setupVariables();
 
         System.out.println("Hello! Welcome to your personalized Schedule Planner \n\n");
 
         int choice = userInteractionTree();
         while (choice != 8) {
-            switch (choice) {
-                case 1:
-                    obtainCourseSafely();
-                    break;
-                case 2:
-                    addSavedCourseToACL();
-                    break;
-                case 3:
-                    viewActiveCourseList();
-                    break;
-                case 4:
-                    addActiveCourseListToCourseList();
-                    break;
-                    //TODO clears stuff
-                case 5:
-                    generate();
-                    //GET maxClassesAtOnce here
-                    break;
-                case 6:
-                    saveGeneratedSchedules();
-                    //TODO clears stuff
-                    break;
-                case 7:
-                    viewSchedules();
-                    break;
-            }
+            userSelection(choice);
             choice = userInteractionTree();
         }
 
+    }
+
+    private void userSelection(int choice) {
+        switch (choice) {
+            case 1:
+                obtainCourseSafely();
+                break;
+            case 2:
+                addSavedCourseToACL();
+                break;
+            case 3:
+                viewActiveCourseList();
+                break;
+                //TODO ADD these cases maybe?
+//            case 4:
+//                removeFromActiveCourseList();
+//                break;
+//            case 5:
+//                removeFromSavedCourseList();
+//                break;
+            case 4:
+                addActiveCourseListToCourseList();
+                break;
+            case 5:
+                generate();
+                break;
+            case 6:
+                saveGeneratedSchedules();
+                //TODO clears stuff
+                break;
+            case 7:
+                viewSchedules();
+                break;
+        }
+    }
+
+    private void addActiveCourseListToCourseList() {
+        courseList.addCoursesToList(activeCourseList);
+        activeCourseList = new ArrayList<>();
+        System.out.println("Added and Cleared!");
+    }
+
+    private void viewActiveCourseList() {
+        boolean detailed = yesNoQuestion("Would you like to look at the detailed version? y/n (just names if no) \n");
+
+        System.out.println("The current active courses are:\n ");
+        for (int i = 0; i < activeCourseList.size(); i++) {
+            if (detailed) {
+                System.out.println("\n");
+                detailedCoursePrint(activeCourseList.get(i));
+            } else {
+                System.out.println("\n" + activeCourseList.get(i).getName());
+            }
+        }
+
+    }
+
+    private void detailedCoursePrint(Course course) {
+        System.out.println("Name: " + course.getName());
+        for (String subCourse : course.getSubClassNames()) {
+            printNameWithTimes(course, subCourse, "Section");
+        }
+        for (String lab : course.getSubClassNames()) {
+            printNameWithTimes(course, lab, "Lab");
+        }
+        for (String tutorial : course.getSubClassNames()) {
+            printNameWithTimes(course, tutorial, "Tutorial");
+        }
+    }
+
+    private void printNameWithTimes(Course course, String name, String type) {
+        String startTime = "";
+        String endTime = "";
+        String days = "";
+        int[][] selection;
+        if (type.equals("Section")) {
+            selection = course.getSubClassTimes().get(name);
+        } else if (type.equals("Lab")) {
+            selection = course.getLabTimes().get(name);
+        } else  {
+            selection = course.getTutorialTimes().get(name);
+        }
+        startTime = String.valueOf(selection[0][0]) + ":" + String.valueOf(selection[0][1]);
+        endTime = String.valueOf(selection[1][0]) + ":" + String.valueOf(selection[1][1]);
+        days = intsToDays(selection[2]);
+
+
+        System.out.println("\t" + type + ": " + name + "\t Start: " + startTime
+                + "\t End: " + endTime + "\t Days: " + days);
+    }
+
+    private String intsToDays(int[] intArr) {
+        String returnString = "";
+        for (int i : intArr) {
+            if (i == 1) {
+                returnString = returnString + " Mon";
+            }
+            if (i == 2) {
+                returnString = returnString + " Tue";
+            }
+            if (i == 3) {
+                returnString = returnString + " Wed";
+            }
+            if (i == 4) {
+                returnString = returnString + " Thu";
+            }
+            if (i == 5) {
+                returnString = returnString + " Fri";
+            }
+        }
+        return returnString;
+    }
+
+    private void setupVariables() {
+        activeCourseList = new ArrayList<>();
+        activeScheduleList = new ArrayList<>();
+
+        scanner = new Scanner(System.in);
+        reader = new JsonReader("./data/ScheduleList.json",
+                "./data/CourseList.json");
+
+        loadLists();
+    }
+
+    private void loadLists() {
+        loadSavedCourses();
+        loadSavedSchedules();
+    }
+
+
+    private void addSavedCourseToACL() {
+        System.out.println("(note that selecting a saved course will extract it and it will need to be saved again)\n");
+        int numSavedCourses = courseList.getCourseList().size();
+        if (numSavedCourses == 0) {
+            System.out.println("There are no saved courses at the moment");
+            return;
+        }
+        System.out.println("The current saved courses are \n");
+        printSavedCoursesNames();
+        System.out.println("Select which one you want to add (select number) ");
+        int courseSelected = obtainIntSafely(1, numSavedCourses,
+                "Please choose the number next to a course");
+
+        activeCourseList.add(courseList.getCourseList().get(courseSelected));
+        courseList.removeCourseFromList(courseSelected);
+        System.out.println("Added!");
+    }
+
+    private void printSavedCoursesNames() {
+        ArrayList<Course> tempCourseList = courseList.getCourseList();
+        for (int i = 0; i < tempCourseList.size(); i++) {
+            System.out.println((i + 1) + ": " + tempCourseList.get(i).getName());
+        }
+    }
+
+    private void loadSavedSchedules() {
+        scheduleList = new ScheduleList(new ArrayList<>());
+        try {
+            courseList = reader.readCourseList();
+        } catch (IOException e) {
+            System.err.println("Course File Missing");
+        } catch (Exception e) {
+            System.err.println("Other Course Error");
+        }
+    }
+
+    private void loadSavedCourses() {
+        courseList = new CourseList(new ArrayList<>());
+        try {
+            courseList = reader.readCourseList();
+        } catch (IOException e) {
+            System.err.println("Course File Missing");
+        } catch (Exception e) {
+            System.err.println("Other Course Error");
+        }
     }
 
     //MODIFIES: this
@@ -103,7 +251,7 @@ public class UserInteractionConsole {
         if (designer.buildSchedulesOnlyMainWithPriority() && designer.buildSchedulesWithLabsAndTutorials()) {
             ArrayList<Scheduler> schedules = designer.getSchedules();
             for (int i = 0; i < schedules.size(); i++) {
-                this.scheduleList.add(schedules.get(i));
+                this.activeScheduleList.add(schedules.get(i));
             }
         } else {
             returnBool = false;
@@ -195,9 +343,9 @@ public class UserInteractionConsole {
 
     //EFFECTS: Prints all the schedules in scheduleList
     public void showAllSchedules() {
-        for (int i = 0; i < scheduleList.size(); i++) {
+        for (int i = 0; i < activeScheduleList.size(); i++) {
             System.out.println(" ____ ");
-            printSchedule(scheduleList.get(i));
+            printSchedule(activeScheduleList.get(i));
             System.out.println(" ____ ");
         }
     }
@@ -210,11 +358,11 @@ public class UserInteractionConsole {
                     + "(eg. CPSC 210, NOT CPSC 210 201)");
             filters.add(scanner.nextLine());
         }
-        for (int i = 0; i < scheduleList.size(); i++) {
+        for (int i = 0; i < activeScheduleList.size(); i++) {
             for (String s : filters) {
-                if (Arrays.stream(scheduleList.get(i).getCoursesInSchedule()).anyMatch(s::equals)) {
+                if (Arrays.stream(activeScheduleList.get(i).getCoursesInSchedule()).anyMatch(s::equals)) {
                     System.out.println(" ____ ");
-                    printSchedule(scheduleList.get(i));
+                    printSchedule(activeScheduleList.get(i));
                     System.out.println(" ____ ");
                 }
             }
