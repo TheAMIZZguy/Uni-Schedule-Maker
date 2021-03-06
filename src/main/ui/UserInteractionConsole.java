@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import model.*;
 import persistence.JsonReader;
+import persistence.JsonWriter;
 
 //User Interaction, asking info about classes and how they want to design schedules
 public class UserInteractionConsole {
@@ -31,14 +32,43 @@ public class UserInteractionConsole {
         setupVariables();
 
         int choice = userInteractionTree();
-        while (choice != 8) {
-            userSelection(choice);
+        while (true) {
+
+            if (choice < 6) {
+                courseOptions(choice);
+            } else if (choice < 11) {
+                scheduleOptions(choice);
+            } else if (choice == 11) {
+                saveAndExit();
+            } else {
+                break;
+            }
+
             choice = userInteractionTree();
         }
 
     }
 
-    private void userSelection(int choice) {
+    private void saveAndExit() {
+        try {
+            JsonWriter writer = new JsonWriter("./data/testScheduleList.json",
+                    "./data/testCourseList.json");
+            writer.open();
+            writer.writeScheduleList(scheduleList);
+            writer.close(true);
+
+            writer.open();
+            writer.writeCourseList(courseList);
+            writer.close(false);
+        } catch (IOException ioe) {
+            System.out.println("File Not Found, failed to save");
+        } catch (Exception e) {
+            System.out.println("Unexpected Error, failed to save");
+        }
+
+    }
+
+    private void courseOptions(int choice) {
         switch (choice) {
             case 1:
                 obtainCourseSafely();
@@ -49,17 +79,47 @@ public class UserInteractionConsole {
             case 3:
                 viewActiveCourseList();
                 break;
-                //TODO ADD these cases maybe?
-//            case 4:
-//                removeFromActiveCourseList();
-//                break;
-//            case 5:
-//                removeFromSavedCourseList();
-//                break;
             case 4:
-                addActiveCourseListToCourseList();
+                removeFromActiveCourseList();
                 break;
             case 5:
+                removeFromSavedCourseList();
+                break;
+            case 6:
+                addActiveCourseListToCourseList();
+                break;
+        }
+    }
+
+    private void removeFromSavedCourseList() {
+        System.out.println("The current courses in the saved course list are: ");
+
+        for (int i = 0; i < courseList.getCourseList().size(); i++) {
+            System.out.println((i + 1) + ": " + courseList.getCourseList().get(i).getName());
+        }
+
+        System.out.println("Write the number of the one you wish to remove");
+        int removeIndex = obtainIntSafely(1, courseList.getCourseList().size(), "Number out of bounds");
+        courseList.getCourseList().remove(removeIndex - 1);
+        System.out.println("Removed!");
+    }
+
+    private void removeFromActiveCourseList() {
+        System.out.println("The current courses in the active course list are: ");
+
+        for (int i = 0; i < activeCourseList.size(); i++) {
+            System.out.println((i + 1) + ": " + activeCourseList.get(i).getName());
+        }
+
+        System.out.println("Write the number of the one you wish to remove");
+        int removeIndex = obtainIntSafely(1, activeCourseList.size(), "Number out of bounds");
+        activeCourseList.remove(removeIndex - 1);
+        System.out.println("Removed!");
+    }
+
+    private void scheduleOptions(int choice) {
+        switch (choice) {
+            case 7:
                 generate();
                 if (yesNoQuestion("Would you like to filter through the generated schedules? y/n")) {
                     showAllSchedules(activeScheduleList);
@@ -67,13 +127,29 @@ public class UserInteractionConsole {
                     showAllSchedulesFiltered(activeScheduleList);
                 }
                 break;
-            case 6:
+            case 8:
                 saveGeneratedSchedules();
                 break;
-            case 7:
+            case 9:
                 viewSavedSchedules();
                 break;
+            case 10:
+                removeFromSavedScheduleList();
+                break;
         }
+    }
+
+    private void removeFromSavedScheduleList() {
+        if (!yesNoQuestion("This will print every schedule, are you sure? y/n")) {
+            return;
+        }
+
+        showAllSchedules(scheduleList.getScheduleList());
+
+        System.out.println("What is the number of the one you want to remove?");
+        int removeIndex = obtainIntSafely(1, scheduleList.getScheduleList().size(), "Number out of bounds");
+        scheduleList.getScheduleList().remove(removeIndex - 1);
+        System.out.println("Removed!");
     }
 
     private void viewSavedSchedules() {
@@ -99,9 +175,9 @@ public class UserInteractionConsole {
         }
 
         for (int i = 0; i < numSchedulesToAdd; i++) {
-            System.out.println("What is the index of the schedule to save?");
+            System.out.println("What is the number of the schedule to save?");
             int schedToAdd = obtainIntSafely(1, activeScheduleList.size(), "That is out of bounds");
-            scheduleList.addScheduleToList(activeScheduleList.get(schedToAdd));
+            scheduleList.addScheduleToList(activeScheduleList.get(schedToAdd - 1));
             System.out.println("Done");
         }
 
@@ -121,10 +197,10 @@ public class UserInteractionConsole {
         System.out.println("The current active courses are:\n ");
         for (int i = 0; i < activeCourseList.size(); i++) {
             if (detailed) {
-                System.out.println("\n");
+                System.out.println((i + 1) + ": \n");
                 detailedCoursePrint(activeCourseList.get(i));
             } else {
-                System.out.println("\n" + activeCourseList.get(i).getName());
+                System.out.println((i + 1) + ": " + activeCourseList.get(i).getName());
             }
         }
 
@@ -586,12 +662,18 @@ public class UserInteractionConsole {
         System.out.println("\t 1) Add new course to Active Course List");
         System.out.println("\t 2) Add saved course to Active Course List");
         System.out.println("\t 3) View Active Course List");
-        System.out.println("\t 4) Save Active Course List to saved courses");
-        System.out.println("\t 5) Generate schedules from Active Course List");
-        System.out.println("\t 6) Save generated schedules to saved schedules");
-        System.out.println("\t 7) View saved schedules");
-        System.out.println("\t 8) Exit");
+        System.out.println("\t 4) Remove from Active Course List");
+        System.out.println("\t 5) Remove from Saved Courses");
+        System.out.println("\t 6) Save Active Course List to saved courses");
 
-        return obtainIntSafely(1,8, "That is not one of the options, try again");
+        System.out.println("\t 7) Generate schedules from Active Course List");
+        System.out.println("\t 8) Save generated schedules to saved schedules");
+        System.out.println("\t 9) View saved schedules");
+        System.out.println("\t 10) Delete saved schedule");
+
+        System.out.println("\t 11) Save and Exit");
+        System.out.println("\t 12) Exit without Saving");
+
+        return obtainIntSafely(1,12, "That is not one of the options, try again");
     }
 }
