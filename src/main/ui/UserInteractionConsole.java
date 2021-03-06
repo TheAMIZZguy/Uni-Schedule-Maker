@@ -30,8 +30,6 @@ public class UserInteractionConsole {
     public UserInteractionConsole() {
         setupVariables();
 
-        System.out.println("Hello! Welcome to your personalized Schedule Planner \n\n");
-
         int choice = userInteractionTree();
         while (choice != 8) {
             userSelection(choice);
@@ -63,15 +61,52 @@ public class UserInteractionConsole {
                 break;
             case 5:
                 generate();
+                if (yesNoQuestion("Would you like to filter through the generated schedules? y/n")) {
+                    showAllSchedules(activeScheduleList);
+                } else {
+                    showAllSchedulesFiltered(activeScheduleList);
+                }
                 break;
             case 6:
                 saveGeneratedSchedules();
-                //TODO clears stuff
                 break;
             case 7:
-                viewSchedules();
+                viewSavedSchedules();
                 break;
         }
+    }
+
+    private void viewSavedSchedules() {
+        if (yesNoQuestion("Would you like to filter through the saved schedules? y/n")) {
+            showAllSchedules(scheduleList.getScheduleList());
+        } else {
+            showAllSchedulesFiltered(scheduleList.getScheduleList());
+        }
+    }
+
+    private void saveGeneratedSchedules() {
+        if (yesNoQuestion("(y) Do you want to save all of them? (n) Or just a few?  y/n")) {
+            scheduleList.addSchedulesToList(activeScheduleList);
+            activeScheduleList = new ArrayList<>();
+            System.out.println("Added and Cleared!");
+            return;
+        }
+
+        System.out.println("How many of the schedules to add? (The rest will be cleared afterwards)");
+        int numSchedulesToAdd = obtainIntSafely(0, activeScheduleList.size(), "That is out of bounds");
+        if (numSchedulesToAdd == activeScheduleList.size()) {
+            System.out.println("Selected maximum Amount, adding all");
+        }
+
+        for (int i = 0; i < numSchedulesToAdd; i++) {
+            System.out.println("What is the index of the schedule to save?");
+            int schedToAdd = obtainIntSafely(1, activeScheduleList.size(), "That is out of bounds");
+            scheduleList.addScheduleToList(activeScheduleList.get(schedToAdd));
+            System.out.println("Done");
+        }
+
+        activeScheduleList = new ArrayList<>();
+        System.out.println("Added and Cleared!");
     }
 
     private void addActiveCourseListToCourseList() {
@@ -342,27 +377,27 @@ public class UserInteractionConsole {
     }
 
     //EFFECTS: Prints all the schedules in scheduleList
-    public void showAllSchedules() {
-        for (int i = 0; i < activeScheduleList.size(); i++) {
-            System.out.println(" ____ ");
-            printSchedule(activeScheduleList.get(i));
+    public void showAllSchedules(ArrayList<Scheduler> schedulesToPrint) {
+        for (int i = 0; i < schedulesToPrint.size(); i++) {
+            System.out.println(" ____ " + (i + 1) + ":");
+            printSchedule(schedulesToPrint.get(i));
             System.out.println(" ____ ");
         }
     }
 
     //EFFECTS: Prints all the schedules in scheduleList that have the classes the user wants
-    public void showAllSchedulesFiltered() {
+    public void showAllSchedulesFiltered(ArrayList<Scheduler> schedulesToPrint) {
         ArrayList<String> filters = new ArrayList<>();
         while (yesNoQuestion("Would you like to filter for another class?")) {
             System.out.println("What is the Base name of the class you want to filter for "
                     + "(eg. CPSC 210, NOT CPSC 210 201)");
             filters.add(scanner.nextLine());
         }
-        for (int i = 0; i < activeScheduleList.size(); i++) {
+        for (int i = 0; i < schedulesToPrint.size(); i++) {
             for (String s : filters) {
-                if (Arrays.stream(activeScheduleList.get(i).getCoursesInSchedule()).anyMatch(s::equals)) {
-                    System.out.println(" ____ ");
-                    printSchedule(activeScheduleList.get(i));
+                if (Arrays.stream(schedulesToPrint.get(i).getCoursesInSchedule()).anyMatch(s::equals)) {
+                    System.out.println(" ____ " + (i + 1) + ":");
+                    printSchedule(schedulesToPrint.get(i));
                     System.out.println(" ____ ");
                 }
             }
@@ -553,8 +588,8 @@ public class UserInteractionConsole {
         System.out.println("\t 3) View Active Course List");
         System.out.println("\t 4) Save Active Course List to saved courses");
         System.out.println("\t 5) Generate schedules from Active Course List");
-        System.out.println("\t 6) Save select generated schedules to saved schedules");
-        System.out.println("\t 7) View all Schedules");
+        System.out.println("\t 6) Save generated schedules to saved schedules");
+        System.out.println("\t 7) View saved schedules");
         System.out.println("\t 8) Exit");
 
         return obtainIntSafely(1,8, "That is not one of the options, try again");
