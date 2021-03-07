@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import model.*;
+import org.json.JSONException;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -31,19 +32,20 @@ public class UserInteractionConsole {
     public UserInteractionConsole() {
         setupVariables();
 
+        System.out.println("Select an Option");
         int choice = userInteractionTree();
         while (true) {
-
-            if (choice < 6) {
+            if (choice < 7) {
                 courseOptions(choice);
             } else if (choice < 11) {
                 scheduleOptions(choice);
             } else if (choice == 11) {
                 saveAndExit();
+                break;
             } else {
                 break;
             }
-
+            System.out.println("\n\nSelect an Option");
             choice = userInteractionTree();
         }
 
@@ -121,10 +123,10 @@ public class UserInteractionConsole {
         switch (choice) {
             case 7:
                 generate();
-                if (yesNoQuestion("Would you like to filter through the generated schedules? y/n")) {
-                    showAllSchedules(activeScheduleList);
-                } else {
+                if (yesNoQuestion("Would you like to filter through the generated schedules?")) {
                     showAllSchedulesFiltered(activeScheduleList);
+                } else {
+                    showAllSchedules(activeScheduleList);
                 }
                 break;
             case 8:
@@ -140,7 +142,7 @@ public class UserInteractionConsole {
     }
 
     private void removeFromSavedScheduleList() {
-        if (!yesNoQuestion("This will print every schedule, are you sure? y/n")) {
+        if (!yesNoQuestion("This will print every schedule, are you sure? ")) {
             return;
         }
 
@@ -153,15 +155,15 @@ public class UserInteractionConsole {
     }
 
     private void viewSavedSchedules() {
-        if (yesNoQuestion("Would you like to filter through the saved schedules? y/n")) {
-            showAllSchedules(scheduleList.getScheduleList());
-        } else {
+        if (yesNoQuestion("Would you like to filter through the saved schedules?")) {
             showAllSchedulesFiltered(scheduleList.getScheduleList());
+        } else {
+            showAllSchedules(scheduleList.getScheduleList());
         }
     }
 
     private void saveGeneratedSchedules() {
-        if (yesNoQuestion("(y) Do you want to save all of them? (n) Or just a few?  y/n")) {
+        if (yesNoQuestion("(y) Do you want to save all of them? (n) Or just a few? ")) {
             scheduleList.addSchedulesToList(activeScheduleList);
             activeScheduleList = new ArrayList<>();
             System.out.println("Added and Cleared!");
@@ -192,12 +194,12 @@ public class UserInteractionConsole {
     }
 
     private void viewActiveCourseList() {
-        boolean detailed = yesNoQuestion("Would you like to look at the detailed version? y/n (just names if no) \n");
+        boolean detailed = yesNoQuestion("Would you like to look at the detailed version? (just names if no) \n");
 
         System.out.println("The current active courses are:\n ");
         for (int i = 0; i < activeCourseList.size(); i++) {
             if (detailed) {
-                System.out.println((i + 1) + ": \n");
+                System.out.println((i + 1) + ":");
                 detailedCoursePrint(activeCourseList.get(i));
             } else {
                 System.out.println((i + 1) + ": " + activeCourseList.get(i).getName());
@@ -211,10 +213,10 @@ public class UserInteractionConsole {
         for (String subCourse : course.getSubClassNames()) {
             printNameWithTimes(course, subCourse, "Section");
         }
-        for (String lab : course.getSubClassNames()) {
+        for (String lab : course.getLabNames()) {
             printNameWithTimes(course, lab, "Lab");
         }
-        for (String tutorial : course.getSubClassNames()) {
+        for (String tutorial : course.getTutorialNames()) {
             printNameWithTimes(course, tutorial, "Tutorial");
         }
     }
@@ -222,8 +224,8 @@ public class UserInteractionConsole {
     private void printNameWithTimes(Course course, String name, String type) {
         String startTime = "";
         String endTime = "";
-        String days = "";
         int[][] selection;
+
         if (type.equals("Section")) {
             selection = course.getSubClassTimes().get(name);
         } else if (type.equals("Lab")) {
@@ -231,10 +233,20 @@ public class UserInteractionConsole {
         } else  {
             selection = course.getTutorialTimes().get(name);
         }
-        startTime = String.valueOf(selection[0][0]) + ":" + String.valueOf(selection[0][1]);
-        endTime = String.valueOf(selection[1][0]) + ":" + String.valueOf(selection[1][1]);
-        days = intsToDays(selection[2]);
 
+        if (selection[0][1] == 0) {
+            startTime = String.valueOf(selection[0][0]) + ":00";
+        } else {
+            startTime = String.valueOf(selection[0][0]) + ":" + String.valueOf(selection[0][1]);
+        }
+
+        if (selection[1][1] == 0) {
+            endTime = String.valueOf(selection[1][0]) + ":00";
+        } else {
+            endTime = String.valueOf(selection[1][0]) + ":" + String.valueOf(selection[1][1]);
+        }
+
+        String days = intsToDays(selection[2]);
 
         System.out.println("\t" + type + ": " + name + "\t Start: " + startTime
                 + "\t End: " + endTime + "\t Days: " + days);
@@ -307,11 +319,12 @@ public class UserInteractionConsole {
     private void loadSavedSchedules() {
         scheduleList = new ScheduleList(new ArrayList<>());
         try {
-            courseList = reader.readCourseList();
+            scheduleList = reader.readSchedules();
         } catch (IOException e) {
             System.err.println("Course File Missing");
-        } catch (Exception e) {
-            System.err.println("Other Course Error");
+        } catch (JSONException je) { //It's fine if this one runs, it's expected for the first ever run
+            //System.err.println("Empty File");
+            //System.out.println(je);
         }
     }
 
@@ -319,10 +332,11 @@ public class UserInteractionConsole {
         courseList = new CourseList(new ArrayList<>());
         try {
             courseList = reader.readCourseList();
-        } catch (IOException e) {
+        } catch (IOException ioe) {
             System.err.println("Course File Missing");
-        } catch (Exception e) {
-            System.err.println("Other Course Error");
+        } catch (JSONException je) { //It's fine if this one runs, it's expected for the first ever run
+            //System.err.println("Other Course Error");
+            //System.out.println(je);
         }
     }
 
@@ -512,7 +526,7 @@ public class UserInteractionConsole {
     private ArrayList<int[][]> tutorialTimes = new ArrayList<>();
 
     //EFFECTS: guides the users through the steps of designing a course
-    private Course obtainCourseSafely() {
+    private void obtainCourseSafely() {
         System.out.println("What is the name of the Course you wish to add (eg. CPSC 210)");
         String name = scanner.nextLine();
 
@@ -535,12 +549,12 @@ public class UserInteractionConsole {
         }
 
         if (response1 || response2) {
-            return new Course(name, subClassNames, subClassTimes,
+            activeCourseList.add(new Course(name, subClassNames, subClassTimes,
                     response1, labNames, labTimes,
-                    response2, tutorialNames, tutorialTimes);
+                    response2, tutorialNames, tutorialTimes));
+        } else {
+            activeCourseList.add(new Course(name, subClassNames, subClassTimes));
         }
-
-        return new Course(name, subClassNames, subClassTimes);
     }
 
     //EFFECTS: safely guides the user through answering a yes/no question
