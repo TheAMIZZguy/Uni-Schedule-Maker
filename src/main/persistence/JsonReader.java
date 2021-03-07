@@ -15,7 +15,8 @@ import java.util.stream.Stream;
 
 import org.json.*;
 
-//VERY largely inspired from the JSONSerializationDemo we were given from UBC
+//VERY largely inspired from the JSONSerializationDemo we were given from UBC, CPSC 210 Class
+//Reads the JSON files holding ScheduleList and CourseList data
 public class JsonReader {
 
     private String sourceSchedules;
@@ -77,7 +78,7 @@ public class JsonReader {
     }
 
 
-    //TODO REM
+    //EFFECTS: Takes a JSON Multidimentional Array and turns it into a Multidimentional String Array
     private String[][] convertJsonMuliDimToStringMultiDim(JSONArray schedule) {
         String[][] returnScheduleList = new String[2 * 14][5];
         for (int i = 0; i < returnScheduleList.length; i++) {
@@ -86,7 +87,7 @@ public class JsonReader {
         return returnScheduleList;
     }
 
-    //TODO REM
+    //EFFECTS: Takes a JSON Array and turns it into a String Array
     private String[] convertJsonArrayToStringArray(JSONArray arr) {
         String[] returnArray = new String[arr.length()];
         for (int i = 0; i < arr.length(); i++) {
@@ -131,6 +132,7 @@ public class JsonReader {
         return courses;
     }
 
+    //EFFECTS: Extracts an arraylist of a multidimentional array from a JSONObject
     private ArrayList<int[][]> getTimesArrayFromJson(JSONObject timesArray, ArrayList<String> namesArray) {
         ArrayList<int[][]> returnArray = new ArrayList<>();
         for (int i = 0; i < namesArray.size(); i++) {
@@ -140,6 +142,7 @@ public class JsonReader {
         return returnArray;
     }
 
+    //EFFECTS: Extracts a multidimentional int array from a JSONArray
     private int[][] getIntArray(JSONArray timesArray) {
         int[][] returnArray = new int[3][];
         for (int i = 0; i < timesArray.length(); i++) {
@@ -150,6 +153,7 @@ public class JsonReader {
         return returnArray;
     }
 
+    //EFFECTS: Extracts an int array from a JSONArray
     private int[] getInts(JSONArray intArr) {
         int[] returnArray = new int[intArr.length()];
         for (int i = 0; i < intArr.length(); i++) {
@@ -160,6 +164,7 @@ public class JsonReader {
         return returnArray;
     }
 
+    //EFFECTS: Extracts a string ArrayList from a JSONArray
     private ArrayList<String> getNameArrayFromJson(JSONArray namesArray) {
         ArrayList<String> returnArray = new ArrayList<>();
         for (int i = 0; i < namesArray.length(); i++) {

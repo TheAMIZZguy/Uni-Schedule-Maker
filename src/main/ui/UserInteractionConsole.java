@@ -28,6 +28,8 @@ public class UserInteractionConsole {
     CourseList courseList;
     JsonReader reader;
 
+    //REQUIRES: JSON Files to be non-empty
+    //MODIFIES: this, ./data/CourseList.json, ./data/ScheduleList.json
     //EFFECTS: Initializes the communication with the user and instantiates course info
     public UserInteractionConsole() {
         setupVariables();
@@ -51,6 +53,8 @@ public class UserInteractionConsole {
 
     }
 
+    //MODIFIES: this, ./data/CourseList.json, ./data/ScheduleList.json
+    //EFFECTS: Saves the data in CourseList and Schedule List to their respective json files and then exits the program
     private void saveAndExit() {
         if (yesNoQuestion("Would you like to save the current active courses to the saved list before saving?")) {
             addActiveCourseListToCourseList();
@@ -73,6 +77,8 @@ public class UserInteractionConsole {
 
     }
 
+    //MODIFIES: this
+    //EFFECTS: Applies the correct function based on the user option
     private void courseOptions(int choice) {
         switch (choice) {
             case 1:
@@ -99,6 +105,7 @@ public class UserInteractionConsole {
         }
     }
 
+    //EFFECTS: Prints out the Saved Course List in an easy to understand Fashion
     private void viewSavedCourseList() {
         boolean detailed = yesNoQuestion("Would you like to look at the detailed version? (just names if no)");
 
@@ -113,6 +120,8 @@ public class UserInteractionConsole {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: removes a course from the courseList
     private void removeFromSavedCourseList() {
         System.out.println("The current courses in the saved course list are: ");
 
@@ -126,6 +135,8 @@ public class UserInteractionConsole {
         System.out.println("Removed!");
     }
 
+    //MODIFIES: this
+    //EFFECTS: removes a course from the activeCourseList
     private void removeFromActiveCourseList() {
         System.out.println("The current courses in the active course list are: ");
 
@@ -139,6 +150,8 @@ public class UserInteractionConsole {
         System.out.println("Removed!");
     }
 
+    //MODIFIES: this
+    //EFFECTS: Applies the correct function based on the user option
     private void scheduleOptions(int choice) {
         switch (choice) {
             case 8:
@@ -161,6 +174,8 @@ public class UserInteractionConsole {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: removes a scheduler from the scheduleList
     private void removeFromSavedScheduleList() {
         if (!yesNoQuestion("This will print every schedule, are you sure? ")) {
             return;
@@ -174,6 +189,7 @@ public class UserInteractionConsole {
         System.out.println("Removed!");
     }
 
+    //EFFECTS: prints out the schedules in scheduleList in an easy to read manner
     private void viewSavedSchedules() {
         if (yesNoQuestion("Would you like to filter through the saved schedules?")) {
             showAllSchedulesFiltered(scheduleList.getScheduleList());
@@ -182,6 +198,8 @@ public class UserInteractionConsole {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: choose which of the generated schedules in activeScheduleList to save to scheduleList
     private void saveGeneratedSchedules() {
         if (yesNoQuestion("(y) Do you want to save all of them? (n) Or just a few? ")) {
             scheduleList.addSchedulesToList(activeScheduleList);
@@ -207,12 +225,15 @@ public class UserInteractionConsole {
         System.out.println("Added and Cleared!");
     }
 
+    //MODIFIES: this
+    //EFFECTS: Add the courses in activeCourseList to courseList and then clear activeCourseList
     private void addActiveCourseListToCourseList() {
         courseList.addCoursesToList(activeCourseList);
         activeCourseList = new ArrayList<>();
         System.out.println("Added and Cleared!");
     }
 
+    //EFFECTS: Prints the courses in activeCourseList in an easy to read manner
     private void viewActiveCourseList() {
         boolean detailed = yesNoQuestion("Would you like to look at the detailed version? (just names if no)");
 
@@ -228,6 +249,7 @@ public class UserInteractionConsole {
 
     }
 
+    //EFFECTS: Prints a course alongside all of it's details in an easy to read manner
     private void detailedCoursePrint(Course course) {
         System.out.println("Name: " + course.getName());
         for (String subCourse : course.getSubClassNames()) {
@@ -241,6 +263,7 @@ public class UserInteractionConsole {
         }
     }
 
+    //EFFECTS: Prints a Sub part of a course in an easy to read fashion, specifically a subpart with name and times
     private void printNameWithTimes(Course course, String name, String type) {
         String startTime = "";
         String endTime = "";
@@ -272,6 +295,7 @@ public class UserInteractionConsole {
                 + "\t End: " + endTime + "\t Days: " + days);
     }
 
+    //EFFECTS: Converts an int array containing day information to a String containing Days
     private String intsToDays(int[] intArr) {
         String returnString = "";
         for (int i : intArr) {
@@ -294,6 +318,8 @@ public class UserInteractionConsole {
         return returnString;
     }
 
+    //MODIFIES: this
+    //EFFECTS: initializes some class-level variables
     private void setupVariables() {
         activeCourseList = new ArrayList<>();
         activeScheduleList = new ArrayList<>();
@@ -305,12 +331,15 @@ public class UserInteractionConsole {
         loadLists();
     }
 
+    //MODIFIES: this
+    //EFFECTS: loads scheduleList and courseList with information from their Json Files
     private void loadLists() {
         loadSavedCourses();
         loadSavedSchedules();
     }
 
-
+    //MODIFIES: this
+    //EFFECTS: extracts a course from courseList and adds it to activeCourseList
     private void addSavedCourseToACL() {
         System.out.println("(note that selecting a saved course will extract it and it will need to be saved again)\n");
         int numSavedCourses = courseList.getCourseList().size();
@@ -329,6 +358,7 @@ public class UserInteractionConsole {
         System.out.println("Added!");
     }
 
+    //EFFECTS: Prints just the names and index + 1 of the courses in courseList
     private void printSavedCoursesNames() {
         ArrayList<Course> tempCourseList = courseList.getCourseList();
         for (int i = 0; i < tempCourseList.size(); i++) {
@@ -336,6 +366,8 @@ public class UserInteractionConsole {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: loads scheduleList with information from its Json Files
     private void loadSavedSchedules() {
         scheduleList = new ScheduleList(new ArrayList<>());
         try {
@@ -348,6 +380,8 @@ public class UserInteractionConsole {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: loads courseList with information from its Json Files
     private void loadSavedCourses() {
         courseList = new CourseList(new ArrayList<>());
         try {
@@ -362,6 +396,7 @@ public class UserInteractionConsole {
 
     //MODIFIES: this
     //EFFECTS: Generates a list of schedules with a chosen option
+    //note: boolean return value was made redundant for the moment
     public boolean generate() {
         System.out.println("Before generating, up to how many courses would you take at once?");
         maxClassesAtOnce = obtainIntSafely(1, 8, "This must be a positive integer less than 8");
@@ -390,6 +425,9 @@ public class UserInteractionConsole {
         return returnBool;
     }
 
+    //MODIFIES: this
+    //EFFECTS: applies a designer to make a list of Scheduler
+    //note: boolean return value was made redundant for the moment
     private boolean simpleDesigner(ArrayList<Course> listOfCoursesForDesigner) {
         boolean returnBool = true;
         designer = new Designer(listOfCoursesForDesigner, maxClassesAtOnce);
@@ -411,10 +449,13 @@ public class UserInteractionConsole {
         return obtainIntSafely(1, max, ("Type a number between 1 and " + max));
     }
 
-    public Boolean createPermutationSchedule() {
+    //MODIFIES: this
+    //EFFECTS: applies a designer to make a list of Scheduler, with several different iterations for variety
+    //note: boolean return value was made redundant for the moment
+    public boolean createPermutationSchedule() {
         listOfCoursesPermutation = permutationOfCourseList(activeCourseList);
 
-        Boolean returnBool = true;
+        boolean returnBool = true;
         for (int i = 0; i < listOfCoursesPermutation.size(); i++) {
             if (!simpleDesigner(listOfCoursesPermutation.get(i))) {
                 returnBool = false;
@@ -569,8 +610,7 @@ public class UserInteractionConsole {
         }
 
         if (response1 || response2) {
-            activeCourseList.add(new Course(name, subClassNames, subClassTimes,
-                    response1, labNames, labTimes,
+            activeCourseList.add(new Course(name, subClassNames, subClassTimes, response1, labNames, labTimes,
                     response2, tutorialNames, tutorialTimes));
         } else {
             activeCourseList.add(new Course(name, subClassNames, subClassTimes));
@@ -689,9 +729,7 @@ public class UserInteractionConsole {
         return num;
     }
 
-
-
-
+    //EFFECTS: Provides a simple list of options the user can do
     public int userInteractionTree() {
         System.out.println("\t 1) Add new course to Active Course List");
         System.out.println("\t 2) Add saved course to Active Course List");

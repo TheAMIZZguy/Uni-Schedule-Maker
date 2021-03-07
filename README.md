@@ -29,11 +29,10 @@ planning where you might want multiple things to happen at a specific panel, but
 - As a user, I want to be able to view the List of Possible Schedules (Lop)
 - As a user, I want to be able to choose how to add schedules to the LoP
 - As a user, I want to be able to filter through completed schedules
-- As a user, I want to be able to save my schedules in a file *
-- As a user, I want to be able to be able to load my schedules from a file  *
-- As a user, I want to be able to save my courses in a file *
-- As a user, I want to be able to be able to load my courses from a file  *
-- (future features below)
-- As a user, I want to be able to delete a schedule from my LoP **
-- As a user, I want to be able to view the courses individually **
-- As a user, I want to be able to edit courses after they have been added **
+- As a user, I want to be able to delete a schedule from my LoP
+- As a user, I want to be able to delete a course from my saved courses
+- As a user, I want to be able to save my schedules in a file 
+- As a user, I want to be able to be able to load my schedules from a file  
+- As a user, I want to be able to save my courses in a file 
+- As a user, I want to be able to be able to load my courses from a file  
+- As a user, I want to be able to view the loaded and unloaded courses 
