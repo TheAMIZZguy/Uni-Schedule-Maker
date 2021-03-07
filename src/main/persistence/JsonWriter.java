@@ -24,9 +24,12 @@ public class JsonWriter {
     // MODIFIES: this
     // EFFECTS: opens writer; throws FileNotFoundException if destination file cannot
     // be opened for writing
-    public void open() throws FileNotFoundException {
-        writerScheduleList = new PrintWriter(new File(destinationScheduleList));
-        writerCourseList = new PrintWriter(new File(destinationCourseList));
+    public void open(boolean isScheduleList) throws FileNotFoundException {
+        if (isScheduleList) {
+            writerScheduleList = new PrintWriter(new File(destinationScheduleList));
+        } else {
+            writerCourseList = new PrintWriter(new File(destinationCourseList));
+        }
     }
 
     // MODIFIES: this

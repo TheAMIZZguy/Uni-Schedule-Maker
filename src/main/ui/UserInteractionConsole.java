@@ -35,11 +35,11 @@ public class UserInteractionConsole {
         System.out.println("Select an Option");
         int choice = userInteractionTree();
         while (true) {
-            if (choice < 7) {
+            if (choice < 8) {
                 courseOptions(choice);
-            } else if (choice < 11) {
+            } else if (choice < 12) {
                 scheduleOptions(choice);
-            } else if (choice == 11) {
+            } else if (choice == 12) {
                 saveAndExit();
                 break;
             } else {
@@ -52,14 +52,17 @@ public class UserInteractionConsole {
     }
 
     private void saveAndExit() {
+        if (yesNoQuestion("Would you like to save the current active courses to the saved list before saving?")) {
+            addActiveCourseListToCourseList();
+        }
         try {
-            JsonWriter writer = new JsonWriter("./data/testScheduleList.json",
-                    "./data/testCourseList.json");
-            writer.open();
+            JsonWriter writer = new JsonWriter("./data/ScheduleList.json",
+                    "./data/CourseList.json");
+            writer.open(true);
             writer.writeScheduleList(scheduleList);
             writer.close(true);
 
-            writer.open();
+            writer.open(false);
             writer.writeCourseList(courseList);
             writer.close(false);
         } catch (IOException ioe) {
@@ -82,14 +85,31 @@ public class UserInteractionConsole {
                 viewActiveCourseList();
                 break;
             case 4:
-                removeFromActiveCourseList();
+                viewSavedCourseList();
                 break;
             case 5:
-                removeFromSavedCourseList();
+                removeFromActiveCourseList();
                 break;
             case 6:
+                removeFromSavedCourseList();
+                break;
+            case 7:
                 addActiveCourseListToCourseList();
                 break;
+        }
+    }
+
+    private void viewSavedCourseList() {
+        boolean detailed = yesNoQuestion("Would you like to look at the detailed version? (just names if no)");
+
+        System.out.println("The current active courses are:\n ");
+        for (int i = 0; i < courseList.getCourseList().size(); i++) {
+            if (detailed) {
+                System.out.println((i + 1) + ":");
+                detailedCoursePrint(courseList.getCourseList().get(i));
+            } else {
+                System.out.println((i + 1) + ": " + courseList.getCourseList().get(i).getName());
+            }
         }
     }
 
@@ -121,7 +141,7 @@ public class UserInteractionConsole {
 
     private void scheduleOptions(int choice) {
         switch (choice) {
-            case 7:
+            case 8:
                 generate();
                 if (yesNoQuestion("Would you like to filter through the generated schedules?")) {
                     showAllSchedulesFiltered(activeScheduleList);
@@ -129,13 +149,13 @@ public class UserInteractionConsole {
                     showAllSchedules(activeScheduleList);
                 }
                 break;
-            case 8:
+            case 9:
                 saveGeneratedSchedules();
                 break;
-            case 9:
+            case 10:
                 viewSavedSchedules();
                 break;
-            case 10:
+            case 11:
                 removeFromSavedScheduleList();
                 break;
         }
@@ -194,7 +214,7 @@ public class UserInteractionConsole {
     }
 
     private void viewActiveCourseList() {
-        boolean detailed = yesNoQuestion("Would you like to look at the detailed version? (just names if no) \n");
+        boolean detailed = yesNoQuestion("Would you like to look at the detailed version? (just names if no)");
 
         System.out.println("The current active courses are:\n ");
         for (int i = 0; i < activeCourseList.size(); i++) {
@@ -304,8 +324,8 @@ public class UserInteractionConsole {
         int courseSelected = obtainIntSafely(1, numSavedCourses,
                 "Please choose the number next to a course");
 
-        activeCourseList.add(courseList.getCourseList().get(courseSelected));
-        courseList.removeCourseFromList(courseSelected);
+        activeCourseList.add(courseList.getCourseList().get(courseSelected - 1));
+        courseList.removeCourseFromList(courseSelected - 1);
         System.out.println("Added!");
     }
 
@@ -321,10 +341,10 @@ public class UserInteractionConsole {
         try {
             scheduleList = reader.readSchedules();
         } catch (IOException e) {
-            System.err.println("Course File Missing");
-        } catch (JSONException je) { //It's fine if this one runs, it's expected for the first ever run
-            //System.err.println("Empty File");
-            //System.out.println(je);
+            System.err.println("Schedule File Missing");
+        } catch (JSONException je) {
+            System.err.println("Empty File - Schedule");
+            System.out.println(je);
         }
     }
 
@@ -334,9 +354,9 @@ public class UserInteractionConsole {
             courseList = reader.readCourseList();
         } catch (IOException ioe) {
             System.err.println("Course File Missing");
-        } catch (JSONException je) { //It's fine if this one runs, it's expected for the first ever run
-            //System.err.println("Other Course Error");
-            //System.out.println(je);
+        } catch (JSONException je) {
+            System.err.println("Empty File - Course");
+            System.out.println(je);
         }
     }
 
@@ -676,18 +696,19 @@ public class UserInteractionConsole {
         System.out.println("\t 1) Add new course to Active Course List");
         System.out.println("\t 2) Add saved course to Active Course List");
         System.out.println("\t 3) View Active Course List");
-        System.out.println("\t 4) Remove from Active Course List");
-        System.out.println("\t 5) Remove from Saved Courses");
-        System.out.println("\t 6) Save Active Course List to saved courses");
+        System.out.println("\t 4) View Saved Course List");
+        System.out.println("\t 5) Remove from Active Course List");
+        System.out.println("\t 6) Remove from Saved Courses");
+        System.out.println("\t 7) Save Active Course List to saved courses");
 
-        System.out.println("\t 7) Generate schedules from Active Course List");
-        System.out.println("\t 8) Save generated schedules to saved schedules");
-        System.out.println("\t 9) View saved schedules");
-        System.out.println("\t 10) Delete saved schedule");
+        System.out.println("\t 8) Generate schedules from Active Course List");
+        System.out.println("\t 9) Save generated schedules to saved schedules");
+        System.out.println("\t 10) View saved schedules");
+        System.out.println("\t 11) Delete saved schedule");
 
-        System.out.println("\t 11) Save and Exit");
-        System.out.println("\t 12) Exit without Saving");
+        System.out.println("\t 12) Save and Exit (Schedules must be saved separately with 9)");
+        System.out.println("\t 13) Exit without Saving");
 
-        return obtainIntSafely(1,12, "That is not one of the options, try again");
+        return obtainIntSafely(1,13, "That is not one of the options, try again");
     }
 }

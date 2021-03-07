@@ -76,7 +76,7 @@ public class JsonReadingAndWritingTest {
             ScheduleList sl = new ScheduleList(new ArrayList<>());
             JsonWriter writer = new JsonWriter("./data/testScheduleListEmpty.json",
                     "./data/testCourseListEmpty.json");
-            writer.open();
+            writer.open(true);
             writer.writeScheduleList(sl);
             writer.close(true);
 
@@ -95,7 +95,7 @@ public class JsonReadingAndWritingTest {
             ScheduleList sl = new ScheduleList(manySchedules);
             JsonWriter writer = new JsonWriter("./data/testScheduleList.json",
                     "./data/testCourseList.json");
-            writer.open();
+            writer.open(true);
             writer.writeScheduleList(sl);
             writer.close(true);
 
@@ -117,7 +117,7 @@ public class JsonReadingAndWritingTest {
             CourseList cl = new CourseList(new ArrayList<>());
             JsonWriter writer = new JsonWriter("./data/testScheduleListEmpty.json",
                     "./data/testCourseListEmpty.json");
-            writer.open();
+            writer.open(false);
             writer.writeCourseList(cl);
             writer.close(false);
 
@@ -138,7 +138,7 @@ public class JsonReadingAndWritingTest {
             CourseList cl = new CourseList(courseList1);
             JsonWriter writer = new JsonWriter("./data/testScheduleList.json",
                     "./data/testCourseList.json");
-            writer.open();
+            writer.open(false);
             writer.writeCourseList(cl);
             writer.close(false);
 

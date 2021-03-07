@@ -1,1 +1,117 @@
-{"courseList": []}
+{"courseList": [
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"TEST 111": [
+            [
+                10,
+                0
+            ],
+            [
+                11,
+                0
+            ],
+            [
+                1,
+                3,
+                5
+            ]
+        ]},
+        "tutorialNames": [],
+        "labNames": [],
+        "subClassNames": ["TEST 111"],
+        "hasLab": false,
+        "name": "TEST 111",
+        "labTimes": {},
+        "tutorialTimes": {}
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {
+            "202": [
+                [
+                    13,
+                    0
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    2,
+                    3,
+                    4
+                ]
+            ],
+            "201": [
+                [
+                    12,
+                    0
+                ],
+                [
+                    13,
+                    0
+                ],
+                [
+                    1,
+                    3,
+                    5
+                ]
+            ]
+        },
+        "tutorialNames": [],
+        "labNames": ["L2A"],
+        "subClassNames": [
+            "201",
+            "202"
+        ],
+        "hasLab": true,
+        "name": "TEST 222",
+        "labTimes": {"L2A": [
+            [
+                19,
+                0
+            ],
+            [
+                20,
+                0
+            ],
+            [2]
+        ]},
+        "tutorialTimes": {}
+    },
+    {
+        "hasTutorial": true,
+        "subClassTimes": {"301": [
+            [
+                12,
+                0
+            ],
+            [
+                13,
+                0
+            ],
+            [
+                1,
+                3,
+                4
+            ]
+        ]},
+        "tutorialNames": ["T2A"],
+        "labNames": [],
+        "subClassNames": ["301"],
+        "hasLab": false,
+        "name": "TEST 333",
+        "labTimes": {},
+        "tutorialTimes": {"T2A": [
+            [
+                20,
+                30
+            ],
+            [
+                21,
+                0
+            ],
+            [2]
+        ]}
+    }
+]}
