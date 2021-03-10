@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
 
         //downScrollPane. ();
 
-        horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upScrollPane, downScrollPane);
+        horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upScrollPane, new JScrollPane(downScrollPane));
         horizontalSplit.setDividerLocation((int) (HEIGHT * .40));
         horizontalSplit.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
