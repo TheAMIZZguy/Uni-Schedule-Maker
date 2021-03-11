@@ -10,24 +10,37 @@ public class MainFrame extends JFrame {
     private JSplitPane leftSplit;
     private JSplitPane horizontalSplit;
 
+    JPanel upPane;
+    JPanel downPane;
+
 
     public MainFrame() {
-        JScrollPane leftScrollPane = new JScrollPane();
-        JScrollPane upScrollPane = new JScrollPane();
-        TableSchedulePanel downScrollPane = new TableSchedulePanel();
+        boolean isSchedule = false;
+        ActionButtons menuPane = new ActionButtons();
+
+        //ScheduleFilter filterPaneUp = new ScheduleFilter();
+        //TableSchedulePanel schedulePaneDown = new TableSchedulePanel();
+        if (isSchedule) {
+            upPane = new ScheduleFilter();
+            downPane = new TableSchedulePanel();
+        } else {
+            upPane = new CourseDetailer();
+            downPane = new CourseAdder();
+        }
+
 
         Dimension minimumSize = new Dimension(100, 50);
-        leftScrollPane.setMinimumSize(minimumSize);
-        upScrollPane.setMinimumSize(minimumSize);
-        downScrollPane.setMinimumSize(new Dimension(500, 500));
+        menuPane.setMinimumSize(minimumSize);
+        upPane.setMinimumSize(minimumSize);
+        downPane.setMinimumSize(new Dimension(500, 500));
 
         //downScrollPane. ();
 
-        horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upScrollPane, new JScrollPane(downScrollPane));
+        horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upPane, new JScrollPane(downPane));
         horizontalSplit.setDividerLocation((int) (HEIGHT * .40));
         horizontalSplit.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
-        leftSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftScrollPane, horizontalSplit);
+        leftSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, menuPane, horizontalSplit);
         leftSplit.setDividerLocation((int) (WIDTH * .20));
         leftSplit.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
