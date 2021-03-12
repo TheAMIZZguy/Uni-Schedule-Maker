@@ -26,6 +26,7 @@ public class CourseDetailer extends JPanel implements ListSelectionListener {
         listModel.addElement("CPSC 121");
         listModel.addElement("CPSC 210");
         listModel.addElement("MATH 121");
+        listModel.addElement("ENGL 100");
 
         //Create the list and put it in a scroll pane.
         list = new JList(listModel);
