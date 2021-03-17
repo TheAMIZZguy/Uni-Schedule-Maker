@@ -65,6 +65,25 @@ public class CourseAdder extends JPanel implements ActionListener, FocusListener
         add(createAddressDisplay());
     }
 
+    private void refresh() {
+        removeAll();
+        revalidate();
+        repaint();
+
+        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+
+        changeSizeFields();
+
+        JPanel leftHalf = new JPanel(); //{
+        leftHalf.setLayout(new BoxLayout(leftHalf,
+                BoxLayout.PAGE_AXIS));
+        leftHalf.add(createRefreshedFields());
+        leftHalf.add(createButtons());
+
+        add(leftHalf);
+        add(createAddressDisplay());
+    }
+
     private void changeSizeFields() {
         subCourseNameFields = new JTextField[cleanTxt(numSubCoursesField.getText())];
         subCourseStartTimeFields = new JFormattedTextField[cleanTxt(numSubCoursesField.getText())];
@@ -345,11 +364,11 @@ public class CourseAdder extends JPanel implements ActionListener, FocusListener
 
     private void addVariableFields(int num, String[] labelStrings, int startIndex, String type) {
         for (int i = startIndex; i < num + startIndex; i++) {
-            if (i - startIndex % 4 == 0) {
+            if ((i - startIndex) % 4 == 0) {
                 labelStrings[i] = type + " Name: ";
-            } else if (i - startIndex % 4 == 1) {
+            } else if ((i - startIndex) % 4 == 1) {
                 labelStrings[i] = "Start Time: ";
-            } else if (i - startIndex % 4 == 2) {
+            } else if ((i - startIndex) % 4 == 2) {
                 labelStrings[i] = "End Time: ";
             } else {
                 labelStrings[i] = "Days: ";
@@ -473,6 +492,7 @@ public class CourseAdder extends JPanel implements ActionListener, FocusListener
         System.out.println(jte.getName());
         //int fields = Integer.parseInt(jte.getText());
         createRefreshedFields();
+        refresh();
 //        if (jte.getName().equals("subCourses")) {
 //            //reset subcourses fields
 //        } else if (jte.getName().equals("labs")) {

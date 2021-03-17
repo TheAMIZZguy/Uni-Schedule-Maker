@@ -59,6 +59,10 @@ public class MainFrame extends JFrame {
         frame.setVisible(true);
     }
 
+    public void makeChoice() {
+
+    }
+
     private JSplitPane getLeftmostSplitPane() {
         return leftSplit;
     }
