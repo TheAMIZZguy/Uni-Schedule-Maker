@@ -101,7 +101,7 @@ public class ActionButtons extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "addNew":
-
+                //parent.getComponent(1).r;
                 break;
             case "addFrom":
 
