@@ -75,6 +75,12 @@ public class CourseDetailer extends JPanel implements ListSelectionListener {
         add(buttonPane, BorderLayout.PAGE_END);
     }
 
+    //Listens to the list
+    public void valueChanged(ListSelectionEvent e) {
+        JList list = (JList)e.getSource();
+        parent.courseViewerChange((String) list.getSelectedValue());
+    }
+
     class DeleteListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             //This method can be called only if
@@ -180,6 +186,7 @@ public class CourseDetailer extends JPanel implements ListSelectionListener {
         }
     }
 
+    /*
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if (e.getValueIsAdjusting() == false) {
@@ -194,4 +201,5 @@ public class CourseDetailer extends JPanel implements ListSelectionListener {
             }
         }
     }
+     */
 }
