@@ -9,11 +9,15 @@ public class MainFrame extends JFrame implements ActionListener {
     public static final int WIDTH = 1400;
     public static final int HEIGHT = 1000;
 
+    private static JFrame frame;
+
     private JSplitPane leftSplit;
     private JSplitPane horizontalSplit;
 
     JPanel upPane;
     JPanel downPane;
+
+    MainFrame mainFrame;
 
 
     public MainFrame() {
@@ -51,12 +55,11 @@ public class MainFrame extends JFrame implements ActionListener {
 
     public static void initializeGraphics() {
         //Create and set up the window.
-        JFrame frame = new JFrame("Graphical UI Frame");
+        frame = new JFrame("Graphical UI Frame");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         MainFrame mainFrame = new MainFrame();
         frame.getContentPane().add(mainFrame.getLeftmostSplitPane());
 
-        //Display the window.
         frame.pack();
         frame.setVisible(true);
     }
@@ -148,7 +151,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
                 break;
             case "viewC":
-
+                viewCoursesThing();
                 break;
             case "generate":
 
@@ -166,6 +169,49 @@ public class MainFrame extends JFrame implements ActionListener {
                 //save and exit
                 break;
         }
+    }
+
+    public void changeTester() {
+        upPane = new CourseDetailer();
+        downPane = new CourseAdder();
+        Dimension minimumSize = new Dimension(100, 50);
+
+        upPane.setMinimumSize(minimumSize);
+        downPane.setMinimumSize(new Dimension(500, 500));
+    }
+
+    private void viewCoursesThing() {
+        //frame.removeAll();
+        frame.getContentPane().removeAll();
+
+        JPanel menuPane = makeActionButtons();
+
+        upPane = new CourseDetailer();
+        downPane = new CourseAdder();
+
+
+        Dimension minimumSize = new Dimension(100, 50);
+        menuPane.setMinimumSize(minimumSize);
+        upPane.setMinimumSize(minimumSize);
+        downPane.setMinimumSize(new Dimension(500, 500));
+
+        //downScrollPane. ();
+
+        horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upPane, new JScrollPane(downPane));
+        horizontalSplit.setDividerLocation((int) (HEIGHT * .40));
+        horizontalSplit.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
+        leftSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, menuPane, horizontalSplit);
+        leftSplit.setDividerLocation((int) (WIDTH * .20));
+        leftSplit.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
+        frame.getContentPane().add((new MainFrame()).getLeftmostSplitPane());
+        //mainFrame.changeTester();
+        frame.revalidate();
+        frame.repaint();
+
+        frame.pack();
+        frame.setVisible(true);
     }
 
 

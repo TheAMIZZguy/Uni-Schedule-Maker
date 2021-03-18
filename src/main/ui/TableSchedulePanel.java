@@ -3,7 +3,6 @@ package ui;
 import model.Scheduler;
 
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -26,22 +25,22 @@ public class TableSchedulePanel extends JPanel {
     public TableSchedulePanel() {
         super(new GridLayout(0,1));
 
-        addScheduleTable(new Scheduler(0));
-        addScheduleTable(new Scheduler(0));
+        addScheduleTable(new Scheduler(0), "1");
+        addScheduleTable(new Scheduler(0), "2");
     }
 
     public void addSchedules(ArrayList<Scheduler> schedules) {
         this.schedules = schedules;
 
-        for (Scheduler schedule : schedules) {
-            addScheduleTable(schedule);
+        for (int i = 0; i < schedules.size(); i++) {
+            addScheduleTable(schedules.get(i), Integer.toString(i));
         }
 
         //initializeGraphics();
     }
 
-    private void addScheduleTable(Scheduler sched) {
-        final JTable table = new JTable(new ScheduleTable(sched)); //TODO change yk
+    private void addScheduleTable(Scheduler sched, String num) {
+        final JTable table = new JTable(new ScheduleTable(sched, num)); //TODO change yk
         table.setPreferredScrollableViewportSize(new Dimension(800, 450));
         JScrollPane scrollPane = new JScrollPane(table);
 

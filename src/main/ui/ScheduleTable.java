@@ -6,10 +6,11 @@ import javax.swing.table.AbstractTableModel;
 
 public class ScheduleTable extends AbstractTableModel {
 
-    private final String[] columnNames = {"", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
+    private String[] columnNames = {"", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
     String[][] data = new String[2 * 14][6];
 
-    public ScheduleTable(Scheduler schedule) {
+    public ScheduleTable(Scheduler schedule, String num) {
+        columnNames[0] = num;
         //this.data = schedule.getSchedule();
         for (int i = 0; i < data.length; i++) {
             for (int j = 0; j < data[i].length; j++) {
