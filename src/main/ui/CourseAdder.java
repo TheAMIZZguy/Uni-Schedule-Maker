@@ -148,8 +148,12 @@ public class CourseAdder extends JPanel implements ActionListener {
     protected JComponent createEntryFields() {
         JPanel panel = new JPanel(new SpringLayout());
 
-        String[] labelStrings = new String[4 + numSub * 4 + numLab * 4 + numTut * 4];
+        String[] labelStrings = {"Name: ", "Start Time: ", "End Time: ", "Days",
+                "Sub Course Name: ", "Lab Name: ", "Tutorial Name: "};
 
+        //String[] labelStrings = new String[4 + numSub * 4 + numLab * 4 + numTut * 4];
+
+        /*
         labelStrings[0] = "Name: ";
         labelStrings[1] = "Number of Sub Courses: ";
         addVariableFields(numSub * 4, labelStrings, 2, "Sub Course");
@@ -158,29 +162,72 @@ public class CourseAdder extends JPanel implements ActionListener {
         labelStrings[3 + ((numLab > 0) ? 1 : 0) + numSub * 4 + numLab * 4] = "Number of Tutorials: ";
         addVariableFields(numTut * 4, labelStrings, 4 + ((numLab > 0) ? 1 : 0)
                 + numSub * 4 + numLab * 4, "Tutorial");
+         */
 
-        JLabel[] labels = new JLabel[labelStrings.length];
-        JComponent[] fields = new JComponent[labelStrings.length];
+        JLabel[] labels = setupLabels(labelStrings);
+        JComponent[] fields = setTextFields();
 
-        changeSizeFields();
-        //todo
-        //Create the text field and set it up.
-        //setTextFields(fields, 0);
-
-        //Associate label/field pairs, add everything,
-        //and lay it out.
         associateLabels(panel, labelStrings, labels, fields);
 
-        SpringUtilities.makeCompactGrid(panel,
-                labelStrings.length, 2,
-                GAP, GAP, //init x,y
-                GAP, GAP / 2);//xpad, ypad
 
-        //revalidate();
+        SpringUtilities.makeCompactGrid(panel, labelStrings.length, 2, GAP, GAP, GAP, GAP / 2);
+
         return panel;
     }
 
+    private void associateSubFieldsAndLabels(JPanel panel, String[] labelStrings, JComponent[] fields, JLabel[] labels) {
+        for (int i = 0; i < numSub; i++) {
+            labels[i].setLabelFor(fields[i]);
+            panel.add(labels[i]);
+            panel.add(fields[i]);
+        }
+    }
 
+    private JLabel[] setupLabels(String[] labelStrings) {
+        int effLab = Math.max(numLab, 0);
+        int effTut = Math.max(numLab, 0);
+
+        JLabel[] labels = new JLabel[1 + numSub * 4 + effLab * 4 + effTut * 4];
+        int labelNum = 0;
+
+
+//        for (int i = 0; i < labelStrings.length; i++) {
+//            labels[i] =  new JLabel(labelStrings[i], JLabel.TRAILING);
+//        }
+//        return labels;
+
+        //new JLabel(labelStrings[i], JLabel.TRAILING);
+
+        //{"Name: ", "Start Time: ", "End Time: ", "Days",
+        //                "Sub Course Name: ", "Lab Name: ", "Tutorial Name: "};
+
+        labels[labelNum++] = new JLabel("Name: ", JLabel.TRAILING);
+
+        for (int i = 0; i < numSub; i++) {
+            labels[labelNum++] = new JLabel("Sub Course Name: ", JLabel.TRAILING);
+            labels[labelNum++] = new JLabel("Start Time: ", JLabel.TRAILING);
+            labels[labelNum++] = new JLabel("End Time: ", JLabel.TRAILING);
+            labels[labelNum++] = new JLabel("Days: ", JLabel.TRAILING);
+        }
+
+        for (int i = 0; i < effLab; i++) {
+            labels[labelNum++] = new JLabel("Lab Name: ", JLabel.TRAILING);
+            labels[labelNum++] = new JLabel("Start Time: ", JLabel.TRAILING);
+            labels[labelNum++] = new JLabel("End Time: ", JLabel.TRAILING);
+            labels[labelNum++] = new JLabel("Days: ", JLabel.TRAILING);
+        }
+
+        for (int i = 0; i < effTut; i++) {
+            labels[labelNum++] = new JLabel("Tutorial Name: ", JLabel.TRAILING);
+            labels[labelNum++] = new JLabel("Start Time: ", JLabel.TRAILING);
+            labels[labelNum++] = new JLabel("End Time: ", JLabel.TRAILING);
+            labels[labelNum++] = new JLabel("Days: ", JLabel.TRAILING);
+        }
+
+        return labels;
+    }
+
+    //private void
 
     private int cleanTxt(String text) {
         if (text.equals("  ") || text.equals("") || text.equals(" ")) {
@@ -210,64 +257,45 @@ public class CourseAdder extends JPanel implements ActionListener {
 
     private void associateLabels(JPanel panel, String[] labelStrings, JLabel[] labels, JComponent[] fields) {
         for (int i = 0; i < labelStrings.length; i++) {
-            labels[i] = new JLabel(labelStrings[i],
-                    JLabel.TRAILING);
             labels[i].setLabelFor(fields[i]);
             panel.add(labels[i]);
             panel.add(fields[i]);
-
-            //Add listeners to each field.
-            JTextField tf = null;
-            if (fields[i] instanceof JSpinner) {
-                tf = getTextField((JSpinner) fields[i]);
-            } else {
-                tf = (JTextField) fields[i];
-            }
-            tf.addActionListener(this);
         }
     }
 
-    /*
-    private void setTextFields(JComponent[] fields, int fieldNum) {
+    private JComponent[] setTextFields() {
+        int effLab = Math.max(numLab, 0);
+        int effTut = Math.max(numLab, 0);
+        JComponent[] fields = new JComponent[1 + numSub * 4 + effLab * 4 + effTut * 4];
+        int fieldNum = 0;
+
         nameField = new JTextField();
         nameField.setColumns(20);
         fields[fieldNum++] = nameField;
 
-        //This can be easily extracted
-        numSubCoursesField = new JFormattedTextField(createFormatter("##"));
-        numSubCoursesField.setColumns(20);
-        numSubCoursesField.setName("subCourses");
-        fields[fieldNum++] = numSubCoursesField;
-        for (int i = 0; i < cleanTxt(numSubCoursesField.getText()); i++) {
+        for (int i = 0; i < numSub; i++) {
             fields[fieldNum++] = subCourseNameFields[i];
             fields[fieldNum++] = subCourseStartTimeFields[i];
             fields[fieldNum++] = subCourseEndTimeFields[i];
             fields[fieldNum++] = subCourseDayFields[i];
         }
 
-        numLabsField = new JFormattedTextField(createFormatter("##"));
-        numLabsField.setName("labs");
-        fields[fieldNum++] = numLabsField;
-        for (int i = 0; i < cleanTxt(numLabsField.getText()); i++) {
+        for (int i = 0; i < numLab; i++) {
             fields[fieldNum++] = labNameFields[i];
             fields[fieldNum++] = labStartTimeFields[i];
             fields[fieldNum++] = labEndTimeFields[i];
             fields[fieldNum++] = labDayFields[i];
         }
 
-        numTutorialsField = new JFormattedTextField(createFormatter("##"));
-        numTutorialsField.setName("tutorials");
-        fields[fieldNum++] = numTutorialsField;
-        for (int i = 0; i < cleanTxt(numTutorialsField.getText()); i++) {
+        for (int i = 0; i < numTut; i++) {
             fields[fieldNum++] = tutorialNameFields[i];
             fields[fieldNum++] = tutorialStartTimeFields[i];
             fields[fieldNum++] = tutorialEndTimeFields[i];
             fields[fieldNum++] = tutorialDayFields[i];
         }
+
+        return fields;
     }
-     */
-
-
 
     public JFormattedTextField getTextField(JSpinner spinner) {
         JComponent editor = spinner.getEditor();
