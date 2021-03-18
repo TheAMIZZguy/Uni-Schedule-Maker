@@ -1,11 +1,13 @@
 package ui;
 
+import model.Course;
 import model.Scheduler;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
 
 public class MainFrame extends JFrame implements ActionListener {
@@ -20,6 +22,24 @@ public class MainFrame extends JFrame implements ActionListener {
     JPanel upPane;
     JPanel downPane;
 
+    //// temp courses
+    Course cpsc121 = new Course("CPSC 121", new ArrayList<>(Arrays.asList("212")),
+            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})));
+    Course cpsc110 = new Course("CPSC 110", new ArrayList<>(Arrays.asList("212")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,30}, {11,0}, {1,3,5}}, new int[][]{})));
+
+    Course phys118 = new Course("PHYS 118", new ArrayList<>(Arrays.asList("202")),
+            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})),
+            true, new ArrayList<>(Arrays.asList("L2A")),
+            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})),
+            false, new ArrayList<>(Arrays.asList("T2A", "T2C")),
+            new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
+                    new int[][]{{10,0}, {12,0}, {1,3,5}})));
+    //
+
+    ArrayList<Course> savedCourseList = new ArrayList<>();
+    ArrayList<Course> activeCourseList = new ArrayList<>();
+
 
     public MainFrame() {
         boolean isSchedule = true;
@@ -33,12 +53,16 @@ public class MainFrame extends JFrame implements ActionListener {
         help.add(new Scheduler(0));
         help.add(new Scheduler(0));
 
+        savedCourseList.add(cpsc110);
+        savedCourseList.add(cpsc121);
+        savedCourseList.add(phys118);
+
         if (isSchedule) {
             upPane = new ScheduleFilter();
             downPane = new TableSchedulePanel(help);
         } else {
-            upPane = new CourseDetailer();
-            downPane = new CourseAdder(new int[]{1, 1, 1});
+            upPane = new CourseDetailer(this, savedCourseList);
+            downPane = new CourseAdder(new int[]{2, 1, 1});
         }
 
 
@@ -149,14 +173,13 @@ public class MainFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "addNew":
-                //parent.getComponent(1).r;
-                System.out.println(addNewCourse());
+                addNewCourse();
                 break;
             case "addFrom":
 
                 break;
             case "viewC":
-                viewCoursePanes();
+                viewCoursePanes(new int[]{0});
                 break;
             case "generate":
 
@@ -176,15 +199,15 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
-    private int[] addNewCourse() {
+    private void addNewCourse() {
         int[] returnInts = new int[3];
-        returnInts[0] =  getSubCouresesAmount("Sub Courses", 1);
-        returnInts[1] =  getSubCouresesAmount("Labs", 0);
-        returnInts[2] =  getSubCouresesAmount("Tutorials", 0);
-        return returnInts;
+        returnInts[0] =  getSubCoursesAmount("Sub Courses", 1);
+        returnInts[1] =  getSubCoursesAmount("Labs", 0);
+        returnInts[2] =  getSubCoursesAmount("Tutorials", 0);
+        viewCoursePanes(returnInts);
     }
 
-    private int getSubCouresesAmount(String type, int min) {
+    private int getSubCoursesAmount(String type, int min) {
         Integer[] maxOptions = new Integer[99 + min];
         for (int i = min; i < maxOptions.length; i++) {
             maxOptions[i] = i;
@@ -203,23 +226,24 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
-    private void viewCoursePanes() {
+    private void viewCoursePanes(int[] dimensions) {
         //frame.removeAll();
         frame.getContentPane().removeAll();
 
         JPanel menuPane = makeActionButtons();
 
-        upPane = new CourseDetailer();
-        downPane = new CourseAdder(new int[]{2, 1, 1});
+        upPane = new CourseDetailer(this, savedCourseList);
+
+        if (dimensions[0] != 0) {
+            downPane = new CourseAdder(dimensions);
+        } else {
+            downPane = new CourseViewer();
+        }
 
         Dimension minimumSize = new Dimension(100, 50);
         menuPane.setMinimumSize(minimumSize);
         upPane.setMinimumSize(minimumSize);
         downPane.setMinimumSize(new Dimension(500, 500));
-
-        //JScrollPane downScrollPane = new JScrollPane(downPane,
-        //      JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        //downScrollPane.setPreferredSize(new Dimension(300, 300));
 
         horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upPane, new JScrollPane(downPane));
         horizontalSplit.setDividerLocation((int) (HEIGHT * .40));
@@ -272,5 +296,50 @@ public class MainFrame extends JFrame implements ActionListener {
 
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public void courseViewerChange(String courseString) {
+
+        Course showCourse = null;
+
+        boolean foundCourse = false;
+        for (Course course : savedCourseList) {
+            if (courseString.equals(course.getName())) {
+                showCourse = course;
+                foundCourse = true;
+            }
+        }
+        if (!foundCourse) {
+            return;
+        }
+        //frame.removeAll();
+        frame.getContentPane().removeAll();
+
+        JPanel menuPane = makeActionButtons();
+
+        upPane = new CourseDetailer(this, savedCourseList);
+
+        downPane = new CourseViewer(showCourse);
+
+        Dimension minimumSize = new Dimension(100, 50);
+        menuPane.setMinimumSize(minimumSize);
+        upPane.setMinimumSize(minimumSize);
+        downPane.setMinimumSize(new Dimension(500, 500));
+
+        horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upPane, new JScrollPane(downPane));
+        horizontalSplit.setDividerLocation((int) (HEIGHT * .40));
+        horizontalSplit.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
+        leftSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, menuPane, horizontalSplit);
+        leftSplit.setDividerLocation((int) (WIDTH * .20));
+        leftSplit.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
+        frame.getContentPane().add(getLeftmostSplitPane());
+        frame.revalidate();
+        frame.repaint();
+
+        frame.pack();
+        frame.setVisible(true);
+
     }
 }

@@ -1,5 +1,7 @@
 package ui;
 
+import model.Course;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -8,6 +10,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class CourseDetailer extends JPanel implements ListSelectionListener {
 
@@ -19,14 +22,18 @@ public class CourseDetailer extends JPanel implements ListSelectionListener {
     private JButton deleteClassButton;
     private JTextField courseName;
 
-    public CourseDetailer() {
+    private MainFrame parent;
+
+    public CourseDetailer(MainFrame parent, ArrayList<Course> coursesList) {
         super(new BorderLayout());
 
+        this.parent = parent;
+
         listModel = new DefaultListModel();
-        listModel.addElement("CPSC 121");
-        listModel.addElement("CPSC 210");
-        listModel.addElement("MATH 121");
-        listModel.addElement("ENGL 100");
+
+        for (Course course : coursesList) {
+            listModel.addElement(course.getName());
+        }
 
         //Create the list and put it in a scroll pane.
         list = new JList(listModel);
@@ -44,7 +51,7 @@ public class CourseDetailer extends JPanel implements ListSelectionListener {
 
         deleteClassButton = new JButton(fireString);
         deleteClassButton.setActionCommand(fireString);
-        deleteClassButton.addActionListener(new FireListener());
+        deleteClassButton.addActionListener(new DeleteListener());
 
         courseName = new JTextField(10);
         courseName.addActionListener(hireListener);
@@ -68,7 +75,7 @@ public class CourseDetailer extends JPanel implements ListSelectionListener {
         add(buttonPane, BorderLayout.PAGE_END);
     }
 
-    class FireListener implements ActionListener {
+    class DeleteListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             //This method can be called only if
             //there's a valid selection
