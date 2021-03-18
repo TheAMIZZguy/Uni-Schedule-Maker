@@ -47,9 +47,12 @@ public class CourseAdder extends JPanel implements ActionListener {
     private void setup() {
         changeSizeFields();
 
+        //JScrollPane scrollPane = new JScrollPane();
+
         add(createEntryFields());
         add(createButtons());
 
+        //add(scrollPane);
     }
 
 
@@ -146,7 +149,8 @@ public class CourseAdder extends JPanel implements ActionListener {
     }
 
     protected JComponent createEntryFields() {
-        JPanel panel = new JPanel(new SpringLayout());
+        //JPanel panel = new JPanel(new SpringLayout());
+        JPanel panel = new JPanel(new GridBagLayout());
 
         String[] labelStrings = {"Name: ", "Start Time: ", "End Time: ", "Days",
                 "Sub Course Name: ", "Lab Name: ", "Tutorial Name: "};
@@ -167,12 +171,25 @@ public class CourseAdder extends JPanel implements ActionListener {
         JLabel[] labels = setupLabels(labelStrings);
         JComponent[] fields = setTextFields();
 
-        associateLabels(panel, labelStrings, labels, fields);
+        int effLab = Math.max(numLab, 0);
+        int effTut = Math.max(numLab, 0);
 
+        int count = 1 + numSub * 4 + effLab * 4 + effTut * 4;
 
-        SpringUtilities.makeCompactGrid(panel, labelStrings.length, 2, GAP, GAP, GAP, GAP / 2);
+        associateLabels(panel, count, labels, fields);
 
+        springLayoutLayout((GridBagLayout) panel.getLayout(), labels, fields);
+
+        //SpringUtilities.makeCompactGrid(panel, count, 2, GAP, GAP, GAP, GAP / 2);
+
+        //JS new JScrollPane(panel);
+        //scrollPane.setPreferredSize(new Dimension(300, 300))
         return panel;
+    }
+
+    private void springLayoutLayout(GridBagLayout layout, JLabel[] labels, JComponent[] fields) {
+        //layout.putConstraint(SpringLayout.WEST, labels[0], 5,SpringLayout.WEST, this);
+        //layout.putConstraint(SpringLayout.WEST, fields[1], 3, SpringLayout.NORTH, labels[0]);
     }
 
     private void associateSubFieldsAndLabels(JPanel panel, String[] labelStrings, JComponent[] fields, JLabel[] labels) {
@@ -255,8 +272,9 @@ public class CourseAdder extends JPanel implements ActionListener {
         }
     }
 
-    private void associateLabels(JPanel panel, String[] labelStrings, JLabel[] labels, JComponent[] fields) {
-        for (int i = 0; i < labelStrings.length; i++) {
+    private void associateLabels(JPanel panel, int count, JLabel[] labels, JComponent[] fields) {
+
+        for (int i = 0; i < count; i++) {
             labels[i].setLabelFor(fields[i]);
             panel.add(labels[i]);
             panel.add(fields[i]);

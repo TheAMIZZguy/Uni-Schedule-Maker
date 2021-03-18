@@ -217,7 +217,9 @@ public class MainFrame extends JFrame implements ActionListener {
         upPane.setMinimumSize(minimumSize);
         downPane.setMinimumSize(new Dimension(500, 500));
 
-        //downScrollPane. ();
+        //JScrollPane downScrollPane = new JScrollPane(downPane,
+        //      JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        //downScrollPane.setPreferredSize(new Dimension(300, 300));
 
         horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upPane, new JScrollPane(downPane));
         horizontalSplit.setDividerLocation((int) (HEIGHT * .40));
