@@ -1,8 +1,11 @@
 package ui;
 
+import model.Scheduler;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class MainFrame extends JFrame implements ActionListener {
@@ -17,8 +20,6 @@ public class MainFrame extends JFrame implements ActionListener {
     JPanel upPane;
     JPanel downPane;
 
-    MainFrame mainFrame;
-
 
     public MainFrame() {
         boolean isSchedule = true;
@@ -27,12 +28,17 @@ public class MainFrame extends JFrame implements ActionListener {
 
         //ScheduleFilter filterPaneUp = new ScheduleFilter();
         //TableSchedulePanel schedulePaneDown = new TableSchedulePanel();
+        ArrayList<Scheduler> help = new ArrayList<>();
+        help.add(new Scheduler(0));
+        help.add(new Scheduler(0));
+        help.add(new Scheduler(0));
+
         if (isSchedule) {
             upPane = new ScheduleFilter();
-            downPane = new TableSchedulePanel();
+            downPane = new TableSchedulePanel(help);
         } else {
             upPane = new CourseDetailer();
-            downPane = new CourseAdder();
+            downPane = new CourseAdder(new int[]{1, 1, 1});
         }
 
 
@@ -53,12 +59,11 @@ public class MainFrame extends JFrame implements ActionListener {
 
     }
 
-    public static void initializeGraphics() {
+    public void initializeGraphics() {
         //Create and set up the window.
         frame = new JFrame("Graphical UI Frame");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        MainFrame mainFrame = new MainFrame();
-        frame.getContentPane().add(mainFrame.getLeftmostSplitPane());
+        frame.getContentPane().add(getLeftmostSplitPane());
 
         frame.pack();
         frame.setVisible(true);
@@ -145,13 +150,13 @@ public class MainFrame extends JFrame implements ActionListener {
         switch (e.getActionCommand()) {
             case "addNew":
                 //parent.getComponent(1).r;
-
+                System.out.println(addNewCourse());
                 break;
             case "addFrom":
 
                 break;
             case "viewC":
-                viewCoursesThing();
+                viewCoursePanes();
                 break;
             case "generate":
 
@@ -160,7 +165,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
                 break;
             case "viewS":
-
+                viewSchedulePanes();
                 break;
             case "delete":
 
@@ -171,24 +176,41 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
-    public void changeTester() {
-        upPane = new CourseDetailer();
-        downPane = new CourseAdder();
-        Dimension minimumSize = new Dimension(100, 50);
-
-        upPane.setMinimumSize(minimumSize);
-        downPane.setMinimumSize(new Dimension(500, 500));
+    private int[] addNewCourse() {
+        int[] returnInts = new int[3];
+        returnInts[0] =  getSubCouresesAmount("Sub Courses", 1);
+        returnInts[1] =  getSubCouresesAmount("Labs", 0);
+        returnInts[2] =  getSubCouresesAmount("Tutorials", 0);
+        return returnInts;
     }
 
-    private void viewCoursesThing() {
+    private int getSubCouresesAmount(String type, int min) {
+        Integer[] maxOptions = new Integer[99 + min];
+        for (int i = min; i < maxOptions.length; i++) {
+            maxOptions[i] = i;
+        }
+        try {
+            return (int) JOptionPane.showInputDialog(
+                    frame,
+                    "How many" +  type + "?:\n",
+                    type + " Amount",
+                    JOptionPane.PLAIN_MESSAGE,
+                    new ImageIcon(),
+                    maxOptions,
+                    "ham");
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    private void viewCoursePanes() {
         //frame.removeAll();
         frame.getContentPane().removeAll();
 
         JPanel menuPane = makeActionButtons();
 
         upPane = new CourseDetailer();
-        downPane = new CourseAdder();
-
+        downPane = new CourseAdder(new int[]{1, 1, 1});
 
         Dimension minimumSize = new Dimension(100, 50);
         menuPane.setMinimumSize(minimumSize);
@@ -205,8 +227,7 @@ public class MainFrame extends JFrame implements ActionListener {
         leftSplit.setDividerLocation((int) (WIDTH * .20));
         leftSplit.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 
-        frame.getContentPane().add((new MainFrame()).getLeftmostSplitPane());
-        //mainFrame.changeTester();
+        frame.getContentPane().add(getLeftmostSplitPane());
         frame.revalidate();
         frame.repaint();
 
@@ -214,5 +235,40 @@ public class MainFrame extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 
+    private void viewSchedulePanes() {
+        //frame.removeAll();
+        frame.getContentPane().removeAll();
 
+        JPanel menuPane = makeActionButtons();
+
+        ArrayList<Scheduler> help = new ArrayList<>();
+        help.add(new Scheduler(0));
+        help.add(new Scheduler(0));
+        help.add(new Scheduler(0));
+
+        upPane = new ScheduleFilter();
+        downPane = new TableSchedulePanel(help);
+
+        Dimension minimumSize = new Dimension(100, 50);
+        menuPane.setMinimumSize(minimumSize);
+        upPane.setMinimumSize(minimumSize);
+        downPane.setMinimumSize(new Dimension(500, 500));
+
+        //downScrollPane. ();
+
+        horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upPane, new JScrollPane(downPane));
+        horizontalSplit.setDividerLocation((int) (HEIGHT * .40));
+        horizontalSplit.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
+        leftSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, menuPane, horizontalSplit);
+        leftSplit.setDividerLocation((int) (WIDTH * .20));
+        leftSplit.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
+        frame.getContentPane().add(getLeftmostSplitPane());
+        frame.revalidate();
+        frame.repaint();
+
+        frame.pack();
+        frame.setVisible(true);
+    }
 }
