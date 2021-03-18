@@ -35,7 +35,7 @@ public class CourseAdder extends JPanel implements ActionListener {
     static final int GAP = 10;
 
     public CourseAdder(int[] sizes) {
-        setLayout(new SpringLayout());
+        setLayout(new GridBagLayout());
 
         numSub = sizes[0];
         numLab = sizes[1];
@@ -49,8 +49,14 @@ public class CourseAdder extends JPanel implements ActionListener {
 
         //JScrollPane scrollPane = new JScrollPane();
 
-        add(createEntryFields());
-        add(createButtons());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+
+        add(createEntryFields(), c);
+        c.gridy = 1;
+        add(createButtons(), c);
 
         //add(scrollPane);
     }
@@ -92,20 +98,34 @@ public class CourseAdder extends JPanel implements ActionListener {
     }
 
     protected JComponent createButtons() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+        //JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
+        JPanel panel = new JPanel(new GridBagLayout());
 
-        JButton button = new JButton("Add Course");
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
+        c.gridx = 0;
+        c.gridy = 0;
+
+        JButton button = new JButton("How to Format");
         button.addActionListener(this);
-        panel.add(button);
+        button.setActionCommand("format");
+        panel.add(button, c);
 
+        c.gridx = 3;
+        button = new JButton("Add Course");
+        button.addActionListener(this);
+        panel.add(button, c);
+
+        c.gridx = 4;
         button = new JButton("Clear Information");
         button.addActionListener(this);
         button.setActionCommand("clear");
-        panel.add(button);
+        panel.add(button, c);
 
         //Match the SpringLayout's gap, subtracting 5 to make
         //up for the default gap FlowLayout provides.
-        panel.setBorder(BorderFactory.createEmptyBorder(0, 0, GAP - 5, GAP - 5));
+        //panel.setBorder(BorderFactory.createEmptyBorder(0, 0, GAP - 5, GAP - 5));
         return panel;
     }
 
@@ -176,9 +196,11 @@ public class CourseAdder extends JPanel implements ActionListener {
 
         int count = 1 + numSub * 4 + effLab * 4 + effTut * 4;
 
-        associateLabels(panel, count, labels, fields);
+        setUpLayout(panel, labels, fields);
 
-        springLayoutLayout((GridBagLayout) panel.getLayout(), labels, fields);
+        //associateLabels(panel, count, labels, fields);
+
+        //setUpLayout((GridBagLayout) panel.getLayout(), labels, fields);
 
         //SpringUtilities.makeCompactGrid(panel, count, 2, GAP, GAP, GAP, GAP / 2);
 
@@ -187,9 +209,82 @@ public class CourseAdder extends JPanel implements ActionListener {
         return panel;
     }
 
-    private void springLayoutLayout(GridBagLayout layout, JLabel[] labels, JComponent[] fields) {
+    private void setUpLayout(JPanel panel, JLabel[] labels, JComponent[] fields) {
         //layout.putConstraint(SpringLayout.WEST, labels[0], 5,SpringLayout.WEST, this);
         //layout.putConstraint(SpringLayout.WEST, fields[1], 3, SpringLayout.NORTH, labels[0]);
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
+        c.gridx = 0;
+        c.gridy = 0;
+        panel.add(labels[0], c);
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridwidth = 3;
+        panel.add(fields[0], c);
+        c.gridwidth = 1;
+        int labelInt = 1;
+        labelInt = setUpLayout(panel, c, labels, fields, labelInt, numSub, 0);
+        labelInt = setUpLayout(panel, c, labels, fields, labelInt, numLab, numSub);
+        labelInt = setUpLayout(panel, c, labels, fields, labelInt, numTut, numSub + Math.max(numLab, 0));
+    }
+
+    private int setUpLayout(JPanel panel, GridBagConstraints c, JLabel[] labels,
+                               JComponent[] fields, int labelInt, int numType, int start) {
+        for (int i = start; i < numType + start; i++) {
+            c.gridx = 0;
+            c.gridy = i * 2 + 1;
+            panel.add(labels[labelInt], c); //name
+            c.gridx = 1;
+            c.gridwidth = 2;
+            panel.add(fields[labelInt++], c);
+
+            c.gridwidth = 1;
+            c.gridx = 0;
+            c.gridy = i * 2 + 2;
+            panel.add(labels[labelInt], c); //Start Time
+            c.gridx = 1;
+            panel.add(fields[labelInt++], c);
+            c.gridx = 2;
+            panel.add(labels[labelInt], c); //End Time
+            c.gridx = 3;
+            panel.add(fields[labelInt++], c);
+            c.gridx = 4;
+            panel.add(labels[labelInt], c); //Days
+            c.gridx = 5;
+            panel.add(fields[labelInt++], c);
+        }
+        return labelInt;
+    }
+
+    private int setupSubLayout(JPanel panel, GridBagConstraints c, JLabel[] labels, JComponent[] fields, int numType) {
+        int labelInt = 1;
+        c.gridwidth = 1;
+        for (int i = 0; i < numType; i++) {
+            c.gridx = 0;
+            c.gridy = i * 2 + 1;
+            panel.add(labels[labelInt], c); //name
+            c.gridx = 1;
+            c.gridy = i + 1;
+            c.gridwidth = 2;
+            panel.add(fields[labelInt++], c);
+
+            c.gridwidth = 1;
+            c.gridx = 0;
+            c.gridy = i * 2 + 2;
+            panel.add(labels[labelInt], c); //Start Time
+            c.gridx = 1;
+            panel.add(fields[labelInt++], c);
+            c.gridx = 2;
+            panel.add(labels[labelInt], c); //End Time
+            c.gridx = 3;
+            panel.add(fields[labelInt++], c);
+            c.gridx = 4;
+            panel.add(labels[labelInt], c); //Days
+            c.gridx = 5;
+            panel.add(fields[labelInt++], c);
+        }
+        return labelInt;
     }
 
     private void associateSubFieldsAndLabels(JPanel panel, String[] labelStrings, JComponent[] fields, JLabel[] labels) {

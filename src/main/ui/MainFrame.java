@@ -210,7 +210,7 @@ public class MainFrame extends JFrame implements ActionListener {
         JPanel menuPane = makeActionButtons();
 
         upPane = new CourseDetailer();
-        downPane = new CourseAdder(new int[]{1, 1, 1});
+        downPane = new CourseAdder(new int[]{2, 1, 1});
 
         Dimension minimumSize = new Dimension(100, 50);
         menuPane.setMinimumSize(minimumSize);
