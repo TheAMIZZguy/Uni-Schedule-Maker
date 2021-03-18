@@ -131,28 +131,80 @@ public class CourseAdder extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if ("clear".equals(e.getActionCommand())) {
-            nameField.setText("");
-            for (int i = 0; i < numSub; i++) {
-                subCourseNameFields[i].setText("");
-                subCourseStartTimeFields[i].setText(null);
-                subCourseEndTimeFields[i].setText(null);
-                subCourseDayFields[i].setText(null);
-            }
-            for (int i = 0; i < numLab; i++) {
-                labNameFields[i].setText("");
-                labStartTimeFields[i].setText(null);
-                labEndTimeFields[i].setText(null);
-                labDayFields[i].setText(null);
-            }
-            for (int i = 0; i < numTut; i++) {
-                tutorialNameFields[i].setText("");
-                tutorialStartTimeFields[i].setText(null);
-                tutorialEndTimeFields[i].setText(null);
-                tutorialDayFields[i].setText(null);
-            }
+            clearFields();
+        } else if ("format".equals(e.getActionCommand())) {
+            JDialog dialog = new JDialog(new JFrame(), "How To Format");
+
+            JLabel label = dialogLabelHelper();
+
+            JPanel contentPane = formatDialogHelper(dialog, label);
+            dialog.setContentPane(contentPane);
+
+            dialog.setSize(new Dimension(600, 300));
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
         } else {
             //todo
             //add Course
+        }
+    }
+
+    private JLabel dialogLabelHelper() {
+        JLabel label = new JLabel("<html><p align=left> "
+                + "How to Format: <br>"
+                + "Name - (Main Course Name): <br> &emsp Ex.  CPSC 210  <br>"
+                + "Sub Course Name/Lab Name/Tutorial Name - (What you add to Main name): <br>"
+                + "&emsp Ex: 201 or L2A or T1B <br>"
+                + "Start Time - (Military Time From 700 to 2030): <br> &emsp Ex: 1030 <br>"
+                + "End Time - (Military Time From 730 to 2100): <br> &emsp Ex: 1200 <br>"
+                + "Days - (Calendar Format): <br> &emsp Ex: MTWThF or TTh or MWF or T");
+        label.setHorizontalAlignment(JLabel.CENTER);
+        Font font = label.getFont();
+        label.setFont(label.getFont().deriveFont(font.PLAIN, 14.0f));
+        return label;
+    }
+
+    private JPanel formatDialogHelper(JDialog dialog, JLabel label) {
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dialog.setVisible(false);
+                dialog.dispose();
+            }
+        });
+
+        JPanel closePanel = new JPanel();
+        closePanel.setLayout(new BoxLayout(closePanel, BoxLayout.LINE_AXIS));
+        closePanel.add(Box.createHorizontalGlue());
+        closePanel.add(closeButton);
+        closePanel.setBorder(BorderFactory.createEmptyBorder(0,0,5,5));
+
+        JPanel contentPane = new JPanel(new BorderLayout());
+        contentPane.add(label, BorderLayout.CENTER);
+        contentPane.add(closePanel, BorderLayout.PAGE_END);
+        contentPane.setOpaque(true);
+        return contentPane;
+    }
+
+    private void clearFields() {
+        nameField.setText("");
+        for (int i = 0; i < numSub; i++) {
+            subCourseNameFields[i].setText("");
+            subCourseStartTimeFields[i].setText(null);
+            subCourseEndTimeFields[i].setText(null);
+            subCourseDayFields[i].setText(null);
+        }
+        for (int i = 0; i < numLab; i++) {
+            labNameFields[i].setText("");
+            labStartTimeFields[i].setText(null);
+            labEndTimeFields[i].setText(null);
+            labDayFields[i].setText(null);
+        }
+        for (int i = 0; i < numTut; i++) {
+            tutorialNameFields[i].setText("");
+            tutorialStartTimeFields[i].setText(null);
+            tutorialEndTimeFields[i].setText(null);
+            tutorialDayFields[i].setText(null);
         }
     }
 
