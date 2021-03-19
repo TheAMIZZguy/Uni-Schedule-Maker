@@ -248,4 +248,8 @@ public class Course {
         this.tutorialTimes.replace(name, newTimes);
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class CourseDetailer extends JPanel implements ListSelectionListener {
 
     private JList list;
-    private DefaultListModel listModel;
+    private DefaultListModel<Course> listModel;
 
     private static final String hireString = "Add Course";
     private static final String fireString = "Commit Die";
@@ -32,55 +32,57 @@ public class CourseDetailer extends JPanel implements ListSelectionListener {
         listModel = new DefaultListModel();
 
         for (Course course : coursesList) {
-            listModel.addElement(course.getName());
+            listModel.addElement(course);
         }
 
         //Create the list and put it in a scroll pane.
         list = new JList(listModel);
+        list.setModel(listModel);
+
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setSelectedIndex(0);
+        //list.setSelectedIndex(0);
         list.addListSelectionListener(this);
         list.setVisibleRowCount(5);
         JScrollPane listScrollPane = new JScrollPane(list);
 
-        JButton hireButton = new JButton(hireString);
-        HireListener hireListener = new HireListener(hireButton);
-        hireButton.setActionCommand(hireString);
-        hireButton.addActionListener(hireListener);
-        hireButton.setEnabled(false);
+//        JButton hireButton = new JButton(hireString);
+//        HireListener hireListener = new HireListener(hireButton);
+//        hireButton.setActionCommand(hireString);
+//        hireButton.addActionListener(hireListener);
+//        hireButton.setEnabled(false);
 
-        deleteClassButton = new JButton(fireString);
-        deleteClassButton.setActionCommand(fireString);
-        deleteClassButton.addActionListener(new DeleteListener());
+//        deleteClassButton = new JButton(fireString);
+//        deleteClassButton.setActionCommand(fireString);
+//        deleteClassButton.addActionListener(new DeleteListener());
 
-        courseName = new JTextField(10);
-        courseName.addActionListener(hireListener);
-        courseName.getDocument().addDocumentListener(hireListener);
-        String name = listModel.getElementAt(
-                list.getSelectedIndex()).toString();
+        //courseName = new JTextField(10);
+        //courseName.addActionListener(hireListener);
+        //courseName.getDocument().addDocumentListener(hireListener);
+        //String name = listModel.getElementAt(list.getSelectedIndex()).toString();
 
-        //Create a panel that uses BoxLayout.
-        JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new BoxLayout(buttonPane,
-                BoxLayout.LINE_AXIS));
-        buttonPane.add(deleteClassButton);
-        buttonPane.add(Box.createHorizontalStrut(5));
-        buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
-        buttonPane.add(Box.createHorizontalStrut(5));
-        buttonPane.add(courseName);
-        buttonPane.add(hireButton);
-        buttonPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+//        //Create a panel that uses BoxLayout.
+//        JPanel buttonPane = new JPanel();
+//        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
+//        buttonPane.add(deleteClassButton);
+//        buttonPane.add(Box.createHorizontalStrut(5));
+//        buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
+//        buttonPane.add(Box.createHorizontalStrut(5));
+//        //buttonPane.add(courseName);
+//        //buttonPane.add(hireButton);
+//        buttonPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         add(listScrollPane, BorderLayout.CENTER);
-        add(buttonPane, BorderLayout.PAGE_END);
+        //add(buttonPane, BorderLayout.PAGE_END);
     }
 
     //Listens to the list
     public void valueChanged(ListSelectionEvent e) {
         JList list = (JList)e.getSource();
-        parent.courseViewerChange((String) list.getSelectedValue());
+        parent.courseViewerChange((Course) list.getSelectedValue());
+        list.updateUI();
     }
 
+    /*
     class DeleteListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             //This method can be called only if
@@ -105,7 +107,9 @@ public class CourseDetailer extends JPanel implements ListSelectionListener {
             }
         }
     }
+    */
 
+    /*
     class HireListener implements ActionListener, DocumentListener {
         private boolean alreadyEnabled = false;
         private JButton button;
@@ -185,6 +189,8 @@ public class CourseDetailer extends JPanel implements ListSelectionListener {
             return false;
         }
     }
+
+     */
 
     /*
     @Override

@@ -298,20 +298,8 @@ public class MainFrame extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 
-    public void courseViewerChange(String courseString) {
+    public void courseViewerChange(Course course) {
 
-        Course showCourse = null;
-
-        boolean foundCourse = false;
-        for (Course course : savedCourseList) {
-            if (courseString.equals(course.getName())) {
-                showCourse = course;
-                foundCourse = true;
-            }
-        }
-        if (!foundCourse) {
-            return;
-        }
         //frame.removeAll();
         frame.getContentPane().removeAll();
 
@@ -319,7 +307,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         upPane = new CourseDetailer(this, savedCourseList);
 
-        downPane = new CourseViewer(showCourse);
+        downPane = new CourseViewer(course);
 
         Dimension minimumSize = new Dimension(100, 50);
         menuPane.setMinimumSize(minimumSize);
