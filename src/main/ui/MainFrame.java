@@ -40,6 +40,9 @@ public class MainFrame extends JFrame implements ActionListener {
     ArrayList<Course> savedCourseList = new ArrayList<>();
     ArrayList<Course> activeCourseList = new ArrayList<>();
 
+    private Course selectedSaveCourse;
+    private Course selectedActiveCourse;
+
 
     public MainFrame() {
         boolean isSchedule = true;
@@ -220,10 +223,26 @@ public class MainFrame extends JFrame implements ActionListener {
                     JOptionPane.PLAIN_MESSAGE,
                     new ImageIcon(),
                     maxOptions,
-                    "ham");
+                    min);
         } catch (Exception e) {
-            return -1;
+            return min;
         }
+    }
+
+    public void setSelectedSaveCourse(Course course) {
+        this.selectedSaveCourse = course;
+    }
+
+    public void setSelectedActiveCourse(Course course) {
+        this.selectedActiveCourse = course;
+    }
+
+    public Course getSelectedSaveCourse() {
+        return this.selectedSaveCourse;
+    }
+
+    public Course getSelectedActiveCourse() {
+        return this.selectedActiveCourse;
     }
 
     private void viewCoursePanes(int[] dimensions) {
