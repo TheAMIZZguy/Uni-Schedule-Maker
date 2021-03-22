@@ -16,6 +16,10 @@ public class TableSchedulePanel extends JPanel {
 
         this.schedules = schedules;
 
+//        if (schedules.size() == 0) {
+//            schedules.add(new Scheduler(0));
+//        }
+
         for (int i = 0; i < schedules.size(); i++) {
             addScheduleTable(schedules.get(i), Integer.toString(i));
         }

@@ -1,6 +1,7 @@
 package ui;
 
 import model.Course;
+import model.Designer;
 import model.Scheduler;
 
 import java.awt.*;
@@ -30,11 +31,12 @@ public class MainFrame extends JFrame implements ActionListener {
 
     Course phys118 = new Course("PHYS 118", new ArrayList<>(Arrays.asList("202")),
             new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})),
-            true, new ArrayList<>(Arrays.asList("L2A")),
-            new ArrayList<>(Arrays.asList(new int[][]{{9,30}, {10,0}, {1,3,5}}, new int[][]{})),
-            false, new ArrayList<>(Arrays.asList("T2A", "T2C")),
+            true, new ArrayList<>(Arrays.asList("L2A", "L2B")),
             new ArrayList<>(Arrays.asList(new int[][]{{10,0}, {12,0}, {1,3,5}},
-                    new int[][]{{10,0}, {12,0}, {1,3,5}})));
+                    new int[][]{{15,0}, {18,0}, {4}})),
+            true, new ArrayList<>(Arrays.asList("T2A", "T2C")),
+            new ArrayList<>(Arrays.asList(new int[][]{{20,0}, {21,0}, {1,3,5}},
+                    new int[][]{{12,0}, {13,30}, {2}})));
     //
 
     ArrayList<Course> savedCourseList = new ArrayList<>();
@@ -43,18 +45,16 @@ public class MainFrame extends JFrame implements ActionListener {
     private Course selectedSaveCourse;
     private Course selectedActiveCourse;
 
+    ArrayList<ArrayList<Course>> listOfCoursesPermutation;
+    ArrayList<Scheduler> activeScheduleList = new ArrayList<>();
+
+    Designer designer;
+
 
     public MainFrame() {
         boolean isSchedule = true;
         //ActionButtons menuPane = new ActionButtons();
         JPanel menuPane = makeActionButtons();
-
-        //ScheduleFilter filterPaneUp = new ScheduleFilter();
-        //TableSchedulePanel schedulePaneDown = new TableSchedulePanel();
-        ArrayList<Scheduler> help = new ArrayList<>();
-        help.add(new Scheduler(0));
-        help.add(new Scheduler(0));
-        help.add(new Scheduler(0));
 
         savedCourseList.add(cpsc110);
         savedCourseList.add(cpsc121);
@@ -62,7 +62,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         if (isSchedule) {
             upPane = new ScheduleFilter();
-            downPane = new TableSchedulePanel(help);
+            downPane = new TableSchedulePanel(activeScheduleList);
         } else {
             upPane = new CourseDetailer(this, savedCourseList, activeCourseList);
             downPane = new CourseAdder(this, new int[]{2, 1, 1});
@@ -176,7 +176,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 viewCoursePanes(new int[]{0});
                 break;
             case "generate":
-
+                generateSchedules();
                 break;
             case "saveGenerated":
 
@@ -191,6 +191,123 @@ public class MainFrame extends JFrame implements ActionListener {
                 //save and exit
                 break;
         }
+    }
+
+    private void generateSchedules() {
+        boolean madeSchedule = false;
+
+        int maxClassesAtOnce = getNumberPopup("Up to how many classes would you want to take at once?", 1);
+        switch (generationType()) {
+            case 0:
+                madeSchedule = simpleDesigner(activeCourseList, maxClassesAtOnce);
+                break;
+            case 1:
+                madeSchedule = createPermutationSchedule(maxClassesAtOnce);
+                break;
+            case 2:
+                madeSchedule = createSemiPermutationSchedule(maxClassesAtOnce);
+                break;
+        }
+        if (!madeSchedule) {
+            //todo make error popup
+            System.out.println("Impossible to make a schedule");
+        }
+
+    }
+
+    //MODIFIES: this
+    //EFFECTS: applies a designer to make a list of Scheduler
+    //note: boolean return value was made redundant for the moment
+    private boolean simpleDesigner(ArrayList<Course> listOfCoursesForDesigner, int maxClassesAtOnce) {
+        boolean returnBool = true;
+        designer = new Designer(listOfCoursesForDesigner, maxClassesAtOnce);
+        if (designer.buildSchedulesOnlyMainWithPriority() && designer.buildSchedulesWithLabsAndTutorials()) {
+            ArrayList<Scheduler> schedules = designer.getSchedules();
+            for (int i = 0; i < schedules.size(); i++) {
+                this.activeScheduleList.add(schedules.get(i));
+            }
+        } else {
+            returnBool = false;
+        }
+        return returnBool;
+    }
+
+    //MODIFIES: this
+    //EFFECTS: applies a designer to make a list of Scheduler, with several different iterations for variety
+    //note: boolean return value was made redundant for the moment
+    public boolean createPermutationSchedule(int maxClassesAtOnce) {
+        listOfCoursesPermutation = permutationOfCourseList(activeCourseList);
+
+        boolean returnBool = true;
+        for (int i = 0; i < listOfCoursesPermutation.size(); i++) {
+            if (!simpleDesigner(listOfCoursesPermutation.get(i), maxClassesAtOnce)) {
+                returnBool = false;
+            }
+        }
+        return returnBool;
+    }
+
+    //These next two functions were pulled from StackOverflow in order to get a permutation of a list,
+    //I modified it to work with the courses
+    //EFFECTS: make an arraylist of arraylists of every permutation of the arraylist
+    public ArrayList<ArrayList<Course>> permutationOfCourseList(ArrayList<Course> originalCourseList) {
+        ArrayList<ArrayList<Course>> results = new ArrayList<ArrayList<Course>>();
+        if (originalCourseList == null || originalCourseList.size() == 0) {
+            return results;
+        }
+        ArrayList<Course> result = new ArrayList<>();
+        recursivePermuter(originalCourseList, results, result);
+        return results;
+    }
+
+    //EFFECTS: make an arraylist of arraylists of every permutation of the arraylist.
+    //     Does so by recursively switching values around.
+    public void recursivePermuter(ArrayList<Course> originalCourseList,
+                                  ArrayList<ArrayList<Course>> results, ArrayList<Course> result) {
+        if (originalCourseList.size() == result.size()) {
+            ArrayList<Course> temp = new ArrayList<>(result);
+            results.add(temp);
+        }
+        for (int i = 0; i < originalCourseList.size(); i++) {
+            if (!result.contains(originalCourseList.get(i))) {
+                result.add(originalCourseList.get(i));
+                recursivePermuter(originalCourseList, results, result);
+                result.remove(result.size() - 1);
+            }
+        }
+    }
+
+    //EFFECTS: creates n arrays where each one is the same but with a different starting point, returns true if success
+    public boolean createSemiPermutationSchedule(int maxClassesAtOnce) {
+
+        listOfCoursesPermutation = semiPermutationOfCourseList(activeCourseList);
+
+        boolean returnBool = true;
+        for (int i = 0; i < listOfCoursesPermutation.size(); i++) {
+            if (!simpleDesigner(listOfCoursesPermutation.get(i), maxClassesAtOnce)) {
+                returnBool = false;
+            }
+        }
+        return returnBool;
+    }
+
+    //EFFECTS: creates n arrays where each one is the same but with a different starting point
+    private ArrayList<ArrayList<Course>> semiPermutationOfCourseList(ArrayList<Course> originalCourseList) {
+        ArrayList<ArrayList<Course>> results = new ArrayList<ArrayList<Course>>();
+        if (originalCourseList == null || originalCourseList.size() == 0) {
+            return results;
+        }
+
+        for (int i = 0; i < originalCourseList.size(); i++) {
+            ArrayList<Course> tempList = new ArrayList<>();
+            tempList = new ArrayList<>(originalCourseList.subList(i, originalCourseList.size()));
+            for (int j = 0; j < i; j++) {
+                tempList.add(originalCourseList.get(j));
+            }
+            results.add(tempList);
+        }
+
+        return results;
     }
 
     private void addNewCourse() {
@@ -217,6 +334,49 @@ public class MainFrame extends JFrame implements ActionListener {
                     min);
         } catch (Exception e) {
             return min;
+        }
+    }
+
+    private int getNumberPopup(String message, int min) {
+        Integer[] maxOptions = new Integer[99 + min];
+        for (int i = min; i < maxOptions.length; i++) {
+            maxOptions[i] = i;
+        }
+        try {
+            return (int) JOptionPane.showInputDialog(
+                    frame,
+                    message,
+                    "Number selecter",
+                    JOptionPane.PLAIN_MESSAGE,
+                    new ImageIcon(),
+                    maxOptions,
+                    min);
+        } catch (Exception e) {
+            return min;
+        }
+    }
+
+    private int generationType() {
+        String[] options = new String[]{"Simple", "Permutation", "Loop"};
+        try {
+            String returnStr = (String) JOptionPane.showInputDialog(
+                    frame,
+                    "How do you want to generate schedules?\n Simple: Generate few schedules\n Permutation: "
+                            + "Generate all possible schedules (high chance of duplication)\n Loop: Middle-Ground",
+                     "Generation Type",
+                    JOptionPane.PLAIN_MESSAGE,
+                    new ImageIcon(),
+                    options,
+                     "Loop");
+            if (returnStr.equals("Simple")) {
+                return 0;
+            } else if (returnStr.equals("Permutation")) {
+                return 1;
+            } else {
+                return 2;
+            }
+        } catch (Exception e) {
+            return 2;
         }
     }
 
@@ -289,13 +449,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JPanel menuPane = makeActionButtons();
 
-        ArrayList<Scheduler> help = new ArrayList<>();
-        help.add(new Scheduler(0));
-        help.add(new Scheduler(0));
-        help.add(new Scheduler(0));
-
         upPane = new ScheduleFilter();
-        downPane = new TableSchedulePanel(help);
+        downPane = new TableSchedulePanel(activeScheduleList);
 
         Dimension minimumSize = new Dimension(100, 50);
         menuPane.setMinimumSize(minimumSize);

@@ -283,6 +283,20 @@ public class Designer {
                 currentTier++;
             }
         }
+//        for (int i = 0; i < tierXClassesWithLT[currentTier - 1].size(); i++) {
+//            Scheduler schedule = tierXClassesWithLT[currentTier - 1].get(i);
+//            String[] coursesInSchedule = schedule.getCoursesInSchedule();
+//            for (int j = 0; j < coursesToTake.size(); j++) {
+//                Course course = coursesToTake.get(j);
+//                if (course.getHasTutorial() && Arrays.asList(coursesInSchedule).contains(course.getName())) {
+//                    hadTutorial = true;
+//                    if (fillNextTierWithTutorials(course, currentTier)) {
+//                        successTutorial = true;
+//                    }
+//                    currentTier++;
+//                }
+//            }
+//        }
         return currentTier;
     }
 
@@ -300,6 +314,20 @@ public class Designer {
                 currentTier++;
             }
         }
+//        for (int i = 0; i < tierXClassesWithLT[currentTier - 1].size(); i++) {
+//            Scheduler schedule = tierXClassesWithLT[currentTier - 1].get(i);
+//            String[] coursesInSchedule = schedule.getCoursesInSchedule();
+//            for (int j = 0; j < coursesToTake.size(); j++) {
+//                Course course = coursesToTake.get(j);
+//                if (course.getHasLab() && Arrays.asList(coursesInSchedule).contains(course.getName())) {
+//                    hadLab = true;
+//                    if (fillNextTierWithLabs(course, currentTier)) {
+//                        successLab = true;
+//                    }
+//                    currentTier++;
+//                }
+//            }
+//        }
         return currentTier;
     }
 
@@ -359,17 +387,17 @@ public class Designer {
         boolean returnBool = false;
         ArrayList<Scheduler> prevScheds = new ArrayList<>(tierXClassesWithLT[curTier - 1]);
         for (int i = 0; i < prevScheds.size(); i++) {
-            //if (Arrays.asList(prevScheds.get(i).getCoursesInSchedule()).contains(name)) {
-            Scheduler newSched = new Scheduler(prevScheds.get(i));
-            if (newSched.addLabOrTutorialToSchedule(name + " " + nameOfLab, times)) {
-                tierXClassesWithLT[curTier].add(newSched);
-                returnBool = true;
-            }
-            /*} else {
+            if (Arrays.asList(prevScheds.get(i).getCoursesInSchedule()).contains(name)) {
+                Scheduler newSched = new Scheduler(prevScheds.get(i));
+                if (newSched.addLabOrTutorialToSchedule(name + " " + nameOfLab, times)) {
+                    tierXClassesWithLT[curTier].add(newSched);
+                    returnBool = true;
+                }
+            } else {
                 Scheduler newSched = new Scheduler(prevScheds.get(i));
                 tierXClassesWithLT[curTier].add(newSched);
                 returnBool = true;
-            }*/
+            }
             // With how the tree is currently build, it will be impossible for the else to run, but
             // a future improvement might change that so this is kept for safety
         }
