@@ -126,7 +126,7 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
 
         listModel = (DefaultListModel<Course>) list.getModel();
 
-        int index = list.getSelectedIndex();
+        //int index = list.getSelectedIndex();
         //listModel.remove(index);
         System.out.println(parent.getSelectedSaveCourse().toString());
         //System.out.println(selectedSaveCourse.toString());
