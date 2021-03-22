@@ -26,6 +26,8 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
     private JButton savedToActiveButton;
     private JButton activeToSavedButton;
 
+    private JButton generateButton;
+
     private MainFrame parent;
 
 
@@ -83,6 +85,10 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
         deleteActiveCourseButton.setActionCommand(REMOVE_COURSE);
         deleteActiveCourseButton.addActionListener(this);
 
+        generateButton = new JButton("Generate Schedules From Active");
+        generateButton.setActionCommand("Generate");
+        generateButton.addActionListener(this);
+
         //courseName = new JTextField(10);
         //courseName.addActionListener(hireListener);
         //courseName.getDocument().addDocumentListener(hireListener);
@@ -96,8 +102,7 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
         savedButtonPanel.add(Box.createHorizontalStrut(5));
         savedButtonPanel.add(new JSeparator(SwingConstants.VERTICAL));
         savedButtonPanel.add(Box.createHorizontalStrut(5));
-        //savedButtonPanel.add(courseName);
-        //savedButtonPanel.add(hireButton);
+        savedButtonPanel.add(generateButton);
         savedButtonPanel.add(deleteActiveCourseButton);
         savedButtonPanel.add(activeToSavedButton);
         savedButtonPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -110,6 +115,7 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
         if (listModelActive.size() == 0) {
             deleteActiveCourseButton.setEnabled(false);
             activeToSavedButton.setEnabled(false);
+            generateButton.setEnabled(false);
         }
 
 
@@ -173,10 +179,11 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
                 } else {
                     deleteActiveCourseButton.setEnabled(false);
                     activeToSavedButton.setEnabled(false);
+                    generateButton.setEnabled(false);
                 }
 
             }
-        } else {
+        } else if (e.getActionCommand() == SWAP_COURSE){
             JList fromList;
             DefaultListModel<Course> fromModel;
             JList toList;
@@ -189,6 +196,7 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
                 }
                 deleteActiveCourseButton.setEnabled(true);
                 activeToSavedButton.setEnabled(true);
+                generateButton.setEnabled(true);
             } else {
                 fromList = activeCourseList;
                 toList = savedCourseList;
@@ -219,8 +227,19 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
                 } else {
                     deleteActiveCourseButton.setEnabled(false);
                     activeToSavedButton.setEnabled(false);
+                    generateButton.setEnabled(false);
                 }
             }
+        } else {
+            parent.generateSchedules();
+            for (int i = 0; i < listModelActive.size(); i++) {
+                listModelSaved.addElement(listModelActive.get(i));
+            }
+            listModelActive.removeAllElements();
+
+            deleteActiveCourseButton.setEnabled(false);
+            activeToSavedButton.setEnabled(false);
+            generateButton.setEnabled(false);
         }
         refreshParentLists();
     }

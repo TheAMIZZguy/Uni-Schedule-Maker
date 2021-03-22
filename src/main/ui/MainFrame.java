@@ -61,7 +61,7 @@ public class MainFrame extends JFrame implements ActionListener {
         savedCourseList.add(phys118);
 
         if (isSchedule) {
-            upPane = new ScheduleFilter();
+            upPane = new ScheduleFilter(savedCourseList, activeCourseList);
             downPane = new TableSchedulePanel(activeScheduleList);
         } else {
             upPane = new CourseDetailer(this, savedCourseList, activeCourseList);
@@ -108,8 +108,8 @@ public class MainFrame extends JFrame implements ActionListener {
     //5: Same with Remove from AC
     //6: Same with Remove from SC
     //7: Button In Course Detailer
-    protected JButton generateButton;
-    protected JButton saveSchedulesButton;
+    //protected JButton generateButton;
+    //protected JButton saveSchedulesButton;
     protected JButton viewSchedulesButton; //selector of top right
     protected JButton deleteSchedulesButton;
     protected JButton saveAndExitButton;
@@ -122,15 +122,8 @@ public class MainFrame extends JFrame implements ActionListener {
         addNewCourseButton.setHorizontalTextPosition(AbstractButton.LEADING); //aka LEFT, for left-to-right locales
         addNewCourseButton.setActionCommand("addNew");
 
-
         viewCoursesButton = new JButton("View Courses");
         viewCoursesButton.setActionCommand("viewC");
-
-        generateButton = new JButton("Generate New Schedules From Active");
-        generateButton.setActionCommand("generate");
-
-        saveSchedulesButton = new JButton("Save Generated Schedules");
-        saveSchedulesButton.setActionCommand("saveGenerated");
 
         viewSchedulesButton = new JButton("View Schedules");
         viewSchedulesButton.setActionCommand("viewS");
@@ -145,8 +138,6 @@ public class MainFrame extends JFrame implements ActionListener {
         //Listen for actions on buttons 1 and 3.
         addNewCourseButton.addActionListener(this);
         viewCoursesButton.addActionListener(this);
-        generateButton.addActionListener(this);
-        saveSchedulesButton.addActionListener(this);
         viewSchedulesButton.addActionListener(this);
         deleteSchedulesButton.addActionListener(this);
         saveAndExitButton.addActionListener(this);
@@ -158,8 +149,6 @@ public class MainFrame extends JFrame implements ActionListener {
         //Add Components to this container, using the default FlowLayout.
         actionPanel.add(addNewCourseButton);
         actionPanel.add(viewCoursesButton);
-        actionPanel.add(generateButton);
-        actionPanel.add(saveSchedulesButton);
         actionPanel.add(viewSchedulesButton);
         actionPanel.add(deleteSchedulesButton);
         actionPanel.add(saveAndExitButton);
@@ -175,12 +164,6 @@ public class MainFrame extends JFrame implements ActionListener {
             case "viewC":
                 viewCoursePanes(new int[]{0});
                 break;
-            case "generate":
-                generateSchedules();
-                break;
-            case "saveGenerated":
-
-                break;
             case "viewS":
                 viewSchedulePanes();
                 break;
@@ -193,7 +176,7 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
-    private void generateSchedules() {
+    public void generateSchedules() {
         boolean madeSchedule = false;
 
         int maxClassesAtOnce = getNumberPopup("Up to how many classes would you want to take at once?", 1);
@@ -449,7 +432,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JPanel menuPane = makeActionButtons();
 
-        upPane = new ScheduleFilter();
+        upPane = new ScheduleFilter(savedCourseList, activeCourseList);
         downPane = new TableSchedulePanel(activeScheduleList);
 
         Dimension minimumSize = new Dimension(100, 50);

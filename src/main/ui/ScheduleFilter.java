@@ -1,68 +1,42 @@
 package ui;
 
+import model.Course;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class ScheduleFilter extends JPanel implements ItemListener {
 
     JCheckBox[] courses;
-    StringBuffer choices; //Todo rid
-    JLabel testLabel;
 
-    public ScheduleFilter() {
+    public ScheduleFilter(ArrayList<Course> courseList1, ArrayList<Course> courseList2) {
         super(new BorderLayout());
 
-        courses = new JCheckBox[4]; //TODO
+        ArrayList<Course> courseList = new ArrayList<>(courseList1);
+        courseList.addAll(courseList2);
 
-        //Create the check boxes.
-        courses[0] = new JCheckBox("CPSC 121");
-        courses[0].setMnemonic(KeyEvent.VK_C);
-        courses[0].setSelected(true);
+        int size = courseList.size();
 
-        courses[1] = new JCheckBox("MATH 121");
-        courses[1].setMnemonic(KeyEvent.VK_G);
-        courses[1].setSelected(true);
+        JPanel checkPanel = new JPanel(new GridLayout((int) Math.sqrt(size), (int) Math.sqrt(size)));
 
-        courses[2] = new JCheckBox("CPSC 210");
-        courses[2].setMnemonic(KeyEvent.VK_H);
-        courses[2].setSelected(true);
+        courses = new JCheckBox[size]; //TODO
 
-        courses[3] = new JCheckBox("ENGL 100");
-        courses[3].setMnemonic(KeyEvent.VK_T);
-        courses[3].setSelected(true);
+        for (int i = 0; i < size; i++) {
+            courses[i] = new JCheckBox(courseList.get(i).getName());
+            courses[i].setSelected(true);
+            courses[i].addItemListener(this);
+            checkPanel.add(courses[i]);
+        }
 
-        //Register a listener for the check boxes.
-        courses[0].addItemListener(this);
-        courses[1].addItemListener(this);
-        courses[2].addItemListener(this);
-        courses[3].addItemListener(this);
-
-        //Indicates what's on the geek.
-        choices = new StringBuffer("cght");
-
-        //Set up the picture label
-        testLabel = new JLabel();
-        testLabel.setFont(testLabel.getFont().deriveFont(Font.ITALIC));
-        doSomething("Start");
-
-        //Put the check boxes in a column in a panel
-        JPanel checkPanel = new JPanel(new GridLayout(0, 1));
-        checkPanel.add(courses[0]);
-        checkPanel.add(courses[1]);
-        checkPanel.add(courses[2]);
-        checkPanel.add(courses[3]);
 
         add(checkPanel, BorderLayout.LINE_START);
-        add(testLabel, BorderLayout.CENTER);
         setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
     }
 
-    private void doSomething(String str) {
-        testLabel.setText(str);
-    }
 
     @Override
     public void itemStateChanged(ItemEvent e) {
@@ -89,10 +63,5 @@ public class ScheduleFilter extends JPanel implements ItemListener {
         if (e.getStateChange() == ItemEvent.DESELECTED) {
             c = '-';
         }
-
-        //Apply the change to the string.
-        choices.setCharAt(index, c);
-
-        doSomething("c is: " + c);
     }
 }
