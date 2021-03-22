@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
 
 import static java.lang.Integer.max;
 
@@ -35,8 +36,12 @@ public class CourseAdder extends JPanel implements ActionListener {
 
     static final int GAP = 10;
 
-    public CourseAdder(int[] sizes) {
+    private MainFrame parent;
+
+    public CourseAdder(MainFrame parent, int[] sizes) {
         setLayout(new GridBagLayout());
+
+        this.parent = parent;
 
         numSub = sizes[0];
         numLab = sizes[1];
@@ -115,6 +120,7 @@ public class CourseAdder extends JPanel implements ActionListener {
         c.gridx = 3;
         button = new JButton("Add Course");
         button.addActionListener(this);
+        button.setActionCommand("add");
         panel.add(button, c);
 
         c.gridx = 4;
@@ -144,9 +150,131 @@ public class CourseAdder extends JPanel implements ActionListener {
             dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
         } else {
-            //todo
             //add Course
+            //1 get info of all stuff
+            //2 make into class
+            //pass into parent
+            try {
+
+                Course courseToAdd;
+                String name = nameField.getText();
+                ArrayList<String> subClassNames = new ArrayList<>();
+                ArrayList<int[][]> subClassTimes = new ArrayList<>();
+                ArrayList<String> labNames = new ArrayList<>();
+                ArrayList<int[][]> labTimes = new ArrayList<>();
+                ArrayList<String> tutorialNames = new ArrayList<>();
+                ArrayList<int[][]> tutorialTimes = new ArrayList<>();
+
+//            for (JTextField subField : subCourseNameFields) {
+//                subClassNames.add(subField.getText());
+//            }
+
+                for (int i = 0; i < numSub; i++) {
+                    subClassNames.add(subCourseNameFields[i].getText());
+
+                    subClassTimes.add(new int[][]{
+                            obtainTimeSafely(Integer.parseInt(subCourseStartTimeFields[i].getText())),
+                            obtainTimeSafely(Integer.parseInt(subCourseEndTimeFields[i].getText())),
+                            obtainDays(subCourseDayFields[i].getText())});
+                }
+
+                for (int i = 0; i < numLab; i++) {
+                    labNames.add(labNameFields[i].getText());
+
+                    labTimes.add(new int[][]{
+                            obtainTimeSafely(Integer.parseInt(labStartTimeFields[i].getText())),
+                            obtainTimeSafely(Integer.parseInt(labEndTimeFields[i].getText())),
+                            obtainDays(labDayFields[i].getText())});
+                }
+
+                for (int i = 0; i < numTut; i++) {
+                    tutorialNames.add(tutorialNameFields[i].getText());
+
+                    tutorialTimes.add(new int[][]{
+                            obtainTimeSafely(Integer.parseInt(tutorialStartTimeFields[i].getText())),
+                            obtainTimeSafely(Integer.parseInt(tutorialEndTimeFields[i].getText())),
+                            obtainDays(tutorialDayFields[i].getText())});
+                }
+
+//            for (JTextField subField : labNameFields) {
+//                labNames.add(subField.getText());
+//            }
+//
+//            for (JTextField subField : tutorialNameFields) {
+//                tutorialNames.add(subField.getText());
+//            }
+
+                if (numLab <= 0 && numTut <= 0) {
+                    courseToAdd = new Course(name, subClassNames, subClassTimes);
+                } else {
+                    courseToAdd = new Course(name, subClassNames, subClassTimes, numLab != 0, labNames, labTimes,
+                            numTut != 0, tutorialNames, tutorialTimes);
+                }
+                parent.addToActiveCourseList(courseToAdd);
+                clearFields();
+                parent.viewCoursePanes(new int[]{0});
+
+            } catch (Exception e1) {
+                JDialog dialog = new JDialog(new JFrame(), "Error");
+
+                JLabel label = new JLabel("Error, check format");
+
+                JPanel contentPane = formatDialogHelper(dialog, label);
+                dialog.setContentPane(contentPane);
+
+                dialog.setSize(new Dimension(200, 100));
+                dialog.setLocationRelativeTo(this);
+                dialog.setVisible(true);
+            }
         }
+    }
+
+    private int[] obtainTimeSafely(int time) {
+
+        String numString = String.valueOf(time);
+
+        int returnHour = time / 100;
+        int returnMins = 0;
+
+        if (numString.toCharArray()[numString.toCharArray().length - 2] == '3') {
+            returnMins = 30;
+        }
+
+        return new int[]{returnHour, returnMins};
+    }
+
+    private int[] obtainDays(String text) {
+        ArrayList<Integer> preDays = new ArrayList();
+
+        if (text.contains("M")) {
+            preDays.add(1);
+        }
+
+        if (text.contains("T")) {
+            for (int i = 0; i < text.length(); i++) {
+                if (text.charAt(i) == 'T' && text.charAt(i + 1) != 'h') {
+                    preDays.add(2);
+                }
+            }
+        }
+
+        if (text.contains("W")) {
+            preDays.add(3);
+        }
+
+        if (text.contains("Th")) {
+            preDays.add(4);
+        }
+
+        if (text.contains("F")) {
+            preDays.add(5);
+        }
+
+        int[] days = new int[preDays.size()];
+        for (int i = 0; i < preDays.size(); i++) {
+            days[i] = preDays.get(i);
+        }
+        return days;
     }
 
     private JLabel dialogLabelHelper() {
