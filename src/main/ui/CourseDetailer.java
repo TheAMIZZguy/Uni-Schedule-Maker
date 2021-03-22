@@ -8,6 +8,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CourseDetailer extends JPanel implements ListSelectionListener, ActionListener {
@@ -17,15 +18,18 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
     private DefaultListModel<Course> listModelSaved;
     private DefaultListModel<Course> listModelActive;
 
-    private static final String ADD_COURSE = "Add Course";
+    private static final String SWAP_COURSE = "Swap Course";
     private static final String REMOVE_COURSE = "Remove Course";
     private JButton deleteSavedCourseButton;
     private JButton deleteActiveCourseButton;
 
+    private JButton savedToActiveButton;
+    private JButton activeToSavedButton;
+
     private MainFrame parent;
 
 
-    public CourseDetailer(MainFrame parent, ArrayList<Course> coursesList) {
+    public CourseDetailer(MainFrame parent, ArrayList<Course> savedCoursesList, ArrayList<Course> activeCoursesList) {
         super(new BorderLayout());
 
         this.parent = parent;
@@ -33,8 +37,12 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
         listModelSaved = new DefaultListModel();
         listModelActive = new DefaultListModel();
 
-        for (Course course : coursesList) {
+        for (Course course : savedCoursesList) {
             listModelSaved.addElement(course);
+        }
+
+        for (Course course : activeCoursesList) {
+            listModelActive.addElement(course);
         }
 
         //Create the list and put it in a scroll pane.
@@ -59,6 +67,14 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
 //        hireButton.addActionListener(hireListener);
 //        hireButton.setEnabled(false);
 
+        savedToActiveButton = new JButton("Move From Saved to Active");
+        savedToActiveButton.setActionCommand(SWAP_COURSE);
+        savedToActiveButton.addActionListener(this);
+
+        activeToSavedButton = new JButton("Move From Active to Saved");
+        activeToSavedButton.setActionCommand(SWAP_COURSE);
+        activeToSavedButton.addActionListener(this);
+
         deleteSavedCourseButton = new JButton("Remove Saved Course");
         deleteSavedCourseButton.setActionCommand(REMOVE_COURSE);
         deleteSavedCourseButton.addActionListener(this);
@@ -76,14 +92,25 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
         JPanel savedButtonPanel = new JPanel();
         savedButtonPanel.setLayout(new BoxLayout(savedButtonPanel, BoxLayout.LINE_AXIS));
         savedButtonPanel.add(deleteSavedCourseButton);
+        savedButtonPanel.add(savedToActiveButton);
         savedButtonPanel.add(Box.createHorizontalStrut(5));
         savedButtonPanel.add(new JSeparator(SwingConstants.VERTICAL));
         savedButtonPanel.add(Box.createHorizontalStrut(5));
         //savedButtonPanel.add(courseName);
         //savedButtonPanel.add(hireButton);
         savedButtonPanel.add(deleteActiveCourseButton);
+        savedButtonPanel.add(activeToSavedButton);
         savedButtonPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
+        if (listModelSaved.size() == 0) {
+            deleteSavedCourseButton.setEnabled(false);
+            savedToActiveButton.setEnabled(false);
+        }
+
+        if (listModelActive.size() == 0) {
+            deleteActiveCourseButton.setEnabled(false);
+            activeToSavedButton.setEnabled(false);
+        }
 
 
         JSplitPane leftSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, listScrollPaneSaved,
@@ -102,8 +129,8 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
     //Listens to the list
     public void valueChanged(ListSelectionEvent e) {
         JList list = (JList)e.getSource();
+        parent.courseViewerChange((Course) list.getSelectedValue());
         if (list == savedCourseList) {
-            parent.courseViewerChange((Course) list.getSelectedValue());
             parent.setSelectedSaveCourse((Course) list.getSelectedValue());
         } else {
             parent.setSelectedActiveCourse((Course) list.getSelectedValue());
@@ -116,44 +143,102 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
         //This method can be called only if
         //there's a valid selection
         //so go ahead and remove whatever's selected.
-        JList list;
-        DefaultListModel<Course> listModel;
-        if (e.getSource() == deleteSavedCourseButton) {
-            list = savedCourseList;
-        } else {
-            list = activeCourseList;
-        }
-
-        listModel = (DefaultListModel<Course>) list.getModel();
-
-        //int index = list.getSelectedIndex();
-        //listModel.remove(index);
-        System.out.println(parent.getSelectedSaveCourse().toString());
-        //System.out.println(selectedSaveCourse.toString());
-        listModel.removeElement(parent.getSelectedSaveCourse());
-        //listModel.removeElement(selectedSaveCourse);
-        System.out.println(listModel.contains(parent.getSelectedSaveCourse()));
-        //System.out.println(listModel.contains(selectedSaveCourse));
-
-        int size = listModel.getSize();
-        System.out.println(size);
-
-        if (size == 0) { //Nobody's left, disable firing.
-            if (list == savedCourseList) {
-                deleteSavedCourseButton.setEnabled(false);
+        if (e.getActionCommand() == REMOVE_COURSE) {
+            JList list;
+            DefaultListModel<Course> listModel;
+            if (e.getSource() == deleteSavedCourseButton) {
+                list = savedCourseList;
             } else {
-                deleteActiveCourseButton.setEnabled(false);
+                list = activeCourseList;
             }
 
-        } else { //Select an index.
-            if (index == listModel.getSize()) {
-                //removed item in last position
-                index--;
+            listModel = (DefaultListModel<Course>) list.getModel();
+
+            //int index = list.getSelectedIndex();
+            //listModel.remove(index);
+            //System.out.println(parent.getSelectedSaveCourse().toString());
+            //System.out.println(selectedSaveCourse.toString());
+            listModel.removeElement(parent.getSelectedSaveCourse());
+            //listModel.removeElement(selectedSaveCourse);
+            //System.out.println(listModel.contains(parent.getSelectedSaveCourse()));
+            //System.out.println(listModel.contains(selectedSaveCourse));
+
+            int size = listModel.getSize();
+            //System.out.println(size);
+
+            if (size == 0) { //Nobody's left, disable firing.
+                if (list == savedCourseList) {
+                    deleteSavedCourseButton.setEnabled(false);
+                    savedToActiveButton.setEnabled(false);
+                } else {
+                    deleteActiveCourseButton.setEnabled(false);
+                    activeToSavedButton.setEnabled(false);
+                }
+
+            }
+        } else {
+            JList fromList;
+            DefaultListModel<Course> fromModel;
+            JList toList;
+            DefaultListModel<Course> toModel;
+            if (e.getSource() == savedToActiveButton) {
+                fromList = savedCourseList;
+                toList = activeCourseList;
+                if (parent.getSelectedSaveCourse() == null) {
+                    return;
+                }
+                deleteActiveCourseButton.setEnabled(true);
+                activeToSavedButton.setEnabled(true);
+            } else {
+                fromList = activeCourseList;
+                toList = savedCourseList;
+                if (parent.getSelectedActiveCourse() == null) {
+                    return;
+                }
+                deleteSavedCourseButton.setEnabled(true);
+                savedToActiveButton.setEnabled(true);
             }
 
-            list.setSelectedIndex(index);
-            list.ensureIndexIsVisible(index);
+            fromModel = (DefaultListModel<Course>) fromList.getModel();
+            toModel = (DefaultListModel<Course>) toList.getModel();
+
+            if (e.getSource() == savedToActiveButton) {
+                toModel.addElement(parent.getSelectedSaveCourse());
+                fromModel.removeElement(parent.getSelectedSaveCourse());
+            } else {
+                toModel.addElement(parent.getSelectedActiveCourse());
+                fromModel.removeElement(parent.getSelectedActiveCourse());
+            }
+
+            int size = fromModel.getSize();
+
+            if (size == 0) { //Nobody's left, disable firing.
+                if (fromList == savedCourseList) {
+                    deleteSavedCourseButton.setEnabled(false);
+                    savedToActiveButton.setEnabled(false);
+                } else {
+                    deleteActiveCourseButton.setEnabled(false);
+                    activeToSavedButton.setEnabled(false);
+                }
+            }
         }
+        refreshParentLists();
+    }
+
+    public void refreshParentLists() {
+        ArrayList<Course> arrSaved = new ArrayList<>();
+        ArrayList<Course> arrActive = new ArrayList<>();
+
+        for (int i = 0; i < listModelSaved.size(); i++) {
+            arrSaved.add(listModelSaved.get(i));
+        }
+
+        for (int i = 0; i < listModelActive.size(); i++) {
+            arrActive.add(listModelActive.get(i));
+        }
+
+        parent.setSavedCourseList(arrSaved);
+        parent.setActiveCourseList(arrActive);
     }
 
 
