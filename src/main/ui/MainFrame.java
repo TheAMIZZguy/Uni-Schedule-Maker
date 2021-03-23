@@ -150,7 +150,6 @@ public class MainFrame extends JFrame implements ActionListener {
         actionPanel.add(addNewCourseButton);
         actionPanel.add(viewCoursesButton);
         actionPanel.add(viewSchedulesButton);
-        actionPanel.add(deleteSchedulesButton);
         actionPanel.add(saveAndExitButton);
 
         return actionPanel;
