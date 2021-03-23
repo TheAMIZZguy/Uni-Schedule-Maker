@@ -134,6 +134,7 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
 
     //Listens to the list
     public void valueChanged(ListSelectionEvent e) {
+        parent.playSound("click2.wav");
         JList list = (JList)e.getSource();
         parent.courseViewerChange((Course) list.getSelectedValue());
         if (list == savedCourseList) {
@@ -146,6 +147,7 @@ public class CourseDetailer extends JPanel implements ListSelectionListener, Act
 
 
     public void actionPerformed(ActionEvent e) {
+        parent.playSound("click1.wav");
         //This method can be called only if
         //there's a valid selection
         //so go ahead and remove whatever's selected.

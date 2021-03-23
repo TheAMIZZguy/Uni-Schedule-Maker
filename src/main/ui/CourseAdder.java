@@ -136,6 +136,7 @@ public class CourseAdder extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        parent.playSound("click1.wav");
         if ("clear".equals(e.getActionCommand())) {
             clearFields();
         } else if ("format".equals(e.getActionCommand())) {

@@ -7,8 +7,12 @@ import model.Scheduler;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.sound.midi.MidiChannel;
+import javax.sound.sampled.*;
 import javax.swing.*;
 
 public class MainFrame extends JFrame implements ActionListener {
@@ -111,7 +115,7 @@ public class MainFrame extends JFrame implements ActionListener {
     //protected JButton generateButton;
     //protected JButton saveSchedulesButton;
     protected JButton viewSchedulesButton; //selector of top right
-    protected JButton deleteSchedulesButton;
+    //protected JButton deleteSchedulesButton;
     protected JButton saveAndExitButton;
 
     private JPanel makeActionButtons() {
@@ -128,9 +132,6 @@ public class MainFrame extends JFrame implements ActionListener {
         viewSchedulesButton = new JButton("View Schedules");
         viewSchedulesButton.setActionCommand("viewS");
 
-        deleteSchedulesButton = new JButton("Delete Saved schedules");
-        deleteSchedulesButton.setActionCommand("delete");
-
         saveAndExitButton = new JButton("Save and Exit");
         saveAndExitButton.setActionCommand("saveExit");
 
@@ -139,7 +140,6 @@ public class MainFrame extends JFrame implements ActionListener {
         addNewCourseButton.addActionListener(this);
         viewCoursesButton.addActionListener(this);
         viewSchedulesButton.addActionListener(this);
-        deleteSchedulesButton.addActionListener(this);
         saveAndExitButton.addActionListener(this);
 
 //        addNewCourseButton.setToolTipText("Click this button to disable the middle button.");
@@ -157,6 +157,7 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
+        playSound("click1.wav");
         switch (e.getActionCommand()) {
             case "addNew":
                 addNewCourse();
@@ -166,9 +167,6 @@ public class MainFrame extends JFrame implements ActionListener {
                 break;
             case "viewS":
                 viewSchedulePanes();
-                break;
-            case "delete":
-
                 break;
             default:
                 //save and exit
@@ -296,8 +294,11 @@ public class MainFrame extends JFrame implements ActionListener {
     private void addNewCourse() {
         int[] returnInts = new int[3];
         returnInts[0] =  getSubCoursesAmount("Sub Courses", 1);
+        playSound("click1.wav");
         returnInts[1] =  getSubCoursesAmount("Labs", 0);
+        playSound("click1.wav");
         returnInts[2] =  getSubCoursesAmount("Tutorials", 0);
+        playSound("click1.wav");
         viewCoursePanes(returnInts);
     }
 
@@ -489,5 +490,17 @@ public class MainFrame extends JFrame implements ActionListener {
         frame.pack();
         frame.setVisible(true);
 
+    }
+
+    public void playSound(String name) {
+        try {
+            File f = new File("./data/audio/" + name);
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioIn);
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

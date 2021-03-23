@@ -84,8 +84,13 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        schedules.remove(numSchedBox.getSelectedIndex());
-        parent.viewSchedulePanes();
+        parent.playSound("click1.wav");
+        try {
+            schedules.remove(numSchedBox.getSelectedIndex());
+            parent.viewSchedulePanes();
+        } catch (Exception e1) {
+            //just ignore
+        }
         //System.out.println(numSchedBox.getSelectedIndex());
     }
 }
