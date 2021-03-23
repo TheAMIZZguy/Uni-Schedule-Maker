@@ -33,9 +33,6 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
 
         numSchedBox = new JComboBox(numSchedsArr);
 
-        if (schedules.size() == 0) {
-            addScheduleTable(new Scheduler(0), "0");
-        }
 
         JPanel listButtonPanel = new JPanel();
         listButtonPanel.setLayout(new BoxLayout(listButtonPanel, BoxLayout.X_AXIS));
@@ -44,6 +41,10 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
         listButtonPanel.add(deleteSpecified);
 
         add(listButtonPanel);
+
+        if (schedules.size() == 0) {
+            addScheduleTable(new Scheduler(0), "0");
+        }
 
         for (int i = 0; i < schedules.size(); i++) {
             addScheduleTable(schedules.get(i), Integer.toString(i));
