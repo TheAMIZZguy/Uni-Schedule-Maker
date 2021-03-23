@@ -62,7 +62,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         if (isSchedule) {
             upPane = new ScheduleFilter(savedCourseList, activeCourseList);
-            downPane = new TableSchedulePanel(activeScheduleList);
+            downPane = new TableSchedulePanel(this, activeScheduleList);
         } else {
             upPane = new CourseDetailer(this, savedCourseList, activeCourseList);
             downPane = new CourseAdder(this, new int[]{2, 1, 1});
@@ -426,14 +426,14 @@ public class MainFrame extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 
-    private void viewSchedulePanes() {
+    public void viewSchedulePanes() {
         //frame.removeAll();
         frame.getContentPane().removeAll();
 
         JPanel menuPane = makeActionButtons();
 
         upPane = new ScheduleFilter(savedCourseList, activeCourseList);
-        downPane = new TableSchedulePanel(activeScheduleList);
+        downPane = new TableSchedulePanel(this, activeScheduleList);
 
         Dimension minimumSize = new Dimension(100, 50);
         menuPane.setMinimumSize(minimumSize);

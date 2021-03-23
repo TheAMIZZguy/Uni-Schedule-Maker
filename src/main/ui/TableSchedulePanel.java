@@ -16,8 +16,13 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
     private JButton deleteSpecified;
     JComboBox numSchedBox;
 
-    public TableSchedulePanel(ArrayList<Scheduler> schedules) {
-        super(new GridLayout(0,1));
+    MainFrame parent;
+
+    public TableSchedulePanel(MainFrame parent, ArrayList<Scheduler> schedules) {
+        //super(new BoxLayout(this);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        this.parent = parent;
 
         this.schedules = schedules;
 
@@ -36,8 +41,11 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
 
         JPanel listButtonPanel = new JPanel();
         listButtonPanel.setLayout(new BoxLayout(listButtonPanel, BoxLayout.X_AXIS));
-        listButtonPanel.setPreferredSize(new Dimension(200,20));
+        listButtonPanel.setMaximumSize(new Dimension(400,20));
         listButtonPanel.add(numSchedBox);
+        listButtonPanel.add(Box.createHorizontalStrut(10));
+        listButtonPanel.add(new JSeparator(SwingConstants.VERTICAL));
+        listButtonPanel.add(Box.createHorizontalStrut(10));
         listButtonPanel.add(deleteSpecified);
 
         add(listButtonPanel);
@@ -76,6 +84,8 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(numSchedBox.getSelectedIndex());
+        schedules.remove(numSchedBox.getSelectedIndex());
+        parent.viewSchedulePanes();
+        //System.out.println(numSchedBox.getSelectedIndex());
     }
 }
