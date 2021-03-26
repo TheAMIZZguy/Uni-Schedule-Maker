@@ -10,7 +10,6 @@ public class CourseViewer extends JPanel {
 
     public CourseViewer() {
         display = new JLabel("No Selected Course");
-        //display.setText("No Selected Course");
         add(display);
     }
 

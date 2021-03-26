@@ -52,6 +52,10 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
 
         add(listButtonPanel);
 
+        tableAdder(schedules, filters);
+    }
+
+    private void tableAdder(ArrayList<Scheduler> schedules, ArrayList<String> filters) {
         if (schedules.size() == 0) {
             addScheduleTable(new Scheduler(0), "0");
         }

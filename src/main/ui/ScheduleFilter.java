@@ -12,12 +12,12 @@ import java.util.ArrayList;
 public class ScheduleFilter extends JPanel implements ItemListener {
 
     JCheckBox[] courses;
-    ArrayList<String> filters = new ArrayList<>();
+    ArrayList<String> filters;
 
     MainFrame parent;
 
     public ScheduleFilter(MainFrame parent, ArrayList<Course> courseList1, ArrayList<Course> courseList2,
-                          ArrayList<String> filters, boolean isSetup) {
+                          ArrayList<String> filters) {
         super(new BorderLayout());
 
         this.parent = parent;
@@ -34,15 +34,10 @@ public class ScheduleFilter extends JPanel implements ItemListener {
 
         for (int i = 0; i < size; i++) {
             courses[i] = new JCheckBox(courseList.get(i).getName());
-            if (!isSetup) {
-                if (filters.contains(courseList.get(i).getName())) {
-                    courses[i].setSelected(true);
-                } else {
-                    courses[i].setSelected(false);
-                }
-            } else {
+            if (filters.contains(courseList.get(i).getName())) {
                 courses[i].setSelected(true);
-                filters.add(courseList.get(i).getName());
+            } else {
+                courses[i].setSelected(false);
             }
             courses[i].addItemListener(this);
             checkPanel.add(courses[i]);

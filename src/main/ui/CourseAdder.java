@@ -20,21 +20,19 @@ public class CourseAdder extends JPanel implements ActionListener {
     JTextField[] subCourseNameFields;
     JFormattedTextField[] subCourseStartTimeFields;
     JFormattedTextField[] subCourseEndTimeFields;
-    JFormattedTextField[] subCourseDayFields; //todo
+    JFormattedTextField[] subCourseDayFields; //abstractable?
 
     int numLab;
     JTextField[] labNameFields;
     JFormattedTextField[] labStartTimeFields;
     JFormattedTextField[] labEndTimeFields;
-    JFormattedTextField[] labDayFields; //todo
+    JFormattedTextField[] labDayFields;
 
     int numTut;
     JTextField[] tutorialNameFields;
     JFormattedTextField[] tutorialStartTimeFields;
     JFormattedTextField[] tutorialEndTimeFields;
-    JFormattedTextField[] tutorialDayFields; //todo
-
-    static final int GAP = 10;
+    JFormattedTextField[] tutorialDayFields;
 
     private MainFrame parent;
 
@@ -68,44 +66,42 @@ public class CourseAdder extends JPanel implements ActionListener {
         //add(scrollPane);
     }
 
+    private void changeSizeFieldsPart(int num, JTextField[] nameFields, JFormattedTextField[] startField,
+                                      JFormattedTextField[] endField, JFormattedTextField[] dayField) {
+        for (int i = 0; i < num; i++) {
+            nameFields[i] = new JFormattedTextField();
+            startField[i] = new JFormattedTextField();
+            endField[i] = new JFormattedTextField();
+            dayField[i] = new JFormattedTextField();
+        }
+    }
 
     private void changeSizeFields() {
+
+        //this is probably abstractable
         subCourseNameFields = new JTextField[numSub];
         subCourseStartTimeFields = new JFormattedTextField[numSub];
         subCourseEndTimeFields = new JFormattedTextField[numSub];
-        subCourseDayFields = new JFormattedTextField[numSub]; //todo abstract
-        for (int i = 0; i < numSub; i++) {
-            subCourseNameFields[i] = new JFormattedTextField();
-            subCourseStartTimeFields[i] = new JFormattedTextField();
-            subCourseEndTimeFields[i] = new JFormattedTextField();
-            subCourseDayFields[i] = new JFormattedTextField();
-        }
+        subCourseDayFields = new JFormattedTextField[numSub];
+        changeSizeFieldsPart(numSub, subCourseNameFields, subCourseStartTimeFields,
+                subCourseEndTimeFields, subCourseDayFields);
 
         labNameFields = new JTextField[numLab];
         labStartTimeFields = new JFormattedTextField[numLab];
         labEndTimeFields = new JFormattedTextField[numLab];
-        labDayFields = new JFormattedTextField[numLab]; //todo
-        for (int i = 0; i < numLab; i++) {
-            labNameFields[i] = new JFormattedTextField();
-            labStartTimeFields[i] = new JFormattedTextField();
-            labEndTimeFields[i] = new JFormattedTextField();
-            labDayFields[i] = new JFormattedTextField();
-        }
+        labDayFields = new JFormattedTextField[numLab];
+        changeSizeFieldsPart(numLab, labNameFields, labStartTimeFields,
+                labEndTimeFields, labDayFields);
 
         tutorialNameFields = new JTextField[numTut];
         tutorialStartTimeFields = new JFormattedTextField[numTut];
         tutorialEndTimeFields = new JFormattedTextField[numTut];
-        tutorialDayFields = new JFormattedTextField[numTut]; //todo
-        for (int i = 0; i < numTut; i++) {
-            tutorialNameFields[i] = new JFormattedTextField();
-            tutorialStartTimeFields[i] = new JFormattedTextField();
-            tutorialEndTimeFields[i] = new JFormattedTextField();
-            tutorialDayFields[i] = new JFormattedTextField();
-        }
+        tutorialDayFields = new JFormattedTextField[numTut];
+        changeSizeFieldsPart(numTut, tutorialNameFields, tutorialStartTimeFields,
+                tutorialEndTimeFields, tutorialDayFields);
     }
 
     protected JComponent createButtons() {
-        //JPanel panel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         JPanel panel = new JPanel(new GridBagLayout());
 
         GridBagConstraints c = new GridBagConstraints();
@@ -131,9 +127,6 @@ public class CourseAdder extends JPanel implements ActionListener {
         button.setActionCommand("clear");
         panel.add(button, c);
 
-        //Match the SpringLayout's gap, subtracting 5 to make
-        //up for the default gap FlowLayout provides.
-        //panel.setBorder(BorderFactory.createEmptyBorder(0, 0, GAP - 5, GAP - 5));
         return panel;
     }
 
@@ -142,16 +135,7 @@ public class CourseAdder extends JPanel implements ActionListener {
         if ("clear".equals(e.getActionCommand())) {
             clearFields();
         } else if ("format".equals(e.getActionCommand())) {
-            JDialog dialog = new JDialog(new JFrame(), "How To Format");
-
-            JLabel label = dialogLabelHelper();
-
-            JPanel contentPane = formatDialogHelper(dialog, label);
-            dialog.setContentPane(contentPane);
-
-            dialog.setSize(new Dimension(600, 300));
-            dialog.setLocationRelativeTo(this);
-            dialog.setVisible(true);
+            formatDialog();
         } else {
             //add Course
             //1 get info of all stuff
@@ -168,68 +152,88 @@ public class CourseAdder extends JPanel implements ActionListener {
                 ArrayList<String> tutorialNames = new ArrayList<>();
                 ArrayList<int[][]> tutorialTimes = new ArrayList<>();
 
-//            for (JTextField subField : subCourseNameFields) {
-//                subClassNames.add(subField.getText());
-//            }
 
-                for (int i = 0; i < numSub; i++) {
-                    subClassNames.add(subCourseNameFields[i].getText());
+                setupArrayLists(subClassNames, subClassTimes, labNames, labTimes, tutorialNames, tutorialTimes);
 
-                    subClassTimes.add(new int[][]{
-                            obtainTimeSafely(Integer.parseInt(subCourseStartTimeFields[i].getText())),
-                            obtainTimeSafely(Integer.parseInt(subCourseEndTimeFields[i].getText())),
-                            obtainDays(subCourseDayFields[i].getText())});
-                }
 
-                for (int i = 0; i < numLab; i++) {
-                    labNames.add(labNameFields[i].getText());
-
-                    labTimes.add(new int[][]{
-                            obtainTimeSafely(Integer.parseInt(labStartTimeFields[i].getText())),
-                            obtainTimeSafely(Integer.parseInt(labEndTimeFields[i].getText())),
-                            obtainDays(labDayFields[i].getText())});
-                }
-
-                for (int i = 0; i < numTut; i++) {
-                    tutorialNames.add(tutorialNameFields[i].getText());
-
-                    tutorialTimes.add(new int[][]{
-                            obtainTimeSafely(Integer.parseInt(tutorialStartTimeFields[i].getText())),
-                            obtainTimeSafely(Integer.parseInt(tutorialEndTimeFields[i].getText())),
-                            obtainDays(tutorialDayFields[i].getText())});
-                }
-
-//            for (JTextField subField : labNameFields) {
-//                labNames.add(subField.getText());
-//            }
-//
-//            for (JTextField subField : tutorialNameFields) {
-//                tutorialNames.add(subField.getText());
-//            }
-
-                if (numLab <= 0 && numTut <= 0) {
-                    courseToAdd = new Course(name, subClassNames, subClassTimes);
-                } else {
-                    courseToAdd = new Course(name, subClassNames, subClassTimes, numLab != 0, labNames, labTimes,
-                            numTut != 0, tutorialNames, tutorialTimes);
-                }
-                parent.addToActiveCourseList(courseToAdd);
-                clearFields();
-                parent.viewCoursePanes(new int[]{0});
+                addingCourse(name, subClassNames, subClassTimes, labNames, labTimes, tutorialNames, tutorialTimes);
 
             } catch (Exception e1) {
-                JDialog dialog = new JDialog(new JFrame(), "Error");
-
-                JLabel label = new JLabel("Error, check format");
-
-                JPanel contentPane = formatDialogHelper(dialog, label);
-                dialog.setContentPane(contentPane);
-
-                dialog.setSize(new Dimension(200, 100));
-                dialog.setLocationRelativeTo(this);
-                dialog.setVisible(true);
+                errorDialog();
             }
         }
+    }
+
+    private void addingCourse(String name, ArrayList<String> subClassNames, ArrayList<int[][]> subClassTimes,
+                              ArrayList<String> labNames, ArrayList<int[][]> labTimes, ArrayList<String> tutorialNames,
+                              ArrayList<int[][]> tutorialTimes) {
+        Course courseToAdd;
+        if (numLab <= 0 && numTut <= 0) {
+            courseToAdd = new Course(name, subClassNames, subClassTimes);
+        } else {
+            courseToAdd = new Course(name, subClassNames, subClassTimes, numLab != 0, labNames, labTimes,
+                    numTut != 0, tutorialNames, tutorialTimes);
+        }
+        parent.addToActiveCourseList(courseToAdd);
+        clearFields();
+        parent.viewCoursePanes(new int[]{0});
+    }
+
+    private void errorDialog() {
+        JDialog dialog = new JDialog(new JFrame(), "Error");
+
+        JLabel label = new JLabel("Error, check format");
+
+        JPanel contentPane = formatDialogHelper(dialog, label);
+        dialog.setContentPane(contentPane);
+
+        dialog.setSize(new Dimension(200, 100));
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
+    private void setupArrayLists(ArrayList<String> subClassNames, ArrayList<int[][]> subClassTimes,
+                                 ArrayList<String> labNames, ArrayList<int[][]> labTimes,
+                                 ArrayList<String> tutorialNames, ArrayList<int[][]> tutorialTimes) {
+        for (int i = 0; i < numSub; i++) {
+            subClassNames.add(subCourseNameFields[i].getText());
+
+            subClassTimes.add(new int[][]{
+                    obtainTimeSafely(Integer.parseInt(subCourseStartTimeFields[i].getText())),
+                    obtainTimeSafely(Integer.parseInt(subCourseEndTimeFields[i].getText())),
+                    obtainDays(subCourseDayFields[i].getText())});
+        }
+
+        for (int i = 0; i < numLab; i++) {
+            labNames.add(labNameFields[i].getText());
+
+            labTimes.add(new int[][]{
+                    obtainTimeSafely(Integer.parseInt(labStartTimeFields[i].getText())),
+                    obtainTimeSafely(Integer.parseInt(labEndTimeFields[i].getText())),
+                    obtainDays(labDayFields[i].getText())});
+        }
+
+        for (int i = 0; i < numTut; i++) {
+            tutorialNames.add(tutorialNameFields[i].getText());
+
+            tutorialTimes.add(new int[][]{
+                    obtainTimeSafely(Integer.parseInt(tutorialStartTimeFields[i].getText())),
+                    obtainTimeSafely(Integer.parseInt(tutorialEndTimeFields[i].getText())),
+                    obtainDays(tutorialDayFields[i].getText())});
+        }
+    }
+
+    private void formatDialog() {
+        JDialog dialog = new JDialog(new JFrame(), "How To Format");
+
+        JLabel label = dialogLabelHelper();
+
+        JPanel contentPane = formatDialogHelper(dialog, label);
+        dialog.setContentPane(contentPane);
+
+        dialog.setSize(new Dimension(600, 300));
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }
 
     private int[] obtainTimeSafely(int time) {
@@ -247,8 +251,18 @@ public class CourseAdder extends JPanel implements ActionListener {
     }
 
     private int[] obtainDays(String text) {
-        ArrayList<Integer> preDays = new ArrayList();
+        ArrayList<Integer> preDays = new ArrayList<>();
 
+        addDaysToPreDays(text, preDays);
+
+        int[] days = new int[preDays.size()];
+        for (int i = 0; i < preDays.size(); i++) {
+            days[i] = preDays.get(i);
+        }
+        return days;
+    }
+
+    private void addDaysToPreDays(String text, ArrayList<Integer> preDays) {
         if (text.contains("M")) {
             preDays.add(1);
         }
@@ -272,12 +286,6 @@ public class CourseAdder extends JPanel implements ActionListener {
         if (text.contains("F")) {
             preDays.add(5);
         }
-
-        int[] days = new int[preDays.size()];
-        for (int i = 0; i < preDays.size(); i++) {
-            days[i] = preDays.get(i);
-        }
-        return days;
     }
 
     private JLabel dialogLabelHelper() {
@@ -340,7 +348,6 @@ public class CourseAdder extends JPanel implements ActionListener {
     }
 
     protected JComponent createEntryFields() {
-        //JPanel panel = new JPanel(new SpringLayout());
         JPanel panel = new JPanel(new GridBagLayout());
 
         int effLab = Math.max(numLab, 0);
@@ -349,6 +356,7 @@ public class CourseAdder extends JPanel implements ActionListener {
         JLabel[] labels = setupLabels(effLab, effTut);
         JComponent[] fields = setTextFields(effLab, effTut, 0);
 
+        //might be useful later?
         int count = 1 + numSub * 4 + effLab * 4 + effTut * 4;
 
         fieldReSizer(fields);

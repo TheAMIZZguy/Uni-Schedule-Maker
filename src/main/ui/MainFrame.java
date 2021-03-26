@@ -10,11 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
-import javax.sound.midi.MidiChannel;
 import javax.sound.sampled.*;
 import javax.swing.*;
 
@@ -63,34 +60,27 @@ public class MainFrame extends JFrame implements ActionListener {
 
     ArrayList<String> filters = new ArrayList<>();
 
+    protected JButton addNewCourseButton;
+    protected JButton viewCoursesButton;
+    protected JButton viewSchedulesButton;
+    protected JButton saveAndExitButton;
+
 
     public MainFrame() {
-        boolean isSchedule = true;
         //ActionButtons menuPane = new ActionButtons();
         JPanel menuPane = makeActionButtons();
         
         setupVariables();
 
-//
-//        savedCourseList.add(cpsc110);
-//        savedCourseList.add(cpsc121);
-//        savedCourseList.add(phys118);
-
-        if (isSchedule) {
-            upPane = new ScheduleFilter(this, savedCourseList, activeCourseList, filters, true);
-            downPane = new TableSchedulePanel(this, activeScheduleList, new ArrayList<>());
-        } else {
-            upPane = new CourseDetailer(this, savedCourseList, activeCourseList);
-            downPane = new CourseAdder(this, new int[]{2, 1, 1});
-        }
-
+        //start with the Schedule view because it needs the filters to be empty on first open
+        upPane = new ScheduleFilter(this, savedCourseList, activeCourseList, filters);
+        downPane = new TableSchedulePanel(this, activeScheduleList, new ArrayList<>());
 
         Dimension minimumSize = new Dimension(100, 50);
         menuPane.setMinimumSize(minimumSize);
         upPane.setMinimumSize(minimumSize);
         downPane.setMinimumSize(new Dimension(500, 500));
 
-        //downScrollPane. ();
 
         horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upPane, new JScrollPane(downPane));
         horizontalSplit.setDividerLocation((int) (HEIGHT * .40));
@@ -165,20 +155,6 @@ public class MainFrame extends JFrame implements ActionListener {
     private JSplitPane getLeftmostSplitPane() {
         return leftSplit;
     }
-    
-    
-    protected JButton addNewCourseButton;
-    //protected JButton addFromSavedButton;
-    protected JButton viewCoursesButton; //selector of top right
-    //4: Same with View Saved Course List
-    //5: Same with Remove from AC
-    //6: Same with Remove from SC
-    //7: Button In Course Detailer
-    //protected JButton generateButton;
-    //protected JButton saveSchedulesButton;
-    protected JButton viewSchedulesButton; //selector of top right
-    //protected JButton deleteSchedulesButton;
-    protected JButton saveAndExitButton;
 
     private JPanel makeActionButtons() {
         JPanel actionPanel  = new JPanel(new GridLayout(0,1));
@@ -204,6 +180,8 @@ public class MainFrame extends JFrame implements ActionListener {
         viewSchedulesButton.addActionListener(this);
         saveAndExitButton.addActionListener(this);
 
+
+        //accessibility feature on hover over button, maybe implement?
 //        addNewCourseButton.setToolTipText("Click this button to disable the middle button.");
 //        addFromSavedButton.setToolTipText("This middle button does nothing when you click it.");
 //        generateButton.setToolTipText("Click this button to enable the middle button.");
@@ -238,6 +216,27 @@ public class MainFrame extends JFrame implements ActionListener {
     private void saveAndExit() {
         addActiveCourseListToCourseList();
 
+        primingListsForSaving();
+
+        try {
+            JsonWriter writer = new JsonWriter("./data/ScheduleList.json",
+                    "./data/CourseList.json");
+            writer.open(true);
+            writer.writeScheduleList(scheduleList);
+            writer.close(true);
+
+            writer.open(false);
+            writer.writeCourseList(courseList);
+            writer.close(false);
+        } catch (IOException ioe) {
+            System.out.println("File Not Found, failed to save");
+        } catch (Exception e) {
+            System.out.println("Unexpected Error, failed to save");
+        }
+        System.exit(0);
+    }
+
+    private void primingListsForSaving() {
         ArrayList<Scheduler> scheduleListScheds = scheduleList.getScheduleList();
 
         for (Scheduler s : activeScheduleList) {
@@ -264,23 +263,6 @@ public class MainFrame extends JFrame implements ActionListener {
                 courseList.removeCourseFromList(courseList.getCourseList().indexOf(c));
             }
         }
-
-        try {
-            JsonWriter writer = new JsonWriter("./data/ScheduleList.json",
-                    "./data/CourseList.json");
-            writer.open(true);
-            writer.writeScheduleList(scheduleList);
-            writer.close(true);
-
-            writer.open(false);
-            writer.writeCourseList(courseList);
-            writer.close(false);
-        } catch (IOException ioe) {
-            System.out.println("File Not Found, failed to save");
-        } catch (Exception e) {
-            System.out.println("Unexpected Error, failed to save");
-        }
-        System.exit(0);
     }
 
     private void addActiveCourseListToCourseList() {
@@ -515,7 +497,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JPanel menuPane = makeActionButtons();
 
-        upPane = new CourseDetailer(this, savedCourseList, activeCourseList);
+        upPane = new CourseListDetailer(this, savedCourseList, activeCourseList);
 
         if (dimensions[0] != 0) {
             downPane = new CourseAdder(this, dimensions);
@@ -551,15 +533,13 @@ public class MainFrame extends JFrame implements ActionListener {
         JPanel menuPane = makeActionButtons();
 
 
-        upPane = new ScheduleFilter(this, savedCourseList, activeCourseList, filters, false);
+        upPane = new ScheduleFilter(this, savedCourseList, activeCourseList, filters);
         downPane = new TableSchedulePanel(this, activeScheduleList, filters);
 
         Dimension minimumSize = new Dimension(100, 50);
         menuPane.setMinimumSize(minimumSize);
         upPane.setMinimumSize(minimumSize);
         downPane.setMinimumSize(new Dimension(500, 500));
-
-        //downScrollPane. ();
 
         horizontalSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upPane, new JScrollPane(downPane));
         horizontalSplit.setDividerLocation((int) (HEIGHT * .40));
@@ -583,12 +563,11 @@ public class MainFrame extends JFrame implements ActionListener {
 
     public void courseViewerChange(Course course) {
 
-        //frame.removeAll();
         frame.getContentPane().removeAll();
 
         JPanel menuPane = makeActionButtons();
 
-        upPane = new CourseDetailer(this, savedCourseList, activeCourseList);
+        upPane = new CourseListDetailer(this, savedCourseList, activeCourseList);
 
         downPane = new CourseViewer(course);
 
