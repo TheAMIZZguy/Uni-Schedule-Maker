@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+//Panel with saved course list and active course list, to be swapped between eachother and to generate schedules
 public class CourseListDetailer extends JPanel implements ListSelectionListener, ActionListener {
 
     private JList savedCourseList;
@@ -30,8 +31,10 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
 
     private MainFrame parent;
 
-
-    public CourseListDetailer(MainFrame parent, ArrayList<Course> savedCoursesList, ArrayList<Course> activeCoursesList) {
+    //MODIFIES: this
+    //EFFECTS: sets up the panel detains and lists
+    public CourseListDetailer(MainFrame parent, ArrayList<Course> savedCoursesList,
+                              ArrayList<Course> activeCoursesList) {
         super(new BorderLayout());
 
         this.parent = parent;
@@ -62,6 +65,8 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         add(savedButtonPanel, BorderLayout.PAGE_END);
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds the appropriate values to the lists
     private void listSetup(ArrayList<Course> savedCoursesList, ArrayList<Course> activeCoursesList) {
         listModelSaved = new DefaultListModel();
         listModelActive = new DefaultListModel();
@@ -88,6 +93,8 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         activeCourseList.addListSelectionListener(this);
     }
 
+    //MODIFIES: this
+    //EFFECTS: creates and then adds the buttons to the panel it makes
     private JPanel setupButtons() {
         buttonCreation();
 
@@ -106,6 +113,8 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         return savedButtonPanel;
     }
 
+    //MODIFIES: this
+    //EFFECTS: creates the buttons
     private void buttonCreation() {
         savedToActiveButton = new JButton("Move From Saved to Active");
         savedToActiveButton.setActionCommand(SWAP_COURSE);
@@ -128,7 +137,8 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         generateButton.addActionListener(this);
     }
 
-    //Listens to the list
+    //MODIFIES: parent
+    //EFFECTS: sets the selected course to the appropriate selected course value in parent
     public void valueChanged(ListSelectionEvent e) {
         parent.playSound("click2.wav");
         JList list = (JList)e.getSource();
@@ -141,6 +151,8 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         //list.updateUI();
     }
 
+    //MODIFIES: this, parent
+    //EFFECTS: does the action described by the clicked button
     public void actionPerformed(ActionEvent e) {
         parent.playSound("click1.wav");
 
@@ -154,6 +166,9 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         refreshParentLists();
     }
 
+    //MODIFIES: this, parent
+    //EFFECTS: uses the current lists to generate schedules and add them in parent,
+    //    then moves everything from the active course list to the saved course list
     private void generateScheduleAction() {
         parent.generateSchedules();
         for (int i = 0; i < listModelActive.size(); i++) {
@@ -166,6 +181,8 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         generateButton.setEnabled(false);
     }
 
+    //MODIFIES: this, parent
+    //EFFECTS: swaps the selected item from saved to active list
     private void swapFromSaved() {
         JList fromList;
         DefaultListModel<Course> fromModel;
@@ -195,6 +212,8 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         }
     }
 
+    //MODIFIES: this, parent
+    //EFFECTS: swaps the selected item from active to saved list
     private void swapFromActive() {
         JList fromList;
         DefaultListModel<Course> fromModel;
@@ -224,6 +243,8 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         }
     }
 
+    //MODIFIES: this, parent
+    //EFFECTS: swaps the current selected item into the other list
     private void swapCourseAction(ActionEvent e) {
         if (e.getSource() == savedToActiveButton) {
             swapFromSaved();
@@ -232,6 +253,8 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         }
     }
 
+    //MODIFIES: this, parent
+    //EFFECTS: removes a course from either the selected or saved course list
     private void removeCourseAction(ActionEvent e) {
         //could technically be abstracted into two identical methods depending on which button was pressed
         JList list;
@@ -261,6 +284,8 @@ public class CourseListDetailer extends JPanel implements ListSelectionListener,
         }
     }
 
+    //MODIFIES: parent
+    //EFFECTS: ensures parent has the same values in the list
     public void refreshParentLists() {
         ArrayList<Course> arrSaved = new ArrayList<>();
         ArrayList<Course> arrActive = new ArrayList<>();

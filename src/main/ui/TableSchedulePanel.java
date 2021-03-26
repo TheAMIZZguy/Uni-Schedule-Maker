@@ -20,6 +20,8 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
 
     MainFrame parent;
 
+    //MODIFIES: this
+    //EFFECTS: displays the tables and buttons from the schedules, filtered if required
     public TableSchedulePanel(MainFrame parent, ArrayList<Scheduler> schedules, ArrayList<String> filters) {
         //super(new BoxLayout(this);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -55,6 +57,8 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
         tableAdder(schedules, filters);
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds tables to the panel
     private void tableAdder(ArrayList<Scheduler> schedules, ArrayList<String> filters) {
         if (schedules.size() == 0) {
             addScheduleTable(new Scheduler(0), "0");
@@ -81,8 +85,10 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds a schedule to the panel after being converted to a table
     private void addScheduleTable(Scheduler sched, String num) {
-        final JTable table = new JTable(new ScheduleTable(sched, num)); //TODO change yk
+        final JTable table = new JTable(new ScheduleTable(sched, num));
         table.setPreferredScrollableViewportSize(new Dimension(800, 450));
         JScrollPane scrollPane = new JScrollPane(table);
 
@@ -98,12 +104,8 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
         add(scrollPane);
     }
 
-    public void initializeGraphics() {
-        JFrame frame = new JFrame("SimpleTableDemo");
-        this.setOpaque(true); //content panes must be opaque
-        frame.setContentPane(this);
-    }
-
+    //MODIFIES: this, parent
+    //EFFECTS: plays a sound and possibly removes a schedule
     @Override
     public void actionPerformed(ActionEvent e) {
         parent.playSound("click1.wav");

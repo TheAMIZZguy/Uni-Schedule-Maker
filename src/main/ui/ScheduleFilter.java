@@ -9,6 +9,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+//Panel displaying all courses that can be filtered through for the TableSchedulePanel
 public class ScheduleFilter extends JPanel implements ItemListener {
 
     JCheckBox[] courses;
@@ -16,6 +17,8 @@ public class ScheduleFilter extends JPanel implements ItemListener {
 
     MainFrame parent;
 
+    //MODIFIES: this
+    //EFFECTS: initilizes the filters with specific ones checked, depending if they were checked before
     public ScheduleFilter(MainFrame parent, ArrayList<Course> courseList1, ArrayList<Course> courseList2,
                           ArrayList<String> filters) {
         super(new BorderLayout());
@@ -48,7 +51,8 @@ public class ScheduleFilter extends JPanel implements ItemListener {
         setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
     }
 
-
+    //MODIFIES: this, parent
+    //EFFECTS: changes the selection of filters
     @Override
     public void itemStateChanged(ItemEvent e) {
         parent.playSound("click2.wav");

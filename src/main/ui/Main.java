@@ -2,7 +2,7 @@ package ui;
 
 import java.util.Scanner;
 
-//Main, runs the program through UserInteractionConsole
+//Main, runs the program through the MainFrame
 public class Main {
 
     public static void main(String[] args) {

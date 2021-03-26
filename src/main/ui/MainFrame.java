@@ -15,6 +15,7 @@ import java.util.Arrays;
 import javax.sound.sampled.*;
 import javax.swing.*;
 
+//The main GUI, subpanels can interact with eachother and share global data through here
 public class MainFrame extends JFrame implements ActionListener {
     public static final int WIDTH = 1400;
     public static final int HEIGHT = 1000;
@@ -66,6 +67,8 @@ public class MainFrame extends JFrame implements ActionListener {
     protected JButton saveAndExitButton;
 
 
+    //MODIFIES: this
+    //EFFECTS: initializes the main starting screen
     public MainFrame() {
         //ActionButtons menuPane = new ActionButtons();
         JPanel menuPane = makeActionButtons();
@@ -104,6 +107,8 @@ public class MainFrame extends JFrame implements ActionListener {
         loadLists();
     }
 
+    //MODIFIES: this
+    //EFFECTS: makes the mainframe visible
     public void initializeGraphics() {
         //Create and set up the window.
         frame = new JFrame("Graphical UI Frame");
@@ -156,6 +161,8 @@ public class MainFrame extends JFrame implements ActionListener {
         return leftSplit;
     }
 
+    //MODIFIES: this
+    //EFFECTS: makes the buttons panel on the leftmost side and assigns actions
     private JPanel makeActionButtons() {
         JPanel actionPanel  = new JPanel(new GridLayout(0,1));
 
@@ -195,6 +202,8 @@ public class MainFrame extends JFrame implements ActionListener {
         return actionPanel;
     }
 
+    //MODIFIES: this
+    //EFFECTS: does the associated action from a button, with sound
     public void actionPerformed(ActionEvent e) {
         playSound("click1.wav");
         switch (e.getActionCommand()) {
@@ -213,6 +222,8 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: saves the data through persistence and then exits the program
     private void saveAndExit() {
         addActiveCourseListToCourseList();
 
@@ -236,6 +247,8 @@ public class MainFrame extends JFrame implements ActionListener {
         System.exit(0);
     }
 
+    //MODIFIES: this
+    //EFFECTS: makes sure lists are all merged and aligned with eachother so they can be saved at once
     private void primingListsForSaving() {
         ArrayList<Scheduler> scheduleListScheds = scheduleList.getScheduleList();
 
@@ -265,6 +278,8 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: moves all items in the active course list to the saved course list
     private void addActiveCourseListToCourseList() {
         for (Course c : activeCourseList) {
             if (!savedCourseList.contains(c)) {
@@ -273,10 +288,13 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: generates schedules from courses in a way specified by the user in a dialog
     public void generateSchedules() {
         boolean madeSchedule = false;
 
         int maxClassesAtOnce = getNumberPopup("Up to how many classes would you want to take at once?", 1);
+        playSound("click1.wav");
         switch (generationType()) {
             case 0:
                 madeSchedule = simpleDesigner(activeCourseList, maxClassesAtOnce);
@@ -289,7 +307,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 break;
         }
         if (!madeSchedule) {
-            //todo make error popup
+            playSound("error.wav");
             System.out.println("Impossible to make a schedule");
         }
 
@@ -390,6 +408,8 @@ public class MainFrame extends JFrame implements ActionListener {
         return results;
     }
 
+    //MODIFIES: this
+    //EFFECTS: sets up the courseAdderPane with data
     private void addNewCourse() {
         int[] returnInts = new int[3];
         returnInts[0] =  getSubCoursesAmount("Sub Courses", 1);
@@ -401,6 +421,7 @@ public class MainFrame extends JFrame implements ActionListener {
         viewCoursePanes(returnInts);
     }
 
+    //EFFECTS: Creates Dialog to get a user int, minimim of min to min + 98. For a specific lab or sub course
     private int getSubCoursesAmount(String type, int min) {
         Integer[] maxOptions = new Integer[99 + min];
         for (int i = min; i < maxOptions.length; i++) {
@@ -420,6 +441,7 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
+    //EFFECTS: Creates Dialog to get a user int, minimim of min, to min + 98
     private int getNumberPopup(String message, int min) {
         Integer[] maxOptions = new Integer[99 + min];
         for (int i = min; i < maxOptions.length; i++) {
@@ -439,6 +461,7 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
+    //EFFECTS: creates a dialog to get the specific type of schedule generation the user wants
     private int generationType() {
         String[] options = new String[]{"Simple", "Permutation", "Loop"};
         try {
@@ -463,6 +486,7 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
+    //setters and getters and adders
     public void setSelectedSaveCourse(Course course) {
         this.selectedSaveCourse = course;
     }
@@ -491,6 +515,13 @@ public class MainFrame extends JFrame implements ActionListener {
         this.savedCourseList = savedCourseList;
     }
 
+    public void setFilters(ArrayList<String> filters) {
+        this.filters = filters;
+    }
+
+    //REQUIRES: dimensions to be of size 1 with value 0, or size at least 3
+    //MODIFIES: this
+    //EFFECTS: initilizes panes to view courses and relevant details
     public void viewCoursePanes(int[] dimensions) {
         //frame.removeAll();
         frame.getContentPane().removeAll();
@@ -526,6 +557,8 @@ public class MainFrame extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: initializes panes to view schedules
     public void viewSchedulePanes() {
         //frame.removeAll();
         frame.getContentPane().removeAll();
@@ -557,10 +590,8 @@ public class MainFrame extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 
-    public void setFilters(ArrayList<String> filters) {
-        this.filters = filters;
-    }
-
+    //MODIFIES: this
+    //EFFECTS: changes the course viewer to one with the new course
     public void courseViewerChange(Course course) {
 
         frame.getContentPane().removeAll();
@@ -593,6 +624,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
     }
 
+    //REQUIRES: sound to be a .wav
+    //EFFECTS: plays a specific soundfile in the audio data/audio folder
     public void playSound(String name) {
         try {
             File f = new File("./data/audio/" + name);

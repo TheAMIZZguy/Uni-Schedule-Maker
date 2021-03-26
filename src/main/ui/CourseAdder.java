@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import static java.lang.Integer.max;
 
+//Represents the Panel where the user can input data about a class, in order to add it
 public class CourseAdder extends JPanel implements ActionListener {
 
     JTextField nameField;
@@ -36,6 +37,9 @@ public class CourseAdder extends JPanel implements ActionListener {
 
     private MainFrame parent;
 
+    //REQUIRES: sizes to have a length of 3
+    //MODIFIES: this
+    //EFFECTS: Sets everything up
     public CourseAdder(MainFrame parent, int[] sizes) {
         setLayout(new GridBagLayout());
 
@@ -48,6 +52,8 @@ public class CourseAdder extends JPanel implements ActionListener {
         setup();
     }
 
+    //MODIFIES: this
+    //EFFECTS: Sets up the size of the fields and then displays them on screen
     private void setup() {
         changeSizeFields();
         //JScrollPane scrollPane = new JScrollPane();
@@ -66,6 +72,8 @@ public class CourseAdder extends JPanel implements ActionListener {
         //add(scrollPane);
     }
 
+    //MODIFIES: this
+    //EFFECTS: initializes the data inside the arraylists
     private void changeSizeFieldsPart(int num, JTextField[] nameFields, JFormattedTextField[] startField,
                                       JFormattedTextField[] endField, JFormattedTextField[] dayField) {
         for (int i = 0; i < num; i++) {
@@ -76,6 +84,9 @@ public class CourseAdder extends JPanel implements ActionListener {
         }
     }
 
+    //REQUIRES: numSub, numLab, numTut to be non-negative
+    //MODIFIES: this
+    //EFFECTS: initilizes the fields to their correct lengths
     private void changeSizeFields() {
 
         //this is probably abstractable
@@ -101,6 +112,8 @@ public class CourseAdder extends JPanel implements ActionListener {
                 tutorialEndTimeFields, tutorialDayFields);
     }
 
+    //MODIFIES: this
+    //EFFECTS: Creates buttons and adds them to the panel
     protected JComponent createButtons() {
         JPanel panel = new JPanel(new GridBagLayout());
 
@@ -130,6 +143,8 @@ public class CourseAdder extends JPanel implements ActionListener {
         return panel;
     }
 
+    //MODIFIES: this
+    //EFFECTS: Does the action implied by the button clicked, with sound effecy
     public void actionPerformed(ActionEvent e) {
         parent.playSound("click1.wav");
         if ("clear".equals(e.getActionCommand())) {
@@ -164,6 +179,9 @@ public class CourseAdder extends JPanel implements ActionListener {
         }
     }
 
+    //REQUIRES: parent to be nonnull
+    //MODIFIES: this, parent
+    //EFFECTS: gets the information and adds a course to the parent mainframe
     private void addingCourse(String name, ArrayList<String> subClassNames, ArrayList<int[][]> subClassTimes,
                               ArrayList<String> labNames, ArrayList<int[][]> labTimes, ArrayList<String> tutorialNames,
                               ArrayList<int[][]> tutorialTimes) {
@@ -179,6 +197,7 @@ public class CourseAdder extends JPanel implements ActionListener {
         parent.viewCoursePanes(new int[]{0});
     }
 
+    //EFFECTS: creates a dialog telling the user there was an error
     private void errorDialog() {
         JDialog dialog = new JDialog(new JFrame(), "Error");
 
@@ -192,6 +211,8 @@ public class CourseAdder extends JPanel implements ActionListener {
         dialog.setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: sets up the arraylists
     private void setupArrayLists(ArrayList<String> subClassNames, ArrayList<int[][]> subClassTimes,
                                  ArrayList<String> labNames, ArrayList<int[][]> labTimes,
                                  ArrayList<String> tutorialNames, ArrayList<int[][]> tutorialTimes) {
@@ -223,6 +244,7 @@ public class CourseAdder extends JPanel implements ActionListener {
         }
     }
 
+    //EFFECTS: creates the dialog window for showing the user how to format
     private void formatDialog() {
         JDialog dialog = new JDialog(new JFrame(), "How To Format");
 
@@ -236,6 +258,7 @@ public class CourseAdder extends JPanel implements ActionListener {
         dialog.setVisible(true);
     }
 
+    //EFFECTS: converts a time int into an hour time int[]
     private int[] obtainTimeSafely(int time) {
 
         String numString = String.valueOf(time);
@@ -250,6 +273,7 @@ public class CourseAdder extends JPanel implements ActionListener {
         return new int[]{returnHour, returnMins};
     }
 
+    //EFFECTS: converts a string into days
     private int[] obtainDays(String text) {
         ArrayList<Integer> preDays = new ArrayList<>();
 
@@ -262,6 +286,8 @@ public class CourseAdder extends JPanel implements ActionListener {
         return days;
     }
 
+    //MODIFIES: preDays
+    //EFFECTS: adds day ints to the predays
     private void addDaysToPreDays(String text, ArrayList<Integer> preDays) {
         if (text.contains("M")) {
             preDays.add(1);
@@ -288,6 +314,7 @@ public class CourseAdder extends JPanel implements ActionListener {
         }
     }
 
+    //EFFECTS: The dialog for format
     private JLabel dialogLabelHelper() {
         JLabel label = new JLabel("<html><p align=left> "
                 + "How to Format: <br>"
@@ -303,6 +330,7 @@ public class CourseAdder extends JPanel implements ActionListener {
         return label;
     }
 
+    //EFFECTS: Formats the dialog
     private JPanel formatDialogHelper(JDialog dialog, JLabel label) {
         JButton closeButton = new JButton("Close");
         closeButton.addActionListener(new ActionListener() {
@@ -325,6 +353,8 @@ public class CourseAdder extends JPanel implements ActionListener {
         return contentPane;
     }
 
+    //MODIFIES: this
+    //EFFECTS: clears the text fields
     private void clearFields() {
         nameField.setText("");
         for (int i = 0; i < numSub; i++) {
@@ -347,6 +377,8 @@ public class CourseAdder extends JPanel implements ActionListener {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: Creates the fields
     protected JComponent createEntryFields() {
         JPanel panel = new JPanel(new GridBagLayout());
 
@@ -365,12 +397,16 @@ public class CourseAdder extends JPanel implements ActionListener {
         return panel;
     }
 
+    //MODIFIES: this, fields
+    //EFFECTS: sets the prefferted size of elements in a JComponent
     private void fieldReSizer(JComponent[] fields) {
         for (JComponent field : fields) {
             field.setPreferredSize(new Dimension(40, 30));
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds the items in a specific layout
     private void setUpLayout(JPanel panel, JLabel[] labels, JComponent[] fields) {
         //layout.putConstraint(SpringLayout.WEST, labels[0], 5,SpringLayout.WEST, this);
         //layout.putConstraint(SpringLayout.WEST, fields[1], 3, SpringLayout.NORTH, labels[0]);
@@ -395,6 +431,8 @@ public class CourseAdder extends JPanel implements ActionListener {
         labelInt = setUpLayout(panel, c, labels, fields, labelInt, numTut, numSub + Math.max(numLab, 0));
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds the items in a specific layout
     private int setUpLayout(JPanel panel, GridBagConstraints c, JLabel[] labels,
                                JComponent[] fields, int labelInt, int numType, int start) {
         for (int i = start; i < numType + start; i++) {
@@ -423,6 +461,8 @@ public class CourseAdder extends JPanel implements ActionListener {
         return labelInt;
     }
 
+    //MODIFIES: this
+    //EFFECTS: Connects a label to a text input
     private JLabel[] setupLabels(int effLab, int effTut) {
 
         JLabel[] labels = new JLabel[1 + numSub * 4 + effLab * 4 + effTut * 4];
@@ -454,6 +494,8 @@ public class CourseAdder extends JPanel implements ActionListener {
         return labels;
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds the textfields to a JComponentArray
     private JComponent[] setTextFields(int effLab, int effTut, int fieldNum) {
         JComponent[] fields = new JComponent[1 + numSub * 4 + effLab * 4 + effTut * 4];
 

@@ -4,11 +4,14 @@ import model.Scheduler;
 
 import javax.swing.table.AbstractTableModel;
 
+//Converts a scheduler object into a human viewable table
 public class ScheduleTable extends AbstractTableModel {
 
     private String[] columnNames = {"", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
     String[][] data = new String[2 * 14][6];
 
+    //MODIFIES: this
+    //EFFECTS: fills a table with the schedule data
     public ScheduleTable(Scheduler schedule, String num) {
         columnNames[0] = num;
         //this.data = schedule.getSchedule();
@@ -23,6 +26,7 @@ public class ScheduleTable extends AbstractTableModel {
         }
     }
 
+    //getters
     public int getColumnCount() {
         return columnNames.length;
     }
@@ -39,10 +43,7 @@ public class ScheduleTable extends AbstractTableModel {
         return data[row][col];
     }
 
-    /*
-     * Don't need to implement this method unless your table's
-     * editable.
-     */
+    //EFFECTS: makes the table uneditable
     public boolean isCellEditable(int row, int col) {
         return false;
     }

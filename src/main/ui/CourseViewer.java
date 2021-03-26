@@ -4,28 +4,34 @@ import model.Course;
 
 import javax.swing.*;
 
+//Stores the data of a class into labels for simple visualization
 public class CourseViewer extends JPanel {
     Course course;
     JLabel display;
 
+    //MODIFIES: this
+    //EFFECTS: Displays a default text
     public CourseViewer() {
         display = new JLabel("No Selected Course");
         add(display);
     }
 
+    //MODIFIES: this
+    //EFFECTS: displays course details
     public CourseViewer(Course course) {
         this.course = course;
         setDisplay();
         add(display);
     }
 
+    //MODIFIES: this
+    //EFFECTS: adds the course data to a label in a specific format
     public void setDisplay() {
         String labelString =  "<html><p align=center>" + detailedCoursePrint(course) + "</p></html>";
         display = new JLabel(labelString);
     }
 
-///////
-
+    //EFFECTS: turns a course into a formatted label
     private String detailedCoursePrint(Course course) {
         String message = "Name: " + course.getName() + "<br>";
         for (String subCourse : course.getSubClassNames()) {
