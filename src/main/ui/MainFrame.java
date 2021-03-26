@@ -1,16 +1,19 @@
 package ui;
 
-import model.Course;
-import model.Designer;
-import model.Scheduler;
+import model.*;
+import org.json.JSONException;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 import javax.sound.midi.MidiChannel;
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -53,19 +56,26 @@ public class MainFrame extends JFrame implements ActionListener {
     ArrayList<Scheduler> activeScheduleList = new ArrayList<>();
 
     Designer designer;
+    
+    CourseList courseList;
+    ScheduleList scheduleList;
+    JsonReader reader;
 
 
     public MainFrame() {
         boolean isSchedule = true;
         //ActionButtons menuPane = new ActionButtons();
         JPanel menuPane = makeActionButtons();
+        
+        setupVariables();
 
-        savedCourseList.add(cpsc110);
-        savedCourseList.add(cpsc121);
-        savedCourseList.add(phys118);
+//
+//        savedCourseList.add(cpsc110);
+//        savedCourseList.add(cpsc121);
+//        savedCourseList.add(phys118);
 
         if (isSchedule) {
-            upPane = new ScheduleFilter(savedCourseList, activeCourseList);
+            upPane = new ScheduleFilter(this, savedCourseList, activeCourseList);
             downPane = new TableSchedulePanel(this, activeScheduleList);
         } else {
             upPane = new CourseDetailer(this, savedCourseList, activeCourseList);
@@ -90,6 +100,18 @@ public class MainFrame extends JFrame implements ActionListener {
 
     }
 
+    //MODIFIES: this
+    //EFFECTS: initializes some class-level variables
+    private void setupVariables() {
+        activeCourseList = new ArrayList<>();
+        activeScheduleList = new ArrayList<>();
+
+        reader = new JsonReader("./data/ScheduleList.json",
+                "./data/CourseList.json");
+
+        loadLists();
+    }
+
     public void initializeGraphics() {
         //Create and set up the window.
         frame = new JFrame("Graphical UI Frame");
@@ -100,11 +122,49 @@ public class MainFrame extends JFrame implements ActionListener {
         frame.setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: loads scheduleList and courseList with information from their Json Files
+    private void loadLists() {
+        loadSavedCourses();
+        loadSavedSchedules();
+        
+        savedCourseList = courseList.getCourseList();
+        activeScheduleList = scheduleList.getScheduleList();
+    }
+
+    //MODIFIES: this
+    //EFFECTS: loads courseList with information from its Json Files
+    private void loadSavedCourses() {
+        courseList = new CourseList(new ArrayList<>());
+        try {
+            courseList = reader.readCourseList();
+        } catch (IOException ioe) {
+            System.err.println("Course File Missing");
+        } catch (JSONException je) {
+            System.err.println("Empty File - Course");
+            System.out.println(je);
+        }
+    }
+
+    //MODIFIES: this
+    //EFFECTS: loads scheduleList with information from its Json Files
+    private void loadSavedSchedules() {
+        scheduleList = new ScheduleList(new ArrayList<>());
+        try {
+            scheduleList = reader.readSchedules();
+        } catch (IOException e) {
+            System.err.println("Schedule File Missing");
+        } catch (JSONException je) {
+            System.err.println("Empty File - Schedule");
+            System.out.println(je);
+        }
+    }
+
     private JSplitPane getLeftmostSplitPane() {
         return leftSplit;
     }
-
-
+    
+    
     protected JButton addNewCourseButton;
     //protected JButton addFromSavedButton;
     protected JButton viewCoursesButton; //selector of top right
@@ -168,8 +228,64 @@ public class MainFrame extends JFrame implements ActionListener {
                 viewSchedulePanes();
                 break;
             default:
-                //save and exit
+                saveAndExit();
                 break;
+        }
+    }
+
+    private void saveAndExit() {
+        addActiveCourseListToCourseList();
+
+        ArrayList<Scheduler> scheduleListScheds = scheduleList.getScheduleList();
+
+        for (Scheduler s : activeScheduleList) {
+            if (!scheduleListScheds.contains(s)) {
+                scheduleList.addScheduleToList(s);
+            }
+        }
+
+        for (Scheduler s : scheduleListScheds) {
+            if (!activeScheduleList.contains(s)) {
+                scheduleList.removeScheduleFromList(scheduleList.getScheduleList().indexOf(s));
+            }
+        }
+
+        ArrayList<Course> courseListCourses = courseList.getCourseList();
+        for (Course c : savedCourseList) {
+            if (!courseListCourses.contains(c)) {
+                courseList.addCourseToList(c);
+            }
+        }
+
+        for (Course c : courseListCourses) {
+            if (!savedCourseList.contains(c)) {
+                courseList.removeCourseFromList(courseList.getCourseList().indexOf(c));
+            }
+        }
+
+        try {
+            JsonWriter writer = new JsonWriter("./data/ScheduleList.json",
+                    "./data/CourseList.json");
+            writer.open(true);
+            writer.writeScheduleList(scheduleList);
+            writer.close(true);
+
+            writer.open(false);
+            writer.writeCourseList(courseList);
+            writer.close(false);
+        } catch (IOException ioe) {
+            System.out.println("File Not Found, failed to save");
+        } catch (Exception e) {
+            System.out.println("Unexpected Error, failed to save");
+        }
+        System.exit(0);
+    }
+
+    private void addActiveCourseListToCourseList() {
+        for (Course c : activeCourseList) {
+            if (!savedCourseList.contains(c)) {
+                savedCourseList.add(c);
+            }
         }
     }
 
@@ -432,7 +548,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JPanel menuPane = makeActionButtons();
 
-        upPane = new ScheduleFilter(savedCourseList, activeCourseList);
+        upPane = new ScheduleFilter(this, savedCourseList, activeCourseList);
         downPane = new TableSchedulePanel(this, activeScheduleList);
 
         Dimension minimumSize = new Dimension(100, 50);

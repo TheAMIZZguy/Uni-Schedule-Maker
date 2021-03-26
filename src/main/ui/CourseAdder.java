@@ -59,8 +59,10 @@ public class CourseAdder extends JPanel implements ActionListener {
         c.gridx = 0;
         c.gridy = 0;
 
-        add(createEntryFields(), c);
+        add(new Label(" DO NOT make a class with the same name as another that is already made"), c);
         c.gridy = 1;
+        add(createEntryFields(), c);
+        c.gridy = 2;
         add(createButtons(), c);
 
         //add(scrollPane);
@@ -342,7 +344,7 @@ public class CourseAdder extends JPanel implements ActionListener {
         JPanel panel = new JPanel(new GridBagLayout());
 
         int effLab = Math.max(numLab, 0);
-        int effTut = Math.max(numLab, 0);
+        int effTut = Math.max(numTut, 0);
 
         JLabel[] labels = setupLabels(effLab, effTut);
         JComponent[] fields = setTextFields(effLab, effTut, 0);

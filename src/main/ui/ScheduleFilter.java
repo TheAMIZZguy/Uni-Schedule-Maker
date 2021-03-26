@@ -13,8 +13,12 @@ public class ScheduleFilter extends JPanel implements ItemListener {
 
     JCheckBox[] courses;
 
-    public ScheduleFilter(ArrayList<Course> courseList1, ArrayList<Course> courseList2) {
+    MainFrame parent;
+
+    public ScheduleFilter(MainFrame parent, ArrayList<Course> courseList1, ArrayList<Course> courseList2) {
         super(new BorderLayout());
+
+        this.parent = parent;
 
         ArrayList<Course> courseList = new ArrayList<>(courseList1);
         courseList.addAll(courseList2);
@@ -40,6 +44,7 @@ public class ScheduleFilter extends JPanel implements ItemListener {
 
     @Override
     public void itemStateChanged(ItemEvent e) {
+        parent.playSound("click2.wav");
         int index = 0;
         char c = '-';
         Object source = e.getItemSelectable();
