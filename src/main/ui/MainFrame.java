@@ -61,6 +61,8 @@ public class MainFrame extends JFrame implements ActionListener {
     ScheduleList scheduleList;
     JsonReader reader;
 
+    ArrayList<String> filters = new ArrayList<>();
+
 
     public MainFrame() {
         boolean isSchedule = true;
@@ -75,8 +77,8 @@ public class MainFrame extends JFrame implements ActionListener {
 //        savedCourseList.add(phys118);
 
         if (isSchedule) {
-            upPane = new ScheduleFilter(this, savedCourseList, activeCourseList);
-            downPane = new TableSchedulePanel(this, activeScheduleList);
+            upPane = new ScheduleFilter(this, savedCourseList, activeCourseList, filters, true);
+            downPane = new TableSchedulePanel(this, activeScheduleList, new ArrayList<>());
         } else {
             upPane = new CourseDetailer(this, savedCourseList, activeCourseList);
             downPane = new CourseAdder(this, new int[]{2, 1, 1});
@@ -548,8 +550,9 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JPanel menuPane = makeActionButtons();
 
-        upPane = new ScheduleFilter(this, savedCourseList, activeCourseList);
-        downPane = new TableSchedulePanel(this, activeScheduleList);
+
+        upPane = new ScheduleFilter(this, savedCourseList, activeCourseList, filters, false);
+        downPane = new TableSchedulePanel(this, activeScheduleList, filters);
 
         Dimension minimumSize = new Dimension(100, 50);
         menuPane.setMinimumSize(minimumSize);
@@ -572,6 +575,10 @@ public class MainFrame extends JFrame implements ActionListener {
 
         frame.pack();
         frame.setVisible(true);
+    }
+
+    public void setFilters(ArrayList<String> filters) {
+        this.filters = filters;
     }
 
     public void courseViewerChange(Course course) {

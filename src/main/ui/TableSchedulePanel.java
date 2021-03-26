@@ -6,25 +6,27 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 public class TableSchedulePanel extends JPanel implements ActionListener {
 
     ArrayList<Scheduler> schedules;
+    ArrayList<String> filters;
 
     private JButton deleteSpecified;
     JComboBox numSchedBox;
 
     MainFrame parent;
 
-    public TableSchedulePanel(MainFrame parent, ArrayList<Scheduler> schedules) {
+    public TableSchedulePanel(MainFrame parent, ArrayList<Scheduler> schedules, ArrayList<String> filters) {
         //super(new BoxLayout(this);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.parent = parent;
-
         this.schedules = schedules;
+        this.filters = filters;
 
         deleteSpecified = new JButton("Delete Schedule At Index");
         deleteSpecified.setActionCommand("Delete");
@@ -54,8 +56,24 @@ public class TableSchedulePanel extends JPanel implements ActionListener {
             addScheduleTable(new Scheduler(0), "0");
         }
 
+        int sizeFilters = filters.size();
+
+        boolean hasAFilter = false;
         for (int i = 0; i < schedules.size(); i++) {
-            addScheduleTable(schedules.get(i), Integer.toString(i));
+            if (sizeFilters != 0) {
+                hasAFilter = false;
+                for (String s : filters) {
+                    if (Arrays.asList(schedules.get(i).getCoursesInSchedule()).contains(s)) {
+                        hasAFilter = true;
+                        break;
+                    }
+                }
+                if (hasAFilter) {
+                    addScheduleTable(schedules.get(i), Integer.toString(i));
+                }
+            } else {
+                addScheduleTable(schedules.get(i), Integer.toString(i));
+            }
         }
     }
 

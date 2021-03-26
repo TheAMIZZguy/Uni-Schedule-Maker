@@ -12,13 +12,16 @@ import java.util.ArrayList;
 public class ScheduleFilter extends JPanel implements ItemListener {
 
     JCheckBox[] courses;
+    ArrayList<String> filters = new ArrayList<>();
 
     MainFrame parent;
 
-    public ScheduleFilter(MainFrame parent, ArrayList<Course> courseList1, ArrayList<Course> courseList2) {
+    public ScheduleFilter(MainFrame parent, ArrayList<Course> courseList1, ArrayList<Course> courseList2,
+                          ArrayList<String> filters, boolean isSetup) {
         super(new BorderLayout());
 
         this.parent = parent;
+        this.filters = filters;
 
         ArrayList<Course> courseList = new ArrayList<>(courseList1);
         courseList.addAll(courseList2);
@@ -31,12 +34,21 @@ public class ScheduleFilter extends JPanel implements ItemListener {
 
         for (int i = 0; i < size; i++) {
             courses[i] = new JCheckBox(courseList.get(i).getName());
-            courses[i].setSelected(true);
+            if (!isSetup) {
+                if (filters.contains(courseList.get(i).getName())) {
+                    courses[i].setSelected(true);
+                } else {
+                    courses[i].setSelected(false);
+                }
+            } else {
+                courses[i].setSelected(true);
+                filters.add(courseList.get(i).getName());
+            }
             courses[i].addItemListener(this);
             checkPanel.add(courses[i]);
         }
 
-
+        parent.setFilters(this.filters);
         add(checkPanel, BorderLayout.LINE_START);
         setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
     }
@@ -45,28 +57,26 @@ public class ScheduleFilter extends JPanel implements ItemListener {
     @Override
     public void itemStateChanged(ItemEvent e) {
         parent.playSound("click2.wav");
-        int index = 0;
-        char c = '-';
         Object source = e.getItemSelectable();
 
-        if (source == courses[0]) {
-            index = 0;
-            c = 'c';
-        } else if (source == courses[1]) {
-            index = 1;
-            c = 'g';
-        } else if (source == courses[2]) {
-            index = 2;
-            c = 'h';
-        } else if (source == courses[3]) {
-            index = 3;
-            c = 't';
+        for (JCheckBox courseBox : courses) {
+            if (source == courseBox) {
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    filters.remove(courseBox.getText());
+                } else {
+                    filters.add(courseBox.getText());
+                }
+                break;
+            }
         }
 
-        //Now that we know which button was pushed, find out
-        //whether it was selected or deselected.
-        if (e.getStateChange() == ItemEvent.DESELECTED) {
-            c = '-';
-        }
+//        System.out.println("-----");
+//        for (String filter : filters) {
+//            System.out.print(" - ");
+//            System.out.print(filter);
+//        }
+
+        parent.setFilters(this.filters);
+        parent.viewSchedulePanes();
     }
 }
