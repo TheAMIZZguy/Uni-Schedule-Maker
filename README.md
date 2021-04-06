@@ -57,4 +57,6 @@ cases where something is either a CourseList or Schedule list. Which can be easi
       -  Then instead of having their own Scheduler and Course fields, they could use some in MainFrame instead
    - Though there is some "double communication" such as MainFrame -> Designer -> Course and MainFrame -> Course
       - This is not a big problem as the types of uses Designer has of Course and MainFrame has of Course are different
-      so refactoring wouldn't help much 
+      so refactoring wouldn't help much
+   - Also there is probably a way to refactor things so that classes don't need to have a MainFrame object, but I 
+   couldn't figure out how. To reduce depenencies. 
