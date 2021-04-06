@@ -38,7 +38,23 @@ planning where you might want multiple things to happen at a specific panel, but
 - As a user, I want to be able to view the loaded and unloaded courses 
 
 
-Phase 4: Task 2
+#Phase 4: Task 2
 - Make appropriate use of the Map interface somewhere in your code. 
-- - Class: Model > Course
-- - - Use: Course Name to Course Time relation
+   - Class: Model > Course
+      - Use: Course Name to Course Time relation
+
+#Phase 4: Task 3
+- The biggest thing about the project I feel could use improvement is refactoring in the Course class. 
+  - Looking at the class closely it is clear that there is a lot of "triple repetition" 
+  - as all the code for subClass, lab, and tutorial are nearly identical and so are repeated often. 
+  - The same exact problem also extends to other classes like
+CourseAdder which works on Course based data.
+- A similar problem also occurs in the JsonReader and JsonWriter classes as there is near identical code for
+cases where something is either a CourseList or Schedule list. Which can be easily refactored.
+- Other than that, class communication between and within the model and persistence packages are quite good.
+- Within the model package MainFrame does most/all of the communication 
+   - Since TableSchedulePanel and CourseListDetailer both have MainFrame as a field
+      -  Then instead of having their own Scheduler and Course fields, they could use some in MainFrame instead
+   - Though there is some "double communication" such as MainFrame -> Designer -> Course and MainFrame -> Course
+      - This is not a big problem as the types of uses Designer has of Course and MainFrame has of Course are different
+      so refactoring wouldn't help much 
