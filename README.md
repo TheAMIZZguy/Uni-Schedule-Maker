@@ -36,3 +36,9 @@ planning where you might want multiple things to happen at a specific panel, but
 - As a user, I want to be able to save my courses in a file 
 - As a user, I want to be able to be able to load my courses from a file  
 - As a user, I want to be able to view the loaded and unloaded courses 
+
+
+Phase 4: Task 2
+- Make appropriate use of the Map interface somewhere in your code. 
+- - Class: Model > Course
+- - - Use: Course Name to Course Time relation
