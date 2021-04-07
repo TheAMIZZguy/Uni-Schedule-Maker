@@ -11,6 +11,7 @@ public class Scheduler {
     private String[][] schedule = new String[2 * 14][5];
     // self Explanatory
     private String[] coursesInSchedule;
+    private String[] filterableCoursesInSchedule;
     //private Boolean[] hasAddedLab;
     //private Boolean[] hasAddedtutorial;
     private int currentCourses = 0;
@@ -18,6 +19,7 @@ public class Scheduler {
     //REQUIRES: numOfClasses must be a positive integer
     public Scheduler(int numOfClasses) {
         this.coursesInSchedule = new String[numOfClasses];
+        this.filterableCoursesInSchedule = new String[numOfClasses * 3];
     }
 
     //DeepCopy Constructor
@@ -65,6 +67,10 @@ public class Scheduler {
 
     public String[] getCoursesInSchedule() {
         return coursesInSchedule;
+    }
+
+    public String[] getFilterableCoursesInSchedule() {
+        return filterableCoursesInSchedule;
     }
 
     /* Checks if the class has already been added to the schedule,
