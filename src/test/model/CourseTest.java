@@ -103,6 +103,8 @@ public class CourseTest {
 
     @Test
     public void getOtherTests() {
+        assertEquals("CPSC 210", c1.toString());
+
         assertEquals("CPSC 210", c1.getName());
         assertEquals("ENGL 100", c2.getName());
         assertEquals("PHYS 118", c3.getName());

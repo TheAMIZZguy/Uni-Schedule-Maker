@@ -104,7 +104,7 @@ public class JsonReadingAndWritingTest {
             sl = reader.readSchedules();
             //technically 3, not then; the rest are duplicated because of how the test it, working as intended though
             assertEquals(12, sl.getScheduleList().size());
-            assertEquals("MATH 120",sl.getScheduleList().get(1).getCoursesInSchedule()[0]);
+            assertEquals("MATH 120 212",sl.getScheduleList().get(1).getCoursesInSchedule()[0]);
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");

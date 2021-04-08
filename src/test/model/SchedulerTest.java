@@ -87,21 +87,28 @@ public class SchedulerTest {
     public void addCourseToScheduleTest(){
         //initial test
         assertEquals(null, sched1.getCoursesInSchedule()[0]);
+
+
+        String[] comparisonArray = new String[15];
+
         //testing adding a class to empty
         assertTrue(sched1.addCourseToSchedule(math120));
-        assertTrue(isSameArray(new String[]{"MATH 120", null, null, null, null}, sched1.getCoursesInSchedule()));
+        comparisonArray[0] = "MATH 120 201";
+        assertTrue(isSameArray(comparisonArray, sched1.getCoursesInSchedule()));
 
         //testing adding a class to a schedule with a class
         assertTrue(sched1.addCourseToSchedule(stat200));
-        assertTrue(isSameArray(new String[]{"MATH 120", "STAT 200", null, null, null}, sched1.getCoursesInSchedule()));
+        comparisonArray[1] = "STAT 200 200";
+        assertTrue(isSameArray(comparisonArray, sched1.getCoursesInSchedule()));
 
         //testing adding a class to a schedule with overlapping hours
         assertFalse(sched1.addCourseToSchedule(stat201));
-        assertTrue(isSameArray(new String[]{"MATH 120", "STAT 200", null, null, null}, sched1.getCoursesInSchedule()));
+        assertTrue(isSameArray(comparisonArray, sched1.getCoursesInSchedule()));
 
         //testing adding a class with labs/tutorials to a schedule with other classes
         assertTrue(sched1.addCourseToSchedule(phys118));
-        assertTrue(isSameArray(new String[]{"MATH 120", "STAT 200", "PHYS 118", null, null}, sched1.getCoursesInSchedule()));
+        comparisonArray[2] = "PHYS 118 202";
+        assertTrue(isSameArray(comparisonArray, sched1.getCoursesInSchedule()));
     }
 
     @Test
