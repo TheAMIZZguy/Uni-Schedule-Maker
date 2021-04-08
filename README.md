@@ -38,12 +38,12 @@ planning where you might want multiple things to happen at a specific panel, but
 - As a user, I want to be able to view the loaded and unloaded courses 
 
 
-#Phase 4: Task 2
+# Phase 4: Task 2
 - Make appropriate use of the Map interface somewhere in your code. 
    - Class: Model > Course
       - Use: Course Name to Course Time relation
 
-#Phase 4: Task 3
+# Phase 4: Task 3
 - The biggest thing about the project I feel could use improvement is refactoring in the Course class. 
   - Looking at the class closely it is clear that there is a lot of "triple repetition" 
   - as all the code for subClass, lab, and tutorial are nearly identical and so are repeated often. 

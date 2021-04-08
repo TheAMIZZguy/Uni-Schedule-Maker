@@ -11,15 +11,13 @@ public class Scheduler {
     private String[][] schedule = new String[2 * 14][5];
     // self Explanatory
     private String[] coursesInSchedule;
-    private String[] filterableCoursesInSchedule;
     //private Boolean[] hasAddedLab;
     //private Boolean[] hasAddedtutorial;
     private int currentCourses = 0;
 
     //REQUIRES: numOfClasses must be a positive integer
     public Scheduler(int numOfClasses) {
-        this.coursesInSchedule = new String[numOfClasses];
-        this.filterableCoursesInSchedule = new String[numOfClasses * 3];
+        this.coursesInSchedule = new String[numOfClasses * 3];
     }
 
     //DeepCopy Constructor
@@ -47,7 +45,7 @@ public class Scheduler {
         return scheduleNew;
     }
 
-    //EFFECTS: makes a deepCopy of courses in a chedule
+    //EFFECTS: makes a deepCopy of courses in a schedule
     public String[] coursesInScheduleDeepCopy(String[] coursesInSchedulePrev) {
         String[] coursesInScheduleNew = new String[coursesInSchedulePrev.length];
         for (int i = 0; i < coursesInSchedulePrev.length; i++) {
@@ -69,10 +67,6 @@ public class Scheduler {
         return coursesInSchedule;
     }
 
-    public String[] getFilterableCoursesInSchedule() {
-        return filterableCoursesInSchedule;
-    }
-
     /* Checks if the class has already been added to the schedule,
           If it has then do nothing and return false
           Otherwise test if the class can be added to the schedule without overlap
@@ -88,7 +82,7 @@ public class Scheduler {
                 addingClassToSchedule(a.getSubClassTimes().get(a.getSubClassNames().get(i))[2],
                         Arrays.copyOfRange(a.getSubClassTimes().get(a.getSubClassNames().get(i)),0,2),
                         a.getName() + " " + a.getSubClassNames().get(i));
-                addToCoursesInSchedule(a.getName());// + " " + a.getSubClassNames().get(i));
+                addToCoursesInSchedule(a.getName() + " " + a.getSubClassNames().get(i));
                 return true;
             }
         }
@@ -106,6 +100,7 @@ public class Scheduler {
 
         if (isOpenForClass(days, hours)) {
             addingClassToSchedule(days, hours, name);
+            addToCoursesInSchedule(name);
             return true;
         }
         return false;

@@ -59,6 +59,7 @@ public class MainFrame extends JFrame implements ActionListener {
     ScheduleList scheduleList;
     JsonReader reader;
 
+    ArrayList<String> filterable = new ArrayList<>();
     ArrayList<String> filters = new ArrayList<>();
 
     protected JButton addNewCourseButton;
@@ -76,7 +77,7 @@ public class MainFrame extends JFrame implements ActionListener {
         setupVariables();
 
         //start with the Schedule view because it needs the filters to be empty on first open
-        upPane = new ScheduleFilter(this, savedCourseList, activeCourseList, filters);
+        upPane = new ScheduleFilter(this, filterable, filters);
         downPane = new TableSchedulePanel(this, activeScheduleList, new ArrayList<>());
 
         Dimension minimumSize = new Dimension(100, 50);
@@ -95,6 +96,19 @@ public class MainFrame extends JFrame implements ActionListener {
 
     }
 
+    private void setupFilters() {
+        ArrayList<String> tempFilters = new ArrayList<>();
+        for (Scheduler s : this.activeScheduleList) {
+            for (String str : s.getCoursesInSchedule()) {
+                if (!tempFilters.contains(str)) {
+                    tempFilters.add(str);
+                }
+            }
+        }
+
+        this.filterable = tempFilters;
+    }
+
     //MODIFIES: this
     //EFFECTS: initializes some class-level variables
     private void setupVariables() {
@@ -105,6 +119,8 @@ public class MainFrame extends JFrame implements ActionListener {
                 "./data/CourseList.json");
 
         loadLists();
+
+        setupFilters();
     }
 
     //MODIFIES: this
@@ -566,7 +582,7 @@ public class MainFrame extends JFrame implements ActionListener {
         JPanel menuPane = makeActionButtons();
 
 
-        upPane = new ScheduleFilter(this, savedCourseList, activeCourseList, filters);
+        upPane = new ScheduleFilter(this, filterable, filters);
         downPane = new TableSchedulePanel(this, activeScheduleList, filters);
 
         Dimension minimumSize = new Dimension(100, 50);

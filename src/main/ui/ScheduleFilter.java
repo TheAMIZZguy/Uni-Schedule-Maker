@@ -19,31 +19,30 @@ public class ScheduleFilter extends JPanel implements ItemListener {
 
     //MODIFIES: this
     //EFFECTS: initilizes the filters with specific ones checked, depending if they were checked before
-    public ScheduleFilter(MainFrame parent, ArrayList<Course> courseList1, ArrayList<Course> courseList2,
-                          ArrayList<String> filters) {
+    public ScheduleFilter(MainFrame parent, ArrayList<String> filterable, ArrayList<String> filters) {
         super(new BorderLayout());
 
         this.parent = parent;
         this.filters = filters;
 
-        ArrayList<Course> courseList = new ArrayList<>(courseList1);
-        courseList.addAll(courseList2);
-
-        int size = courseList.size();
+        //int size = courseList.size();
+        int size = filterable.size();
 
         JPanel checkPanel = new JPanel(new GridLayout((int) Math.sqrt(size), (int) Math.sqrt(size)));
 
         courses = new JCheckBox[size]; //TODO
 
         for (int i = 0; i < size; i++) {
-            courses[i] = new JCheckBox(courseList.get(i).getName());
-            if (filters.contains(courseList.get(i).getName())) {
-                courses[i].setSelected(true);
-            } else {
-                courses[i].setSelected(false);
+            if (filterable.get(i) != null) {
+                courses[i] = new JCheckBox(filterable.get(i));
+                if (filters.contains(filterable.get(i))) {
+                    courses[i].setSelected(true);
+                } else {
+                    courses[i].setSelected(false);
+                }
+                courses[i].addItemListener(this);
+                checkPanel.add(courses[i]);
             }
-            courses[i].addItemListener(this);
-            checkPanel.add(courses[i]);
         }
 
         parent.setFilters(this.filters);

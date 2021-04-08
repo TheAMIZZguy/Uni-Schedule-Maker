@@ -387,7 +387,7 @@ public class Designer {
         boolean returnBool = false;
         ArrayList<Scheduler> prevScheds = new ArrayList<>(tierXClassesWithLT[curTier - 1]);
         for (int i = 0; i < prevScheds.size(); i++) {
-            if (Arrays.asList(prevScheds.get(i).getCoursesInSchedule()).contains(name)) {
+            if (classContainer(prevScheds.get(i).getCoursesInSchedule(), name)) {
                 Scheduler newSched = new Scheduler(prevScheds.get(i));
                 if (newSched.addLabOrTutorialToSchedule(name + " " + nameOfLab, times)) {
                     tierXClassesWithLT[curTier].add(newSched);
@@ -403,5 +403,18 @@ public class Designer {
         }
         return returnBool;
     }
+
+    private boolean classContainer(String[] coursesInSchedule, String name) {
+
+        for (String s : coursesInSchedule) {
+            if (s != null) {
+                if (s.startsWith(name)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
 }
