@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
 import javax.sound.sampled.*;
 import javax.swing.*;
 
@@ -322,11 +324,42 @@ public class MainFrame extends JFrame implements ActionListener {
                 madeSchedule = createSemiPermutationSchedule(maxClassesAtOnce);
                 break;
         }
+
+        clearDuplicateSchedules();
+
         if (!madeSchedule) {
             playSound("error.wav");
             System.out.println("Impossible to make a schedule");
         }
 
+    }
+
+    //MODIFIES: this
+    //EFFECTS: loops through the schedules to make sure that any duplicate schedules are removed (relatively slow)
+    private void clearDuplicateSchedules() {
+        //first sort lists then compare (they are string lists)
+        String[] tempScheds1;
+        String[] tempScheds2;
+
+        int size = activeScheduleList.size();
+        for (int i = 0; i < size - 1; i++) {
+            tempScheds1 = Arrays.stream(activeScheduleList.get(i).getCoursesInSchedule()).filter(
+                    Objects::nonNull).toArray(String[]::new);
+
+            Arrays.sort(tempScheds1);
+
+            for (int j = i + 1; j < size; j++) {
+                tempScheds2 = Arrays.stream(activeScheduleList.get(j).getCoursesInSchedule()).filter(
+                        Objects::nonNull).toArray(String[]::new);
+                Arrays.sort(tempScheds2);
+
+                if (Arrays.equals(tempScheds1, tempScheds2)) {
+                    activeScheduleList.remove(j);
+                    j--; //becuase otherwise it would double skip, and it's more readable than continue;
+                    size -= 1;
+                }
+            }
+        }
     }
 
     //MODIFIES: this

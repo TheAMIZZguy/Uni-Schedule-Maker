@@ -21,8 +21,8 @@
         "subClassNames": ["TEST 111"],
         "hasLab": false,
         "name": "TEST 111",
-        "labTimes": {},
-        "tutorialTimes": {}
+        "tutorialTimes": {},
+        "labTimes": {}
     },
     {
         "hasTutorial": false,
@@ -66,6 +66,7 @@
         ],
         "hasLab": true,
         "name": "TEST 222",
+        "tutorialTimes": {},
         "labTimes": {"L2A": [
             [
                 19,
@@ -76,8 +77,7 @@
                 0
             ],
             [2]
-        ]},
-        "tutorialTimes": {}
+        ]}
     },
     {
         "hasTutorial": true,
@@ -101,7 +101,6 @@
         "subClassNames": ["301"],
         "hasLab": false,
         "name": "TEST 333",
-        "labTimes": {},
         "tutorialTimes": {"T2A": [
             [
                 20,
@@ -112,7 +111,8 @@
                 0
             ],
             [2]
-        ]}
+        ]},
+        "labTimes": {}
     },
     {
         "hasTutorial": false,
@@ -154,6 +154,7 @@
         ],
         "hasLab": true,
         "name": "TEST 444",
+        "tutorialTimes": {},
         "labTimes": {"L2C": [
             [
                 20,
@@ -164,7 +165,6 @@
                 0
             ],
             [5]
-        ]},
-        "tutorialTimes": {}
+        ]}
     }
 ]}
