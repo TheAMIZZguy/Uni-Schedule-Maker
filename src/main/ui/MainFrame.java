@@ -69,6 +69,8 @@ public class MainFrame extends JFrame implements ActionListener {
     protected JButton viewSchedulesButton;
     protected JButton saveAndExitButton;
 
+    protected JButton vanityButton;
+
 
     //MODIFIES: this
     //EFFECTS: initializes the main starting screen
@@ -185,8 +187,8 @@ public class MainFrame extends JFrame implements ActionListener {
         JPanel actionPanel  = new JPanel(new GridLayout(0,1));
 
         addNewCourseButton = new JButton("Add New Course");
-        addNewCourseButton.setVerticalTextPosition(AbstractButton.CENTER);
-        addNewCourseButton.setHorizontalTextPosition(AbstractButton.LEADING); //aka LEFT, for left-to-right locales
+        //addNewCourseButton.setVerticalTextPosition(AbstractButton.CENTER);
+        //addNewCourseButton.setHorizontalTextPosition(AbstractButton.LEADING); //aka LEFT, for left-to-right locales
         addNewCourseButton.setActionCommand("addNew");
 
         viewCoursesButton = new JButton("View Courses");
@@ -198,12 +200,16 @@ public class MainFrame extends JFrame implements ActionListener {
         saveAndExitButton = new JButton("Save and Exit");
         saveAndExitButton.setActionCommand("saveExit");
 
+        vanityButton = new JButton("Credits");
+        vanityButton.setActionCommand("creds");
+
 
         //Listen for actions on buttons 1 and 3.
         addNewCourseButton.addActionListener(this);
         viewCoursesButton.addActionListener(this);
         viewSchedulesButton.addActionListener(this);
         saveAndExitButton.addActionListener(this);
+        vanityButton.addActionListener(this);
 
 
         //accessibility feature on hover over button, maybe implement?
@@ -215,6 +221,7 @@ public class MainFrame extends JFrame implements ActionListener {
         actionPanel.add(addNewCourseButton);
         actionPanel.add(viewCoursesButton);
         actionPanel.add(viewSchedulesButton);
+        actionPanel.add(vanityButton);
         actionPanel.add(saveAndExitButton);
 
         return actionPanel;
@@ -234,10 +241,66 @@ public class MainFrame extends JFrame implements ActionListener {
             case "viewS":
                 viewSchedulePanes();
                 break;
+            case "creds":
+                credits();
+                break;
             default:
                 saveAndExit();
                 break;
         }
+    }
+
+    private void credits() {
+        JDialog dialog = new JDialog(new JFrame(), "Credits");
+
+        JLabel label = dialogCredits();
+
+        JPanel contentPane = formatDialogHelperCredit(dialog, label);
+        dialog.setContentPane(contentPane);
+
+        dialog.setSize(new Dimension(600, 300));
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+
+    //EFFECTS: The dialog for credits
+    private JLabel dialogCredits() {
+        JLabel label = new JLabel("<html><p align=left> "
+                + "Made By: The Better Snake <br><br>" //"Made By: Andres Zepeda Perez <br><br>"
+                + "If you have any suggestions/improvement ideas email me at  <br>"
+                + " **********@gmail.com: <br>" //"AndresZepeda137@gmail.com: <br>"
+                + "Please Include how you expect this code to be implemented <br><br>"
+                + "Any complaints can be sent to: <br>"
+                + "notARealEmail@snakemail.com <br><br>"
+                + "Made For use with UBC Classes<br>"
+                + "Tutorial on how to use (TBA?)");
+        label.setHorizontalAlignment(JLabel.CENTER);
+        Font font = label.getFont();
+        label.setFont(label.getFont().deriveFont(font.PLAIN, 14.0f));
+        return label;
+    }
+
+    //EFFECTS: Formats the dialog for credit
+    private JPanel formatDialogHelperCredit(JDialog dialog, JLabel label) {
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dialog.setVisible(false);
+                dialog.dispose();
+            }
+        });
+
+        JPanel closePanel = new JPanel();
+        closePanel.setLayout(new BoxLayout(closePanel, BoxLayout.LINE_AXIS));
+        closePanel.add(Box.createHorizontalGlue());
+        closePanel.add(closeButton);
+        closePanel.setBorder(BorderFactory.createEmptyBorder(0,0,5,5));
+
+        JPanel contentPane = new JPanel(new BorderLayout());
+        contentPane.add(label, BorderLayout.CENTER);
+        contentPane.add(closePanel, BorderLayout.PAGE_END);
+        contentPane.setOpaque(true);
+        return contentPane;
     }
 
     //MODIFIES: this
