@@ -3,6 +3,7 @@ package ui;
 import model.Course;
 
 import javax.swing.*;
+import java.awt.*;
 
 //Stores the data of a class into labels for simple visualization
 public class CourseViewer extends JPanel {
@@ -27,19 +28,23 @@ public class CourseViewer extends JPanel {
     //MODIFIES: this
     //EFFECTS: adds the course data to a label in a specific format
     public void setDisplay() {
-        String labelString =  "<html><p align=center>" + detailedCoursePrint(course) + "</p></html>";
+        String labelString =  "<html><p align=left>" + detailedCoursePrint(course) + "</p></html>";
+
         display = new JLabel(labelString);
+        display.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
     }
 
     //EFFECTS: turns a course into a formatted label
     private String detailedCoursePrint(Course course) {
-        String message = "Name: " + course.getName() + "<br>";
+        String message = "&emsp&emsp&emsp&emsp&emsp Name: " + course.getName() + "<br><br>";
         for (String subCourse : course.getSubClassNames()) {
             message += printNameWithTimes(course, subCourse, "Section") + "<br>";
         }
+        message += "<br>";
         for (String lab : course.getLabNames()) {
             message += printNameWithTimes(course, lab, "Lab") + "<br>";
         }
+        message += "<br>";
         for (String tutorial : course.getTutorialNames()) {
             message += printNameWithTimes(course, tutorial, "Tutorial") + "<br>";
         }

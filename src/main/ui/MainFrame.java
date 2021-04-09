@@ -276,24 +276,29 @@ public class MainFrame extends JFrame implements ActionListener {
             }
         }
 
-        for (Scheduler s : scheduleListScheds) {
-            if (!activeScheduleList.contains(s)) {
-                scheduleList.removeScheduleFromList(scheduleList.getScheduleList().indexOf(s));
-            }
-        }
+        scheduleList.getScheduleList().removeIf(s -> !activeScheduleList.contains(s));
+
+//        for (Scheduler s : scheduleListScheds) {
+//            if (!activeScheduleList.contains(s)) {
+//                scheduleList.removeScheduleFromList(scheduleList.getScheduleList().indexOf(s));
+//            }
+//        }
 
         ArrayList<Course> courseListCourses = courseList.getCourseList();
+
         for (Course c : savedCourseList) {
             if (!courseListCourses.contains(c)) {
                 courseList.addCourseToList(c);
             }
         }
 
-        for (Course c : courseListCourses) {
-            if (!savedCourseList.contains(c)) {
-                courseList.removeCourseFromList(courseList.getCourseList().indexOf(c));
-            }
-        }
+        courseList.getCourseList().removeIf(c -> !savedCourseList.contains(c));
+
+//        for (Course c : courseListCourses) {
+//            if (!savedCourseList.contains(c)) {
+//                courseList.removeCourseFromList(courseList.getCourseList().indexOf(c));
+//            }
+//        }
     }
 
     //MODIFIES: this
@@ -614,6 +619,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         JPanel menuPane = makeActionButtons();
 
+        setupFilters();
 
         upPane = new ScheduleFilter(this, filterable, filters);
         downPane = new TableSchedulePanel(this, activeScheduleList, filters);

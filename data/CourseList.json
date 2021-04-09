@@ -1,31 +1,6 @@
 {"courseList": [
     {
         "hasTutorial": false,
-        "subClassTimes": {"TEST 111": [
-            [
-                10,
-                0
-            ],
-            [
-                11,
-                0
-            ],
-            [
-                1,
-                3,
-                5
-            ]
-        ]},
-        "labNames": [],
-        "tutorialNames": [],
-        "subClassNames": ["TEST 111"],
-        "hasLab": false,
-        "name": "TEST 111",
-        "tutorialTimes": {},
-        "labTimes": {}
-    },
-    {
-        "hasTutorial": false,
         "subClassTimes": {
             "202": [
                 [
@@ -166,5 +141,30 @@
             ],
             [5]
         ]}
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"111": [
+            [
+                10,
+                0
+            ],
+            [
+                11,
+                0
+            ],
+            [
+                1,
+                3,
+                5
+            ]
+        ]},
+        "labNames": [],
+        "tutorialNames": [],
+        "subClassNames": ["111"],
+        "hasLab": false,
+        "name": "TEST 111",
+        "tutorialTimes": {},
+        "labTimes": {}
     }
 ]}

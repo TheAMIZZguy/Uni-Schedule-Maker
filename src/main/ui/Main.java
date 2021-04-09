@@ -9,7 +9,6 @@ public class Main {
 
     public static void main(String[] args) {
         if (USE_GUI) {
-            System.out.println("Goodbye!");
             javax.swing.SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     new MainFrame().initializeGraphics();

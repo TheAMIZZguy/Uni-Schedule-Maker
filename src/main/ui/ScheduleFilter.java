@@ -8,12 +8,15 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 
 //Panel displaying all courses that can be filtered through for the TableSchedulePanel
 public class ScheduleFilter extends JPanel implements ItemListener {
 
     JCheckBox[] courses;
     ArrayList<String> filters;
+    JPanel checkPanel;
 
     MainFrame parent;
 
@@ -25,10 +28,25 @@ public class ScheduleFilter extends JPanel implements ItemListener {
         this.parent = parent;
         this.filters = filters;
 
-        //int size = courseList.size();
+        filterable.removeIf(Objects::isNull);
         int size = filterable.size();
 
-        JPanel checkPanel = new JPanel(new GridLayout((int) Math.sqrt(size), (int) Math.sqrt(size)));
+        if (size == 0) {
+            noSchedules(parent, filterable);
+            return;
+        }
+
+        yesSchedules(filterable, filters, size);
+
+        parent.setFilters(this.filters);
+        add(checkPanel, BorderLayout.LINE_START);
+        setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+    }
+
+    //MODIFIES: this
+    //EFFECTS: makes the panel view when there are possible things to filter
+    private void yesSchedules(ArrayList<String> filterable, ArrayList<String> filters, int size) {
+        checkPanel = new JPanel(new GridLayout((int) Math.sqrt(size), (int) Math.sqrt(size)));
 
         courses = new JCheckBox[size]; //TODO
 
@@ -44,7 +62,13 @@ public class ScheduleFilter extends JPanel implements ItemListener {
                 checkPanel.add(courses[i]);
             }
         }
+    }
 
+    //MODIFIES: this
+    //EFFECTS: makes the panel view when there are no possible things to filter
+    private void noSchedules(MainFrame parent, ArrayList<String> filterable) {
+        checkPanel = new JPanel(new GridLayout(1, 1));
+        Collections.sort(filterable);
         parent.setFilters(this.filters);
         add(checkPanel, BorderLayout.LINE_START);
         setBorder(BorderFactory.createEmptyBorder(20,20,20,20));

@@ -16,8 +16,8 @@
                 5
             ]
         ]},
-        "labNames": [],
         "tutorialNames": [],
+        "labNames": [],
         "subClassNames": ["212"],
         "hasLab": false,
         "name": "MATH 120",
@@ -41,8 +41,8 @@
                 5
             ]
         ]},
-        "labNames": [],
         "tutorialNames": [],
+        "labNames": [],
         "subClassNames": ["212"],
         "hasLab": false,
         "name": "CPSC 121",
@@ -66,8 +66,8 @@
                 5
             ]
         ]},
-        "labNames": [],
         "tutorialNames": [],
+        "labNames": [],
         "subClassNames": ["212"],
         "hasLab": false,
         "name": "CPSC 110",
@@ -108,13 +108,13 @@
                 ]
             ]
         },
-        "labNames": [
-            "L2A",
-            "L2B"
-        ],
         "tutorialNames": [
             "T2A",
             "T2C"
+        ],
+        "labNames": [
+            "L2A",
+            "L2B"
         ],
         "subClassNames": [
             "201",
