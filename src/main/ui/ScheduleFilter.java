@@ -48,7 +48,7 @@ public class ScheduleFilter extends JPanel implements ItemListener {
     private void yesSchedules(ArrayList<String> filterable, ArrayList<String> filters, int size) {
         checkPanel = new JPanel(new GridLayout((int) Math.sqrt(size), (int) Math.sqrt(size)));
 
-        courses = new JCheckBox[size]; //TODO
+        courses = new JCheckBox[size];
 
         for (int i = 0; i < size; i++) {
             if (filterable.get(i) != null) {

@@ -174,6 +174,7 @@ public class CourseAdder extends JPanel implements ActionListener {
                 addingCourse(name, subClassNames, subClassTimes, labNames, labTimes, tutorialNames, tutorialTimes);
 
             } catch (Exception e1) {
+                e1.printStackTrace();
                 errorDialog();
             }
         }
@@ -295,7 +296,12 @@ public class CourseAdder extends JPanel implements ActionListener {
 
         if (text.contains("T")) {
             for (int i = 0; i < text.length(); i++) {
-                if (text.charAt(i) == 'T' && text.charAt(i + 1) != 'h') {
+                try {
+                    if (text.charAt(i) == 'T' && text.charAt(i + 1) != 'h') {
+                        preDays.add(2);
+                    }
+                } catch (Exception e) {
+                    //means T was the last char
                     preDays.add(2);
                 }
             }

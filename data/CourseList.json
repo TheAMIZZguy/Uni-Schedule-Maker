@@ -33,8 +33,8 @@
                 ]
             ]
         },
-        "labNames": ["L2A"],
         "tutorialNames": [],
+        "labNames": ["L2A"],
         "subClassNames": [
             "201",
             "202"
@@ -71,8 +71,8 @@
                 4
             ]
         ]},
-        "labNames": [],
         "tutorialNames": ["T2A"],
+        "labNames": [],
         "subClassNames": ["301"],
         "hasLab": false,
         "name": "TEST 333",
@@ -121,8 +121,8 @@
                 ]
             ]
         },
-        "labNames": ["L2C"],
         "tutorialNames": [],
+        "labNames": ["L2C"],
         "subClassNames": [
             "401",
             "402"
@@ -159,12 +159,697 @@
                 5
             ]
         ]},
-        "labNames": [],
         "tutorialNames": [],
+        "labNames": [],
         "subClassNames": ["111"],
         "hasLab": false,
         "name": "TEST 111",
         "tutorialTimes": {},
         "labTimes": {}
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {
+            "103": [
+                [
+                    12,
+                    0
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    1,
+                    3,
+                    5
+                ]
+            ],
+            "101": [
+                [
+                    14,
+                    0
+                ],
+                [
+                    16,
+                    0
+                ],
+                [
+                    1,
+                    3,
+                    5
+                ]
+            ],
+            "102": [
+                [
+                    13,
+                    0
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    1,
+                    3,
+                    5
+                ]
+            ]
+        },
+        "tutorialNames": [],
+        "labNames": [
+            "L1A",
+            "L1B",
+            "L1C",
+            "L1D",
+            "L1E",
+            "L1F",
+            "L1G",
+            "L1H",
+            "L1J",
+            "L1M",
+            "L1N",
+            "L1P",
+            "L1R",
+            "L1S",
+            "L1T"
+        ],
+        "subClassNames": [
+            "101",
+            "102",
+            "103"
+        ],
+        "hasLab": true,
+        "name": "CPSC 221",
+        "tutorialTimes": {},
+        "labTimes": {
+            "L1F": [
+                [
+                    16,
+                    0
+                ],
+                [
+                    18,
+                    0
+                ],
+                [2]
+            ],
+            "L1E": [
+                [
+                    14,
+                    0
+                ],
+                [
+                    16,
+                    0
+                ],
+                [3]
+            ],
+            "L1H": [
+                [
+                    16,
+                    0
+                ],
+                [
+                    18,
+                    0
+                ],
+                [2]
+            ],
+            "L1G": [
+                [
+                    16,
+                    0
+                ],
+                [
+                    18,
+                    0
+                ],
+                [3]
+            ],
+            "L1J": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ],
+                [1]
+            ],
+            "L1N": [
+                [
+                    18,
+                    0
+                ],
+                [
+                    20,
+                    0
+                ],
+                [1]
+            ],
+            "L1M": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ],
+                [3]
+            ],
+            "L1P": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ],
+                [1]
+            ],
+            "L1R": [
+                [
+                    17,
+                    0
+                ],
+                [
+                    19,
+                    0
+                ],
+                [3]
+            ],
+            "L1T": [
+                [
+                    16,
+                    0
+                ],
+                [
+                    18,
+                    0
+                ],
+                [3]
+            ],
+            "L1S": [
+                [
+                    16,
+                    0
+                ],
+                [
+                    18,
+                    0
+                ],
+                [2]
+            ],
+            "L1B": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ],
+                [3]
+            ],
+            "L1A": [
+                [
+                    11,
+                    0
+                ],
+                [
+                    13,
+                    0
+                ],
+                [2]
+            ],
+            "L1D": [
+                [
+                    11,
+                    0
+                ],
+                [
+                    13,
+                    0
+                ],
+                [2]
+            ],
+            "L1C": [
+                [
+                    16,
+                    0
+                ],
+                [
+                    18,
+                    0
+                ],
+                [1]
+            ]
+        }
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {
+            "101": [
+                [
+                    14,
+                    0
+                ],
+                [
+                    15,
+                    30
+                ],
+                [
+                    2,
+                    4
+                ]
+            ],
+            "102": [
+                [
+                    17,
+                    0
+                ],
+                [
+                    18,
+                    30
+                ],
+                [
+                    3,
+                    5
+                ]
+            ]
+        },
+        "tutorialNames": [],
+        "labNames": [
+            "L1A",
+            "L1B",
+            "L1C",
+            "L1D",
+            "L1E",
+            "L1F",
+            "L1G",
+            "L1H",
+            "L1K",
+            "L1M",
+            "L1N",
+            "L1P",
+            "L1R"
+        ],
+        "subClassNames": [
+            "101",
+            "102"
+        ],
+        "hasLab": true,
+        "name": "CPSC 213",
+        "tutorialTimes": {},
+        "labTimes": {
+            "L1F": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    3,
+                    5
+                ]
+            ],
+            "L1E": [
+                [
+                    18,
+                    30
+                ],
+                [
+                    20,
+                    0
+                ],
+                [
+                    2,
+                    4
+                ]
+            ],
+            "L1H": [
+                [
+                    17,
+                    0
+                ],
+                [
+                    19,
+                    0
+                ],
+                [
+                    1,
+                    3
+                ]
+            ],
+            "L1G": [
+                [
+                    11,
+                    0
+                ],
+                [
+                    13,
+                    0
+                ],
+                [
+                    1,
+                    3
+                ]
+            ],
+            "L1K": [
+                [
+                    12,
+                    0
+                ],
+                [
+                    14,
+                    0
+                ],
+                [
+                    1,
+                    2
+                ]
+            ],
+            "L1N": [
+                [
+                    13,
+                    0
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    1,
+                    5
+                ]
+            ],
+            "L1M": [
+                [
+                    9,
+                    0
+                ],
+                [
+                    11,
+                    0
+                ],
+                [
+                    1,
+                    2
+                ]
+            ],
+            "L1P": [
+                [
+                    15,
+                    0
+                ],
+                [
+                    17,
+                    0
+                ],
+                [
+                    1,
+                    4
+                ]
+            ],
+            "L1R": [
+                [
+                    17,
+                    0
+                ],
+                [
+                    18,
+                    30
+                ],
+                [
+                    2,
+                    4
+                ]
+            ],
+            "L1B": [
+                [
+                    11,
+                    0
+                ],
+                [
+                    13,
+                    0
+                ],
+                [3]
+            ],
+            "L1A": [
+                [
+                    15,
+                    30
+                ],
+                [
+                    17,
+                    30
+                ],
+                [
+                    3,
+                    5
+                ]
+            ],
+            "L1D": [
+                [
+                    14,
+                    0
+                ],
+                [
+                    16,
+                    0
+                ],
+                [
+                    1,
+                    3
+                ]
+            ],
+            "L1C": [
+                [
+                    13,
+                    0
+                ],
+                [
+                    15,
+                    0
+                ],
+                [
+                    2,
+                    4
+                ]
+            ]
+        }
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"001": [
+            [
+                10,
+                0
+            ],
+            [
+                13,
+                0
+            ],
+            [
+                2,
+                4
+            ]
+        ]},
+        "tutorialNames": [],
+        "labNames": [],
+        "subClassNames": ["001"],
+        "hasLab": false,
+        "name": "PHIL 220",
+        "tutorialTimes": {},
+        "labTimes": {}
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"921": [
+            [
+                10,
+                0
+            ],
+            [
+                12,
+                0
+            ],
+            [
+                1,
+                3,
+                5
+            ]
+        ]},
+        "tutorialNames": [],
+        "labNames": ["921"],
+        "subClassNames": ["921"],
+        "hasLab": true,
+        "name": "MATH 200",
+        "tutorialTimes": {},
+        "labTimes": {"921": [
+            [
+                10,
+                0
+            ],
+            [
+                11,
+                0
+            ],
+            [2]
+        ]}
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"921": [
+            [
+                13,
+                0
+            ],
+            [
+                15,
+                0
+            ],
+            [
+                1,
+                2,
+                5
+            ]
+        ]},
+        "tutorialNames": [],
+        "labNames": ["921"],
+        "subClassNames": ["921"],
+        "hasLab": true,
+        "name": "MATH 215",
+        "tutorialTimes": {},
+        "labTimes": {"921": [
+            [
+                13,
+                0
+            ],
+            [
+                14,
+                0
+            ],
+            [3]
+        ]}
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"921": [
+            [
+                14,
+                0
+            ],
+            [
+                16,
+                0
+            ],
+            [
+                1,
+                4,
+                5
+            ]
+        ]},
+        "tutorialNames": [],
+        "labNames": ["921"],
+        "subClassNames": ["921"],
+        "hasLab": true,
+        "name": "MATH 221",
+        "tutorialTimes": {},
+        "labTimes": {"921": [
+            [
+                14,
+                0
+            ],
+            [
+                15,
+                0
+            ],
+            [3]
+        ]}
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"921": [
+            [
+                10,
+                30
+            ],
+            [
+                12,
+                0
+            ],
+            [
+                2,
+                3,
+                5
+            ]
+        ]},
+        "tutorialNames": [],
+        "labNames": [],
+        "subClassNames": ["921"],
+        "hasLab": false,
+        "name": "STAT 302",
+        "tutorialTimes": {},
+        "labTimes": {}
+    },
+    {
+        "hasTutorial": false,
+        "subClassTimes": {"921": [
+            [
+                12,
+                30
+            ],
+            [
+                15,
+                0
+            ],
+            [
+                1,
+                3,
+                5
+            ]
+        ]},
+        "tutorialNames": [],
+        "labNames": [
+            "L07",
+            "L3E"
+        ],
+        "subClassNames": ["921"],
+        "hasLab": true,
+        "name": "CHEM 121",
+        "tutorialTimes": {},
+        "labTimes": {
+            "L07": [
+                [
+                    14,
+                    0
+                ],
+                [
+                    17,
+                    0
+                ],
+                [4]
+            ],
+            "L3E": [
+                [
+                    17,
+                    0
+                ],
+                [
+                    2,
+                    0
+                ],
+                [2]
+            ]
+        }
     }
 ]}

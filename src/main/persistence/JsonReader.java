@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 
 import org.json.*;
 
-//VERY largely inspired from the JSONSerializationDemo we were given from UBC, CPSC 210 Class
 //Reads the JSON files holding ScheduleList and CourseList data
 public class JsonReader {
 

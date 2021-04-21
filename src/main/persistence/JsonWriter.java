@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import java.io.*;
 
-//VERY largely inspired from the JSONSerializationDemo we were given from UBC, CPSC 210 class
 //Writes ScheduleList and CourseList data into JSON files
 public class JsonWriter {
     private static final int TAB = 4;
